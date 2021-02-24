@@ -1,4 +1,4 @@
-package com.mahi.evergreen.ui
+package com.mahi.evergreen.ui.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
