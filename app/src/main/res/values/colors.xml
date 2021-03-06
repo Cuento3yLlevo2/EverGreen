@@ -8,12 +8,12 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="primary">#ffffff</color>
-    <color name="primary_dark">#f7f7f7</color>
-    <color name="primary_light">#B2DFDB</color>
-    <color name="accent">#1dbf73</color>
+    <color name="primary">#1dbf73</color>
+    <color name="primary_dark">#248859</color>
+    <color name="primary_light">#0EFF8F</color>
+    <color name="accent">#ff62ad</color>
     <color name="primary_text">#404145</color>
     <color name="secondary_text">#62646a</color>
-    <color name="icons">#c2c2c2</color>
-    <color name="divider">#0d084d</color>
+    <color name="icons">#4a73e8</color>
+    <color name="divider">#ff62ad</color>
 </resources>
