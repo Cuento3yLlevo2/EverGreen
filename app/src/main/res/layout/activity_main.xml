@@ -11,8 +11,12 @@
         <Toolbar
             android:id="@+id/toolbarMain"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+            <ImageView
+                android:layout_width="@dimen/toolbar_logo_dimen"
+                android:layout_height="@dimen/toolbar_logo_dimen"
+                android:src="@drawable/evergreen_logo" />
         </Toolbar>
 
 

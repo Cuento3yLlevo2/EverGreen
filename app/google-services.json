@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "597595473320",
+    "project_id": "evergreen-app-bdbc2",
+    "storage_bucket": "evergreen-app-bdbc2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:597595473320:android:4e9b513d454c084908499d",
+        "android_client_info": {
+          "package_name": "com.mahi.evergreen"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "597595473320-m7486p695v3m6ccn5jmd1rr1b40uo0hj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHk4clAMSqCCctj8jnuw290UEoBxHw7Uw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "597595473320-m7486p695v3m6ccn5jmd1rr1b40uo0hj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

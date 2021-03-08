@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="5dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_launcher"
+                android:padding="4dp"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginStart="10dp"
+            android:paddingTop="8dp">
+
+            <TextView
+                android:id="@+id/tviMessageUserName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Idaira"
+                android:textSize="14sp"
+                android:textColor="@color/secondary_text"
+                android:ellipsize="end"
+                android:lines="1"/>
+            <TextView
+                android:id="@+id/tviMessageTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Vasos de botellas cortadas"
+                android:textSize="17sp"
+                android:textColor="@color/primary_text"
+                android:ellipsize="end"
+                android:lines="1"
+                android:textStyle="bold"/>
+            <TextView
+                android:paddingStart="8dp"
+                android:id="@+id/tviMessagePreview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Quiero 12 vasos para regalar a mi primo, puedo reutilizar mis botellas de vino vacías?"
+                android:textSize="14sp"
+                android:textColor="@color/secondary_text"
+                android:ellipsize="end"
+                android:lines="1"
+                android:drawableLeft="@drawable/check_circle"
+                android:drawablePadding="4dp"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/secondary_text"/>
+</LinearLayout>
