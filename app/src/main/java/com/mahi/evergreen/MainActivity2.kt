@@ -2,10 +2,7 @@ package com.mahi.evergreen
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.view.MenuItem
 import android.widget.Button
-import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -44,6 +41,20 @@ class MainActivity2 : AppCompatActivity() {
 
         viewPager.adapter = viewPagerAdapter
         tabLayout.setupWithViewPager(viewPager)
+
+        buttonSignOut = findViewById(R.id.buttonSignOut)
+        buttonSignOut.setOnClickListener {
+            signOut()
+        }
+
+    }
+
+    private fun signOut() {
+        FirebaseAuth.getInstance().signOut()
+        val intent = Intent(this@MainActivity2, WelcomeActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+        finish()
     }
 
     // Adapter needed for the ViewPager and navegation
@@ -79,17 +90,6 @@ class MainActivity2 : AppCompatActivity() {
         }
     }
 
-    override fun onPostCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onPostCreate(savedInstanceState, persistentState)
-        buttonSignOut = findViewById(R.id.buttonSignOut)
-        buttonSignOut.setOnClickListener {
-            FirebaseAuth.getInstance().signOut()
-            val intent = Intent(this@MainActivity2, WelcomeActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-            finish()
-        }
-    }
 
 
 

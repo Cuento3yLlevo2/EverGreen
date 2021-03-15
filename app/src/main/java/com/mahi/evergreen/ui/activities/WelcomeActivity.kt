@@ -17,10 +17,15 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.mahi.evergreen.MainActivity2
 import com.mahi.evergreen.R
+import com.mahi.evergreen.model.User
+import com.mahi.evergreen.network.Callback
+import com.mahi.evergreen.network.FirebaseDatabaseService
+import java.lang.Exception
 
 class WelcomeActivity : AppCompatActivity() {
 
     var firebaseUser: FirebaseUser? = null
+    private val databaseService: FirebaseDatabaseService = FirebaseDatabaseService()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -36,6 +36,15 @@
                 android:textColor="@color/white"
                 android:textStyle="bold"/>
 
+            <Button
+                android:id="@+id/buttonSignOut"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="username"
+                android:layout_marginLeft="26dp"
+                android:textColor="@color/white"
+                />
+
         </androidx.appcompat.widget.Toolbar>
 
         <com.google.android.material.tabs.TabLayout

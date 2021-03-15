@@ -19,13 +19,13 @@ class FirebaseDatabaseService {
         database.getReference(USERS_REFERENCE)
                 .get()
                 .addOnSuccessListener { result ->
+                    var userList = ArrayList<User>()
                     for (child in result.children) {
                         Log.d("Data reading success", "${child.key} => ${child.value}")
-                        val t = object : GenericTypeIndicator<List<User>>() {}
-                        val list = result.getValue(t)
-                        callback.onSuccess(list)
-                        break
+                        // val t = object : GenericTypeIndicator<List<User>>() {}
+                        child.getValue(User::class.java)?.let { userList.add(it) }
                     }
+                    callback.onSuccess(userList)
                 }
                 .addOnFailureListener { exception ->
                     Log.w("Data reading failure", "Error getting documents.", exception)
