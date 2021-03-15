@@ -56,16 +56,19 @@ dependencies {
 
 
     // FIREBASE DEPENDENCIES
-    // Firebase main Dependency
-    implementation 'com.google.firebase:firebase-core:18.0.2'
+    // Import the Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:26.5.0')
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    // Declare the dependency for the Firebase SDK for Google Analytics
+    implementation 'com.google.firebase:firebase-analytics-ktx'
     // Firebase authentication service
-    implementation 'com.google.firebase:firebase-auth:20.0.3'
+    implementation 'com.google.firebase:firebase-auth-ktx'
     // Firebase storage service
-    implementation 'com.google.firebase:firebase-storage-ktx:19.2.1'
+    implementation 'com.google.firebase:firebase-storage-ktx'
     // Firebase realtime database service
-    implementation 'com.google.firebase:firebase-database-ktx:19.6.0'
+    implementation 'com.google.firebase:firebase-database-ktx'
     // Firebase massaging service
-    implementation 'com.google.firebase:firebase-messaging:21.0.1'
+    implementation 'com.google.firebase:firebase-messaging-ktx'
 
     // EXTERNAL DEPENDENCIES
     // CircleImageView: a fast circular ImageView perfect for profile images. more info: https://github.com/hdodenhof/CircleImageView
