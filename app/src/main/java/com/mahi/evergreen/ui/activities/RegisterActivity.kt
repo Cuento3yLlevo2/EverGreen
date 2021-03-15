@@ -18,16 +18,17 @@ import com.google.firebase.ktx.Firebase
 import com.mahi.evergreen.MainActivity2
 import com.mahi.evergreen.R
 import com.mahi.evergreen.model.User
+import com.mahi.evergreen.network.FirebaseDatabaseService
+import com.mahi.evergreen.network.USERS_REFERENCE
 
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
-    private lateinit var database: FirebaseDatabase
     private lateinit var dbReference: DatabaseReference
-
     private lateinit var etRegisterUsername: EditText
     private lateinit var etRegisterEmail: EditText
     private lateinit var etRegisterPassword: EditText
+    private val database: FirebaseDatabase = FirebaseDatabaseService().database
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,8 +103,8 @@ class RegisterActivity : AppCompatActivity() {
         val user = User(username, email, profileImage, coverImage, status, search)
         Log.w("FireBaseLogs", "Start Writing $userId")
 
-        dbReference.push().key
-        dbReference.child(userId).setValue(user)
+        dbReference = database.reference
+        dbReference.child(USERS_REFERENCE).child(userId).setValue(user)
                 .addOnSuccessListener {
                     // Write was successful!
                     Log.w("FireBaseLogs", "Write was successful")
