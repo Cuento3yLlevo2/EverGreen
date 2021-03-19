@@ -8,8 +8,9 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.FirebaseException
+import com.google.firebase.FirebaseTooManyRequestsException
+import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -91,8 +92,19 @@ class RegisterActivity : AppCompatActivity() {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("FireBaseLogs", "createUserWithEmail:failure", task.exception)
-                            Toast.makeText(baseContext, "Authentication failed.",
-                                Toast.LENGTH_SHORT).show()
+                            lateinit var errorCode: String
+                            when(task.exception as FirebaseException){
+                                is FirebaseAuthWeakPasswordException -> Toast.makeText(this@RegisterActivity, "La contraseña es demasiado corta. Debe tener más de 6 caracteres.", Toast.LENGTH_LONG).show()
+                                is FirebaseAuthUserCollisionException -> {
+                                    errorCode = (task.exception as FirebaseAuthUserCollisionException).errorCode
+                                    when(errorCode){
+                                        "ERROR_EMAIL_ALREADY_IN_USE" -> Toast.makeText(this@RegisterActivity, "El correo electrónico ya está siendo utilizado por otra cuenta.", Toast.LENGTH_LONG).show()
+                                        else -> Toast.makeText(this@RegisterActivity, "Error: $errorCode", Toast.LENGTH_LONG).show()
+                                    }
+                                }
+                                is FirebaseAuthInvalidCredentialsException -> Toast.makeText(this@RegisterActivity, "Mmm...eso no parece una dirección de correo.", Toast.LENGTH_LONG).show()
+                                else -> Toast.makeText(this@RegisterActivity, "Error: ${(task.exception as FirebaseException).message}", Toast.LENGTH_LONG).show()
+                            }
                         }
                     }
             }

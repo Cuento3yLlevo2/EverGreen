@@ -11,4 +11,18 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="welcome_app_title">Te damos la bienvenida a EverGreen</string>
+    <string name="welcome_app_subtitle">Descubre tu próxima Idea de reciclaje</string>
+    <string name="register_btn">Regístrate</string>
+    <string name="login_btn">Iniciar sesíon</string>
+    <string name="register_hint_username">Nombre de usuario</string>
+    <string name="register_hint_email">Correo electrónico</string>
+    <string name="register_hint_password">Crea una contraseña</string>
+    <string name="continue_btn">Continuar</string>
+    <string name="already_member_login_link">¿Ya eres miembro? Iniciar Sesión</string>
+    <string name="login_hint_email">Correo</string>
+    <string name="login_hint_password">Contraseña</string>
+    <string name="not_yet_register_link">¿Aún no estás en EverGreen? Regístrate</string>
+    <string name="content_description_evergreen_logo">Evergreen Logo</string>
+    <string name="evergreen_welcome_image">variedad de materiales reciclables sujetos por manos</string>
 </resources>
