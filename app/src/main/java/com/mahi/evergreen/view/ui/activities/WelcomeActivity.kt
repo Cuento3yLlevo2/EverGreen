@@ -1,31 +1,18 @@
-package com.mahi.evergreen.ui.activities
+package com.mahi.evergreen.view.ui.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
-import android.widget.Toast
-import com.google.android.gms.tasks.Task
-import com.google.firebase.FirebaseError
-import com.google.firebase.auth.FirebaseAuth
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
-import com.google.firebase.database.ktx.FirebaseDatabaseKtxRegistrar
-import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.mahi.evergreen.MainActivity2
 import com.mahi.evergreen.R
-import com.mahi.evergreen.model.User
-import com.mahi.evergreen.network.Callback
-import com.mahi.evergreen.network.FirebaseDatabaseService
-import java.lang.Exception
 
 class WelcomeActivity : AppCompatActivity() {
 
-    var firebaseUser: FirebaseUser? = null
-    private val databaseService: FirebaseDatabaseService = FirebaseDatabaseService()
+    private var firebaseUser: FirebaseUser? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

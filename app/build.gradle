@@ -17,6 +17,10 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    buildFeatures {
+        viewBinding true
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -24,8 +28,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility kotlin_version
-        targetCompatibility kotlin_version
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
         jvmTarget = '1.8'
@@ -53,6 +57,9 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     // Implement the Material Design card pattern with round corners and drop shadows.
     implementation "androidx.cardview:cardview:1.0.0"
+    // Implement the viewModel ans Lifecycle for recyclerview items
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0'
 
 
     // FIREBASE DEPENDENCIES
@@ -74,13 +81,16 @@ dependencies {
     // CircleImageView: a fast circular ImageView perfect for profile images. more info: https://github.com/hdodenhof/CircleImageView
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     // Picasso: a powerful image downloading and caching library for Android. more info: https://square.github.io/picasso/
-    implementation 'com.squareup.picasso:picasso:2.71828'
+    def picassoVersion = "2.71828"
+    implementation "com.squareup.picasso:picasso:$picassoVersion"
     // MaterialEditText: the EditText in Material Design, with more features that Google Material Design Spec has introduced. more info: https://github.com/rengwuxian/MaterialEditText
     implementation 'com.rengwuxian.materialedittext:library:2.1.4'
     // Retrofit: A type-safe HTTP client for Android. more info https://square.github.io/retrofit/
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     // Retrofit: Converters can be added to support other types. In this case GSON
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    // Glide: is a fast and efficient open source media management and image loading framework for Android that wraps media decoding, memory and disk caching, and resource pooling into a simple and easy to use interface. more info https://github.com/bumptech/glide
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
 
 }
 

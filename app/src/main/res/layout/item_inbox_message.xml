@@ -52,7 +52,7 @@
                 android:textStyle="bold"/>
             <TextView
                 android:paddingStart="8dp"
-                android:id="@+id/tviMessagePreview"
+                android:id="@+id/tviLastMessage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Quiero 12 vasos para regalar a mi primo, puedo reutilizar mis botellas de vino vacías?"

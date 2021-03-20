@@ -11,23 +11,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.EverGreen">
-        <activity android:name=".ui.activities.WelcomeActivity">
+        <activity android:name="com.mahi.evergreen.view.ui.activities.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activities.LoginActivity" />
-        <activity android:name=".ui.activities.RegisterActivity" />
+        <activity android:name="com.mahi.evergreen.view.ui.activities.LoginActivity" />
+        <activity android:name="com.mahi.evergreen.view.ui.activities.RegisterActivity" />
         <activity
-            android:name=".MainActivity2"
+            android:name="com.mahi.evergreen.view.ui.activities.MainActivity2"
             android:label="@string/title_activity_main2"
             android:theme="@style/Theme.EverGreen.NoActionBar">
 
         </activity>
-        <activity android:name=".ui.activities.SplashscreenActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name="com.mahi.evergreen.view.ui.activities.SplashscreenActivity" />
+        <activity android:name="com.mahi.evergreen.view.ui.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>

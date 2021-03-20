@@ -1,8 +1,9 @@
-package com.mahi.evergreen
+package com.mahi.evergreen.view.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -10,35 +11,47 @@ import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
-import com.mahi.evergreen.ui.activities.WelcomeActivity
-import com.mahi.evergreen.ui.fragments.ChatsFragment
-import com.mahi.evergreen.ui.fragments.SearchFragment
-import com.mahi.evergreen.ui.fragments.SettingsFragment
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.*
+import com.google.firebase.ktx.Firebase
+import com.mahi.evergreen.R
+import com.mahi.evergreen.model.User
+import com.mahi.evergreen.network.FirebaseDatabaseService
+import com.mahi.evergreen.network.USERS_REFERENCE
+import com.mahi.evergreen.view.ui.fragments.ChatsFragment
+import com.mahi.evergreen.view.ui.fragments.SearchUsersFragment
+import com.mahi.evergreen.view.ui.fragments.SettingsFragment
+import com.squareup.picasso.Picasso
+import de.hdodenhof.circleimageview.CircleImageView
 import kotlin.collections.ArrayList
 
 class MainActivity2 : AppCompatActivity() {
 
     private lateinit var buttonSignOut : Button
+    private val databaseService: FirebaseDatabaseService = FirebaseDatabaseService()
+    private var firebaseUser: FirebaseUser? = null
+    private var currentUserReference: DatabaseReference? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
         setSupportActionBar(findViewById(R.id.toolbar_main2))
 
+        // First of all, after Authentication we need to get user's data from Realtime Database using the users's uid
+        firebaseUser = Firebase.auth.currentUser
+        currentUserReference = firebaseUser?.let { databaseService.database.getReference(USERS_REFERENCE).child(it.uid) }
 
 
         val toolbar: androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar_main2)
         setSupportActionBar(toolbar)
         supportActionBar!!.title = ""
-
         val tabLayout: TabLayout = findViewById(R.id.tlMainTabLayout)
         val viewPager: ViewPager = findViewById(R.id.vpMainViewPager)
         val viewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
-
         viewPagerAdapter.addFragment(ChatsFragment(), "Chats")
-        viewPagerAdapter.addFragment(SearchFragment(), "Search")
+        viewPagerAdapter.addFragment(SearchUsersFragment(), "Search")
         viewPagerAdapter.addFragment(SettingsFragment(), "Settings")
-
         viewPager.adapter = viewPagerAdapter
         tabLayout.setupWithViewPager(viewPager)
 
@@ -46,6 +59,28 @@ class MainActivity2 : AppCompatActivity() {
         buttonSignOut.setOnClickListener {
             signOut()
         }
+
+        // Display username and profile picture
+        currentUserReference?.addValueEventListener(object : ValueEventListener {
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                // OnDataChange: we need to make sure that the current user still exist
+                if (snapshot.exists()){
+                    val userDataSnapshot = snapshot.getValue(User::class.java)
+                    val tvMainUsername = findViewById<TextView>(R.id.tvMainUsername)
+                    val civMainProfileImage = findViewById<CircleImageView>(R.id.civMainProfileImage)
+                    if (userDataSnapshot != null) {
+                        tvMainUsername.text = userDataSnapshot.username
+                        Picasso.get().load(userDataSnapshot.profileImage).placeholder(R.drawable.user_default).into(civMainProfileImage)
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
 
     }
 

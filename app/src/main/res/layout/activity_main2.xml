@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity2">
+    tools:context=".view.ui.activities.MainActivity2">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -21,6 +21,7 @@
             app:popupTheme="@style/Theme.EverGreen.PopupOverlay" >
 
             <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/civMainProfileImage"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:src="@drawable/ic_profile"
@@ -30,7 +31,7 @@
                 android:id="@+id/tvMainUsername"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="username"
+                tools:text="username"
                 android:textSize="18sp"
                 android:layout_marginLeft="26dp"
                 android:textColor="@color/white"
@@ -40,9 +41,10 @@
                 android:id="@+id/buttonSignOut"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="username"
+                android:text="@string/buttonSignOut"
                 android:layout_marginLeft="26dp"
                 android:textColor="@color/white"
+                android:textAllCaps="false"
                 />
 
         </androidx.appcompat.widget.Toolbar>

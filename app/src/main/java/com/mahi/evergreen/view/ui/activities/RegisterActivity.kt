@@ -1,26 +1,24 @@
-package com.mahi.evergreen.ui.activities
+package com.mahi.evergreen.view.ui.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.FirebaseException
-import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.mahi.evergreen.MainActivity2
 import com.mahi.evergreen.R
 import com.mahi.evergreen.model.User
 import com.mahi.evergreen.network.FirebaseDatabaseService
 import com.mahi.evergreen.network.USERS_REFERENCE
+import java.util.*
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -29,14 +27,15 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var etRegisterUsername: EditText
     private lateinit var etRegisterEmail: EditText
     private lateinit var etRegisterPassword: EditText
-    private val database: FirebaseDatabase = FirebaseDatabaseService().database
+    private val databaseService: FirebaseDatabaseService = FirebaseDatabaseService()
+    private lateinit var database: FirebaseDatabase
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-
+        database = databaseService.database
 
         etRegisterUsername = findViewById(R.id.etRegisterUsername)
         etRegisterEmail = findViewById(R.id.etRegisterEmail)
@@ -82,12 +81,7 @@ class RegisterActivity : AppCompatActivity() {
                             Log.d("FireBaseLogs", "createUserWithEmail:success")
                             val user = auth.currentUser
                             if (user != null) {
-                                writeNewUser(user.uid, username, userEmail,
-                                    "https://firebasestorage.googleapis.com/v0/b/evergreen-app-bdbc2.appspot.com/o/user_default.png?alt=media&token=53382a72-8fc1-4a11-b63f-0cb342bb02c6",
-                                    "https://firebasestorage.googleapis.com/v0/b/evergreen-app-bdbc2.appspot.com/o/profile_cover_default.jpg?alt=media&token=49ff9c78-9714-45bf-9ff7-b0a605ba39b1",
-                                    "offline",
-                                    username.toLowerCase()
-                                )
+                                writeNewUser(user.uid, username, userEmail)
                             }
                         } else {
                             // If sign in fails, display a message to the user.
@@ -111,8 +105,16 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    private fun writeNewUser(userId: String, username: String, email: String, profileImage: String, coverImage: String, status: String, search: String) {
-        val user = User(username, email, profileImage, coverImage, status, search)
+    private fun writeNewUser(userId: String, username: String, email: String) {
+        val defaultProfileImage = "https://firebasestorage.googleapis.com/v0/b/evergreen-app-bdbc2.appspot.com/o/user_default.png?alt=media&token=53382a72-8fc1-4a11-b63f-0cb342bb02c6"
+        val defaultCoverImage = "https://firebasestorage.googleapis.com/v0/b/evergreen-app-bdbc2.appspot.com/o/profile_cover_default.jpg?alt=media&token=49ff9c78-9714-45bf-9ff7-b0a605ba39b1"
+        val user = User(
+                username,
+                email,
+                defaultProfileImage,
+                defaultCoverImage,
+                "offline",
+                username.toLowerCase(Locale.ROOT))
         Log.w("FireBaseLogs", "Start Writing $userId")
 
         dbReference = database.reference

@@ -25,4 +25,5 @@
     <string name="not_yet_register_link">¿Aún no estás en EverGreen? Regístrate</string>
     <string name="content_description_evergreen_logo">Evergreen Logo</string>
     <string name="evergreen_welcome_image">variedad de materiales reciclables sujetos por manos</string>
+    <string name="buttonSignOut">Cerrar sesión</string>
 </resources>

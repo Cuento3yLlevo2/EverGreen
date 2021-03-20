@@ -1,4 +1,4 @@
-package com.mahi.evergreen.ui.activities
+package com.mahi.evergreen.view.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -13,7 +13,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.mahi.evergreen.MainActivity2
 import com.mahi.evergreen.R
 
 class LoginActivity : AppCompatActivity() {
