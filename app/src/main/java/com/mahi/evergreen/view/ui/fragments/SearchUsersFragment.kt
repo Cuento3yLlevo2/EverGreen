@@ -1,6 +1,8 @@
 package com.mahi.evergreen.view.ui.fragments
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -33,17 +35,34 @@ class SearchUsersFragment : Fragment(), UsersListener {
         return view
     }
 
+    @ExperimentalStdlibApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProvider(this).get(UsersViewModel::class.java)
-        viewModel.refresh()
+
+        viewModel.refreshUsersList(null)
 
         usersAdapter = UsersAdapter(this)
         binding.rvUsers.apply {
             layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
             adapter = usersAdapter
         }
+
+        binding.etSearchUsers.addTextChangedListener(object: TextWatcher{
+            override fun beforeTextChanged(keyword: CharSequence?, start: Int, count: Int, after: Int) {
+                // do nothing
+            }
+
+            override fun onTextChanged(keyword: CharSequence?, start: Int, before: Int, count: Int) {
+                viewModel.refreshUsersList(keyword)
+            }
+
+            override fun afterTextChanged(keyword: Editable?) {
+                // do nothing
+            }
+        })
+
 
         observeViewModel()
 

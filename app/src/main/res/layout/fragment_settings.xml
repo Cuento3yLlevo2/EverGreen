@@ -3,20 +3,73 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="30dp"
     tools:context=".view.ui.fragments.SettingsFragment">
 
-    <TextView
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvSettings1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <ImageView
+                android:id="@+id/ivSettingsCoverImage"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:src="@drawable/profile_cover_default"
+                android:scaleType="centerCrop"
+                android:contentDescription="@string/cd_profile_cover_image" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/ivSettingsProfileImage"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="120dp"
+                android:src="@drawable/user_default"
+                />
+
+            <TextView
+                android:id="@+id/tvSettingsUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                tools:text= "Username"
+                android:layout_below="@id/ivSettingsProfileImage"
+                android:layout_marginTop="15dp"
+                android:textColor="@color/primary_text"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="20dp"
+                />
+
+        </RelativeLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+    <RelativeLayout
+        android:id="@+id/rlSettings"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Account Settings"
-        android:textSize="30dp"
-        android:gravity="center"/>
+        >
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sing out"
-        android:layout_centerInParent="true"
-        android:gravity="center"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:alpha="0.4"/>
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            />
+    </RelativeLayout>
+
 
 </RelativeLayout>
