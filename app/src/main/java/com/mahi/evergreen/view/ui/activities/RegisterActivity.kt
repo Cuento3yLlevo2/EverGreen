@@ -114,7 +114,9 @@ class RegisterActivity : AppCompatActivity() {
                 defaultProfileImage,
                 defaultCoverImage,
                 "offline",
-                username.toLowerCase(Locale.ROOT))
+                username.toLowerCase(Locale.ROOT),
+                userId
+        )
         Log.w("FireBaseLogs", "Start Writing $userId")
 
         dbReference = database.reference

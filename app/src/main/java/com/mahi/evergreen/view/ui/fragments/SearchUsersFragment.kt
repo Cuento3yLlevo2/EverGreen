@@ -1,5 +1,8 @@
 package com.mahi.evergreen.view.ui.fragments
 
+import android.app.AlertDialog
+import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -14,6 +17,7 @@ import com.mahi.evergreen.databinding.FragmentSearchUsersBinding
 import com.mahi.evergreen.model.User
 import com.mahi.evergreen.view.adapter.UsersAdapter
 import com.mahi.evergreen.view.adapter.UsersListener
+import com.mahi.evergreen.view.ui.activities.MessageChatActivity
 import com.mahi.evergreen.viewmodel.UsersViewModel
 
 
@@ -81,6 +85,22 @@ class SearchUsersFragment : Fragment(), UsersListener {
 
     override fun onUserClicked(user: User, position: Int) {
         Toast.makeText(context, "User Clicked", Toast.LENGTH_LONG).show()
+        val options = arrayOf<CharSequence>("Send Message", "Visit Profile")
+        val builder : AlertDialog.Builder = AlertDialog.Builder(context)
+        builder.setTitle("What do you want?")
+        builder.setItems(options) { dialog, which ->
+            when (which) {
+                0 -> {
+                    val intent = Intent(context, MessageChatActivity::class.java)
+                    intent.putExtra("visit_user_id", user.userID)
+                    startActivity(intent)
+                }
+                1 -> {
+                    Toast.makeText(context, "TODO", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+        builder.show()
     }
 
     override fun onDestroyView() {

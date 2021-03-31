@@ -42,6 +42,8 @@ class UsersAdapter(val usersListener: UsersListener) : RecyclerView.Adapter<User
             usersListener.onUserClicked(user, position)
         }
 
+
+
     }
 
     override fun getItemCount() = listUsers.size
