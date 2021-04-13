@@ -3,7 +3,6 @@ package com.mahi.evergreen.network
 import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Color
-import android.net.Uri
 import android.util.Log
 import android.view.Gravity
 import android.view.ViewGroup
@@ -11,7 +10,6 @@ import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -19,12 +17,12 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.StorageTask
-import com.google.firebase.storage.UploadTask
+import com.mahi.evergreen.model.Chat
 import com.mahi.evergreen.model.User
-import com.mahi.evergreen.view.ui.fragments.SettingsFragment
 
-const val USERS_REFERENCE = "/users"
+const val USERS_REFERENCE = "users"
+const val CHATS_REFERENCE = "chats"
+const val CHAT_LISTS_REFERENCE = "chatList"
 
 class FirebaseDatabaseService {
     val database = Firebase.database("https://evergreen-app-bdbc2-default-rtdb.europe-west1.firebasedatabase.app")
@@ -81,6 +79,35 @@ class FirebaseDatabaseService {
                 }
     }
 
+    fun getChatsFromDatabase(currentUserID: String, visitedUserID: String, visitedUserProfileImage: String, callback: Callback<List<Chat>>) {
+
+        database.getReference(CHATS_REFERENCE)
+                .addValueEventListener(object : ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        var chatList = ArrayList<Chat>()
+                        for (child in snapshot.children) {
+                            val chat = child.getValue(Chat::class.java)
+                            if (chat != null) {
+                                var chatsFromCurrentUserToVisitedUser = false
+                                if (chat.sender.equals(currentUserID) && chat.receiver.equals(visitedUserID))
+                                    chatsFromCurrentUserToVisitedUser = true
+                                var chatsFromVisitedUserToCurrentUser = false
+                                if (chat.sender.equals(visitedUserID) && chat.receiver.equals(currentUserID))
+                                    chatsFromVisitedUserToCurrentUser = true
+
+                                if (chatsFromCurrentUserToVisitedUser || chatsFromVisitedUserToCurrentUser) {
+                                    chatList.add(chat)
+                                }
+                            }
+                        }
+                        callback.onSuccess(chatList)
+                    }
+                    override fun onCancelled(error: DatabaseError) {
+                        Log.w("Data reading failure", "Error getting documents.", error.toException())
+                    }
+                })
+    }
+
     fun setProgressDialogWhenDataLoading(context: Context, message:String): AlertDialog {
         val llPadding = 30
         val ll = LinearLayout(context)
@@ -125,5 +152,7 @@ class FirebaseDatabaseService {
         }
         return dialog
     }
+
+
 
 }

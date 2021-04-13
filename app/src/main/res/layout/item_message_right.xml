@@ -6,7 +6,7 @@
     android:layout_alignParentEnd="true">
 
     <TextView
-        android:id="@+id/right_show_text_message"
+        android:id="@+id/tvRightTextMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -17,18 +17,18 @@
         android:textColor="@color/primary_text"/>
 
     <ImageView
-        android:id="@+id/right_image_view"
+        android:id="@+id/ivRightImageMessage"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_alignParentEnd="true"
         android:visibility="gone"/>
 
     <TextView
-        android:id="@+id/text_seen"
+        android:id="@+id/tvRightIsTextSeen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:text="seen"
-        android:layout_below="@id/right_show_text_message"/>
+        android:layout_below="@id/tvRightTextMessage"/>
 
 </RelativeLayout>

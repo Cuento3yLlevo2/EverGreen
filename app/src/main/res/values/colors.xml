@@ -17,4 +17,5 @@
     <color name="secondary_text">#62646a</color>
     <color name="icons">#4a73e8</color>
     <color name="divider">#ff62ad</color>
+    <color name="chat_background_light_green">#CEDCCE</color>
 </resources>

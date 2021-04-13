@@ -4,16 +4,16 @@
     android:padding="9dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profile_image"
+        android:id="@+id/civLeftProfileImage"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:src="@drawable/user_default"/>
 
     <TextView
-        android:id="@+id/left_show_text_message"
+        android:id="@+id/tvLeftTextMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/profile_image"
+        android:layout_toEndOf="@id/civLeftProfileImage"
         android:layout_marginStart="6dp"
         android:text="there is some text"
         android:textSize="18sp"
@@ -22,18 +22,18 @@
         android:textColor="@color/primary_text"/>
 
     <ImageView
-        android:id="@+id/left_image_view"
+        android:id="@+id/ivLeftImageMessage"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_toEndOf="@id/profile_image"
+        android:layout_toEndOf="@id/civLeftProfileImage"
         android:layout_marginStart="6dp"
         android:visibility="gone"/>
 
     <TextView
-        android:id="@+id/text_seen"
+        android:id="@+id/tvLeftIsTextSeen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="seen"
-        android:layout_below="@id/left_show_text_message"/>
+        android:layout_below="@id/tvLeftTextMessage"/>
 
 </RelativeLayout>
