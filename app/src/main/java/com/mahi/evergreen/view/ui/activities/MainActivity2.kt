@@ -19,7 +19,7 @@ import com.mahi.evergreen.R
 import com.mahi.evergreen.model.User
 import com.mahi.evergreen.network.FirebaseDatabaseService
 import com.mahi.evergreen.network.USERS_REFERENCE
-import com.mahi.evergreen.view.ui.fragments.ChatsFragment
+import com.mahi.evergreen.view.ui.fragments.ChatListFragment
 import com.mahi.evergreen.view.ui.fragments.SearchUsersFragment
 import com.mahi.evergreen.view.ui.fragments.SettingsFragment
 import com.squareup.picasso.Picasso
@@ -49,7 +49,7 @@ class MainActivity2 : AppCompatActivity() {
         val tabLayout: TabLayout = findViewById(R.id.tlMainTabLayout)
         val viewPager: ViewPager = findViewById(R.id.vpMainViewPager)
         val viewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
-        viewPagerAdapter.addFragment(ChatsFragment(), "Chats")
+        viewPagerAdapter.addFragment(ChatListFragment(), "Chats")
         viewPagerAdapter.addFragment(SearchUsersFragment(), "Search")
         viewPagerAdapter.addFragment(SettingsFragment(), "Settings")
         viewPager.adapter = viewPagerAdapter

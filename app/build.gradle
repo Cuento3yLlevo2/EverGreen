@@ -74,7 +74,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage-ktx'
     // Firebase realtime database service
     implementation 'com.google.firebase:firebase-database-ktx'
-    // Firebase massaging service
+    // Firebase messaging service
     implementation 'com.google.firebase:firebase-messaging-ktx'
 
     // EXTERNAL DEPENDENCIES

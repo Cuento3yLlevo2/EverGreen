@@ -17,7 +17,9 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.mahi.evergreen.model.Chat
+import com.mahi.evergreen.model.ChatList
+import com.mahi.evergreen.model.ChatListItem
+import com.mahi.evergreen.model.ChatMessageItem
 import com.mahi.evergreen.model.User
 
 const val USERS_REFERENCE = "users"
@@ -79,14 +81,14 @@ class FirebaseDatabaseService {
                 }
     }
 
-    fun getChatsFromDatabase(currentUserID: String, visitedUserID: String, visitedUserProfileImage: String, callback: Callback<List<Chat>>) {
+    fun getChatMessageItemsFromDatabase(currentUserID: String, visitedUserID: String, visitedUserProfileImage: String, callback: Callback<List<ChatMessageItem>>) {
 
         database.getReference(CHATS_REFERENCE)
                 .addValueEventListener(object : ValueEventListener{
                     override fun onDataChange(snapshot: DataSnapshot) {
-                        var chatList = ArrayList<Chat>()
+                        var chatList = ArrayList<ChatMessageItem>()
                         for (child in snapshot.children) {
-                            val chat = child.getValue(Chat::class.java)
+                            val chat = child.getValue(ChatMessageItem::class.java)
                             if (chat != null) {
                                 var chatsFromCurrentUserToVisitedUser = false
                                 if (chat.sender.equals(currentUserID) && chat.receiver.equals(visitedUserID))
@@ -106,6 +108,45 @@ class FirebaseDatabaseService {
                         Log.w("Data reading failure", "Error getting documents.", error.toException())
                     }
                 })
+    }
+
+    fun getChatListFromDatabase(currentUserID: String?, callback: Callback<List<ChatListItem>>) {
+        var chatListReference = ArrayList<ChatList>()
+        database.getReference(CHAT_LISTS_REFERENCE)
+                .get()
+                .addOnSuccessListener { result ->
+                    for (child in result.children) {
+                        if (child.key.equals(currentUserID)){
+                            for (children in child.children) {
+                                children.getValue(ChatList::class.java)?.let { chatListReference.add(it) }
+                            }
+                        }
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.w("Data reading failure", "Error getting documents.", exception)
+                }
+
+        var listOfChatListItems = ArrayList<ChatListItem>()
+        database.getReference(USERS_REFERENCE)
+                .get()
+                .addOnSuccessListener { result ->
+                    for (child in result.children) {
+
+                        if (child.key?.equals(currentUserID) == false) {
+                            val user = child.getValue(User::class.java)
+
+                            for (eachChatList in listOfChatListItems) {
+
+                            }
+                        }
+                    }
+                    // callback.onSuccess(listOfChatListItems)
+                }
+                .addOnFailureListener { exception ->
+                    Log.w("Data reading failure", "Error getting documents.", exception)
+                }
+
     }
 
     fun setProgressDialogWhenDataLoading(context: Context, message:String): AlertDialog {
@@ -152,6 +193,7 @@ class FirebaseDatabaseService {
         }
         return dialog
     }
+
 
 
 

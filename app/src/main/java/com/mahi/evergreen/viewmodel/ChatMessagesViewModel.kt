@@ -2,33 +2,33 @@ package com.mahi.evergreen.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mahi.evergreen.model.Chat
+import com.mahi.evergreen.model.ChatMessageItem
 import com.mahi.evergreen.network.Callback
 import com.mahi.evergreen.network.FirebaseDatabaseService
 import java.lang.Exception
 
-class ChatsViewModel: ViewModel() {
+class ChatMessagesViewModel: ViewModel() {
 
     val firestoreService = FirebaseDatabaseService()
-    var listChats: MutableLiveData<List<Chat>> = MutableLiveData()
+    var listOfChatMessages: MutableLiveData<List<ChatMessageItem>> = MutableLiveData()
     var isLoading = MutableLiveData<Boolean>()
 
-    fun refreshChatList(currentUserID: String?, visitedUserID: String, visitedUserProfileImage: String?) {
+    fun refreshChatMessages(currentUserID: String?, visitedUserID: String, visitedUserProfileImage: String?) {
         if (currentUserID != null && visitedUserProfileImage != null){
-            getChatsFromFirebase(currentUserID, visitedUserID, visitedUserProfileImage)
+            getChatMessagesFromFirebase(currentUserID, visitedUserID, visitedUserProfileImage)
         }
     }
 
-    fun getChatsFromFirebase(currentUserID: String, visitedUserID: String, visitedUserProfileImage: String) {
-        firestoreService.getChatsFromDatabase(
+    fun getChatMessagesFromFirebase(currentUserID: String, visitedUserID: String, visitedUserProfileImage: String) {
+        firestoreService.getChatMessageItemsFromDatabase(
                 currentUserID,
                 visitedUserID,
                 visitedUserProfileImage,
-                object: Callback<List<Chat>>
+                object: Callback<List<ChatMessageItem>>
 
                 {
-                    override fun onSuccess(result: List<Chat>?) {
-                        listChats.postValue(result)
+                    override fun onSuccess(result: List<ChatMessageItem>?) {
+                        listOfChatMessages.postValue(result)
                         processFinished()
                     }
 

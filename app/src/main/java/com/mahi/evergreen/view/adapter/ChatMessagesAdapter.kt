@@ -12,12 +12,12 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.mahi.evergreen.R
-import com.mahi.evergreen.model.Chat
+import com.mahi.evergreen.model.ChatMessageItem
 import de.hdodenhof.circleimageview.CircleImageView
 
-class ChatsAdapter(val chatsListener: ChatsListener, val profileImageUrl: String) : RecyclerView.Adapter<ChatsAdapter.ViewHolder>() {
+class ChatMessagesAdapter(val chatMessagesListener: ChatMessagesListener, val profileImageUrl: String) : RecyclerView.Adapter<ChatMessagesAdapter.ViewHolder>() {
 
-    var listChats = ArrayList<Chat>()
+    var listChats = ArrayList<ChatMessageItem>()
     val rightMessageItem: Int = 1
     val leftMessageItem: Int = 0
     var firebaseUser = Firebase.auth.currentUser
@@ -126,7 +126,7 @@ class ChatsAdapter(val chatsListener: ChatsListener, val profileImageUrl: String
 
 
         holder.itemView.setOnClickListener {
-            chatsListener.onChatClicked(chat, position)
+            chatMessagesListener.onChatClicked(chat, position)
         }
 
     }
@@ -138,9 +138,9 @@ class ChatsAdapter(val chatsListener: ChatsListener, val profileImageUrl: String
 
     override fun getItemCount() = listChats.size
 
-    fun updateData(chats: List<Chat>) {
+    fun updateData(chatMessageItems: List<ChatMessageItem>) {
         listChats.clear()
-        for (chat in chats) {
+        for (chat in chatMessageItems) {
             listChats.add(chat)
         }
         // listChats.addAll(data)

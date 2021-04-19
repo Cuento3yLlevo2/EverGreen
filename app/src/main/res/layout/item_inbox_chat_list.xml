@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
@@ -17,6 +18,7 @@
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/ivChatPostImage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:src="@mipmap/ic_launcher"
@@ -32,7 +34,7 @@
             android:paddingTop="8dp">
 
             <TextView
-                android:id="@+id/tviMessageUserName"
+                android:id="@+id/tvChatUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Idaira"
@@ -41,7 +43,7 @@
                 android:ellipsize="end"
                 android:lines="1"/>
             <TextView
-                android:id="@+id/tviMessageTitle"
+                android:id="@+id/tvChatPostTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Vasos de botellas cortadas"
@@ -52,7 +54,7 @@
                 android:textStyle="bold"/>
             <TextView
                 android:paddingStart="8dp"
-                android:id="@+id/tviLastMessage"
+                android:id="@+id/tvChatLastMessage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Quiero 12 vasos para regalar a mi primo, puedo reutilizar mis botellas de vino vacías?"
@@ -60,9 +62,8 @@
                 android:textColor="@color/secondary_text"
                 android:ellipsize="end"
                 android:lines="1"
-                android:drawableLeft="@drawable/check_circle"
                 android:drawablePadding="4dp"
-                />
+                app:drawableStartCompat="@drawable/check_circle" />
         </LinearLayout>
     </LinearLayout>
 

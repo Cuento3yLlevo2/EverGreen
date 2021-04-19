@@ -1,16 +1,13 @@
 package com.mahi.evergreen.view.ui.activities
 
-import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
-import androidx.core.view.size
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,18 +24,18 @@ import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
 import com.google.firebase.storage.ktx.storage
 import com.mahi.evergreen.databinding.ActivityMessageChatBinding
-import com.mahi.evergreen.model.Chat
+import com.mahi.evergreen.model.ChatMessageItem
 import com.mahi.evergreen.model.User
 import com.mahi.evergreen.network.FirebaseDatabaseService
-import com.mahi.evergreen.view.adapter.ChatsAdapter
-import com.mahi.evergreen.view.adapter.ChatsListener
-import com.mahi.evergreen.viewmodel.ChatsViewModel
+import com.mahi.evergreen.view.adapter.ChatMessagesAdapter
+import com.mahi.evergreen.view.adapter.ChatMessagesListener
+import com.mahi.evergreen.viewmodel.ChatMessagesViewModel
 import com.squareup.picasso.Picasso
 
-class MessageChatActivity : AppCompatActivity(), ChatsListener {
+class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
 
-    private lateinit var chatsAdapter: ChatsAdapter
-    private lateinit var viewModel: ChatsViewModel
+    private lateinit var chatMessagesAdapter: ChatMessagesAdapter
+    private lateinit var viewModel: ChatMessagesViewModel
 
     private lateinit var binding: ActivityMessageChatBinding
     private var userIDVisited: String = ""
@@ -60,7 +57,7 @@ class MessageChatActivity : AppCompatActivity(), ChatsListener {
         // retrieve from Firebase.auth the current user UID
         firebaseUser = Firebase.auth.currentUser
 
-        viewModel = ViewModelProvider(this).get(ChatsViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(ChatMessagesViewModel::class.java)
 
 
         // Display Chat List for Layout
@@ -71,15 +68,15 @@ class MessageChatActivity : AppCompatActivity(), ChatsListener {
                 if (visitedUserData?.profileImage != null) {
                     Picasso.get().load(visitedUserData.profileImage).into(binding.ivVisitedProfileImage)
 
-                    viewModel.refreshChatList(firebaseUser?.uid, userIDVisited, visitedUserData.profileImage)
+                    viewModel.refreshChatMessages(firebaseUser?.uid, userIDVisited, visitedUserData.profileImage)
 
-                    chatsAdapter = ChatsAdapter(this@MessageChatActivity, visitedUserData.profileImage)
+                    chatMessagesAdapter = ChatMessagesAdapter(this@MessageChatActivity, visitedUserData.profileImage)
 
                     binding.rvMessageChats.apply {
                         val linearLayoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
                         linearLayoutManager.stackFromEnd = true
                         layoutManager = linearLayoutManager
-                        adapter = chatsAdapter
+                        adapter = chatMessagesAdapter
                         setHasFixedSize(true)
                     }
 
@@ -124,9 +121,9 @@ class MessageChatActivity : AppCompatActivity(), ChatsListener {
             Toast.makeText(this@MessageChatActivity, "El campo de texto esta vació!", Toast.LENGTH_LONG).show()
         } else {
             val messageKey = reference.push().key
-            val chat: Chat = Chat(senderID, message, receiverID, false, "", messageKey)
+            val chatMessageItem: ChatMessageItem = ChatMessageItem(senderID, message, receiverID, false, "", messageKey)
             if (messageKey != null && senderID != null) {
-                reference.child("chats").child(messageKey).setValue(chat).addOnCompleteListener { task ->
+                reference.child("chats").child(messageKey).setValue(chatMessageItem).addOnCompleteListener { task ->
                     if (task.isSuccessful){
                         createChatsRefereces(senderID)
                     }
@@ -180,7 +177,7 @@ class MessageChatActivity : AppCompatActivity(), ChatsListener {
                         val url = downloadUri.toString()
                         val senderID = firebaseUser?.uid
 
-                        val chat: Chat = Chat(senderID,
+                        val chatMessageItem: ChatMessageItem = ChatMessageItem(senderID,
                                 "sent you an image.",
                                 userIDVisited,
                                 false,
@@ -190,7 +187,7 @@ class MessageChatActivity : AppCompatActivity(), ChatsListener {
                         if (messageID != null && senderID != null) {
                             reference.child("chats")
                                     .child(messageID)
-                                    .setValue(chat)
+                                    .setValue(chatMessageItem)
                                     .addOnCompleteListener { task ->
                                 if (task.isSuccessful){
                                     createChatsRefereces(senderID)
@@ -232,14 +229,14 @@ class MessageChatActivity : AppCompatActivity(), ChatsListener {
         })
     }
 
-    override fun onChatClicked(chat: Chat, position: Int) {
+    override fun onChatClicked(chatMessageItem: ChatMessageItem, position: Int) {
         // what happen if a chat is clicked
     }
 
     override fun observeViewModel() {
-        viewModel.listChats.observe(this, Observer<List<Chat>> {chat ->
-            chatsAdapter.updateData(chat)
-            binding.rvMessageChats.smoothScrollToPosition(chatsAdapter.listChats.size)
+        viewModel.listOfChatMessages.observe(this, Observer<List<ChatMessageItem>> { chat ->
+            chatMessagesAdapter.updateData(chat)
+            binding.rvMessageChats.smoothScrollToPosition(chatMessagesAdapter.listChats.size)
         })
 
         viewModel.isLoading.observe(this, Observer<Boolean> {
