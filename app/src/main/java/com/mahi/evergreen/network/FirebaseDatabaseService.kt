@@ -17,14 +17,15 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.mahi.evergreen.model.ChatList
-import com.mahi.evergreen.model.ChatListItem
-import com.mahi.evergreen.model.ChatMessageItem
-import com.mahi.evergreen.model.User
+import com.mahi.evergreen.model.*
+import java.util.*
+import kotlin.collections.ArrayList
 
-const val USERS_REFERENCE = "users"
-const val CHATS_REFERENCE = "chats"
-const val CHAT_LISTS_REFERENCE = "chatList"
+const val USERS = "users"
+const val CHATS = "chats"
+const val CHAT_MESSAGES = "chatMessages"
+const val CHAT_MEMBERS = "chatMembers"
+// const val POSTS = "posts"
 
 class FirebaseDatabaseService {
     val database = Firebase.database("https://evergreen-app-bdbc2-default-rtdb.europe-west1.firebasedatabase.app")
@@ -33,16 +34,116 @@ class FirebaseDatabaseService {
         // database.setPersistenceEnabled(true)
     }
 
+    // Write to Realtime Database
+
+    fun writeNewUser(userId: String, username: String, email: String, callback: Callback<Boolean>) {
+        val defaultProfileImage = "https://firebasestorage.googleapis.com/v0/b/evergreen-app-bdbc2.appspot.com/o/user_default.png?alt=media&token=53382a72-8fc1-4a11-b63f-0cb342bb02c6"
+        val defaultCoverImage = "https://firebasestorage.googleapis.com/v0/b/evergreen-app-bdbc2.appspot.com/o/profile_cover_default.jpg?alt=media&token=07a0cfd5-a6df-4877-8ea6-8e0ecc2d98fb"
+        val createdAt = System.currentTimeMillis()
+        val userProfile = UserProfile(
+                username,
+                email,
+                defaultProfileImage,
+                defaultCoverImage,
+        )
+
+        val user = User(
+                userId,
+                userProfile,
+                username.toLowerCase(Locale.ROOT),
+                false,
+                createdAt
+        )
+
+        database.reference.child(USERS).child(userId).setValue(user)
+                .addOnSuccessListener {
+                    // Write was successful!
+                        Log.w("FireBaseLogs", "Write was successful")
+                    callback.onSuccess(true)
+                }
+                .addOnFailureListener {
+                     // Write failed
+                        Log.w("FireBaseLogs", "Write failed")
+                }
+    }
+
+    fun writeNewChat(senderID: String, receiverID: String, callback: Callback<String>) {
+        var chatID = ""
+        val currentTime = System.currentTimeMillis()
+        val chatKey = database.reference.push().key
+        if (chatKey != null) {
+
+            val chat = Chat("postID", "PostTitle", "PostImage", null, false, currentTime, chatKey)
+            val chatMembers = ChatMembers(chatKey, hashMapOf(senderID to true, receiverID to true))
+            database.reference.child(CHATS).child(chatKey).setValue(chat).addOnCompleteListener { task ->
+                if (task.isSuccessful){
+                    database.reference.child(CHAT_MEMBERS).child(chatKey).setValue(chatMembers).addOnCompleteListener {
+                        task2 ->
+                        if (task2.isSuccessful){
+                            chatID = chatKey
+                            callback.onSuccess(chatID)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun writeNewMessage(senderID: String?, chatKey: String, message: String, url: String) {
+        val currentTime = System.currentTimeMillis()
+        val messageKey = database.reference.child(CHAT_MESSAGES).child(chatKey).push().key
+        val chatMessage = ChatMessage(messageKey, senderID, message, url, false, currentTime)
+        if (messageKey != null) {
+            database.reference.child(CHAT_MESSAGES)
+                    .child(chatKey)
+                    .child(messageKey)
+                    .setValue(chatMessage)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                        Log.d("WriteData", "Message creation successful")
+                        }
+                    }
+        }
+    }
+
+
+
+    // Read From Realtime Database
+
+
+    fun usernameAlreadyExists(newUsername: String, callback: Callback<Boolean>) {
+        database.getReference(USERS)
+                .get()
+                .addOnSuccessListener { result ->
+                    var exists = false
+                    for (child in result.children) {
+                        Log.d("Data reading success", "${child.key} => ${child.value}")
+                        val user = child.getValue(User::class.java)
+                        if (user != null) {
+                            Log.d("Data reading success 2", "$newUsername => ${user.search}")
+                            if (user.search.equals(newUsername, true)) {
+                                exists = true
+                            }
+                        }
+                    }
+                    Log.d("Data reading success 3", "$exists")
+                    callback.onSuccess(exists)
+                }
+                .addOnFailureListener { exception ->
+                    Log.w("Data reading failure", "Error getting documents.", exception)
+                }
+    }
+
     fun getDatabaseUsersReference(): DatabaseReference {
-        database.getReference(USERS_REFERENCE)
-        return database.getReference(USERS_REFERENCE)
+        database.getReference(USERS)
+        return database.getReference(USERS)
     }
 
     fun getUsersExcludingCurrent(firebaseUser: FirebaseUser?, callback: Callback<List<User>>){
-        database.getReference(USERS_REFERENCE)
+        database.getReference(USERS)
                 .get()
                 .addOnSuccessListener { result ->
-                    var userList = ArrayList<User>()
+                    val userList = ArrayList<User>()
                     for (child in result.children) {
                         Log.d("Data reading success", "${child.key} => ${child.value}")
                         if (firebaseUser != null) {
@@ -59,13 +160,13 @@ class FirebaseDatabaseService {
     }
 
     fun getUsersQuery(keyword: String, firebaseUser: FirebaseUser?, callback: Callback<List<User>>) {
-        database.getReference(USERS_REFERENCE)
+        database.getReference(USERS)
                 .orderByChild("search")
                 .startAt(keyword)
                 .endAt(keyword + "\uf8ff")
                 .get()
                 .addOnSuccessListener { result ->
-                    var userList = ArrayList<User>()
+                    val userList = ArrayList<User>()
                     for (child in result.children) {
                         Log.d("Data reading success", "${child.key} => ${child.value}")
                         if (firebaseUser != null) {
@@ -81,25 +182,18 @@ class FirebaseDatabaseService {
                 }
     }
 
-    fun getChatMessageItemsFromDatabase(currentUserID: String, visitedUserID: String, visitedUserProfileImage: String, callback: Callback<List<ChatMessageItem>>) {
-
-        database.getReference(CHATS_REFERENCE)
+    fun getChatMessageItemsFromDatabase(chatID: String, callback: Callback<List<ChatMessage>>) {
+        Log.d("ccccData", "El Chat ID es ->>>>>>>>>>>> $chatID")
+        database.getReference(CHAT_MESSAGES)
+                .child(chatID)
+                .orderByChild("timestamp")
                 .addValueEventListener(object : ValueEventListener{
                     override fun onDataChange(snapshot: DataSnapshot) {
-                        var chatList = ArrayList<ChatMessageItem>()
+                        val chatList = ArrayList<ChatMessage>()
                         for (child in snapshot.children) {
-                            val chat = child.getValue(ChatMessageItem::class.java)
-                            if (chat != null) {
-                                var chatsFromCurrentUserToVisitedUser = false
-                                if (chat.sender.equals(currentUserID) && chat.receiver.equals(visitedUserID))
-                                    chatsFromCurrentUserToVisitedUser = true
-                                var chatsFromVisitedUserToCurrentUser = false
-                                if (chat.sender.equals(visitedUserID) && chat.receiver.equals(currentUserID))
-                                    chatsFromVisitedUserToCurrentUser = true
-
-                                if (chatsFromCurrentUserToVisitedUser || chatsFromVisitedUserToCurrentUser) {
-                                    chatList.add(chat)
-                                }
+                            val chatMessage = child.getValue(ChatMessage::class.java)
+                            if (chatMessage != null) {
+                                chatList.add(chatMessage)
                             }
                         }
                         callback.onSuccess(chatList)
@@ -110,9 +204,9 @@ class FirebaseDatabaseService {
                 })
     }
 
-    fun getChatListFromDatabase(currentUserID: String?, callback: Callback<List<ChatListItem>>) {
+    /* fun getChatListFromDatabase(currentUserID: String?, callback: Callback<List<ChatListItem>>) {
         var chatListReference = ArrayList<ChatList>()
-        database.getReference(CHAT_LISTS_REFERENCE)
+        database.getReference(CHAT_MEMBERS)
                 .get()
                 .addOnSuccessListener { result ->
                     for (child in result.children) {
@@ -128,7 +222,7 @@ class FirebaseDatabaseService {
                 }
 
         var listOfChatListItems = ArrayList<ChatListItem>()
-        database.getReference(USERS_REFERENCE)
+        database.getReference(USERS)
                 .get()
                 .addOnSuccessListener { result ->
                     for (child in result.children) {
@@ -147,7 +241,98 @@ class FirebaseDatabaseService {
                     Log.w("Data reading failure", "Error getting documents.", exception)
                 }
 
+    }*/
+
+    fun getChatIDFromDatabase(currentUserID: String, visitedUserID: String, callback: Callback<String>) {
+        var chatID = ""
+        database.getReference(CHAT_MEMBERS)
+                .get()
+                .addOnSuccessListener { result ->
+                    for (child in result.children) {
+                        val chatMembers : ChatMembers? = child.getValue(ChatMembers::class.java)
+                        if (chatMembers != null) {
+                            if(chatMembers.members == hashMapOf(currentUserID to true, visitedUserID to true)){
+                                chatID = chatMembers.chatID.toString()
+                            } else if (chatMembers.members == hashMapOf(visitedUserID to true, currentUserID to true)) {
+                                chatID = chatMembers.chatID.toString()
+                            }
+                        }
+                    }
+                    Log.d("cccc1", "El Chat ID es ->>>>>>>>>>>> $chatID")
+                    callback.onSuccess(chatID)
+                }
+                .addOnFailureListener { exception ->
+                    Log.w("Data reading failure", "Error getting documents.", exception)
+                }
     }
+
+    fun getChatUsername(chatID: String, currentUserID: String): String {
+        var chatUsername = ""
+        database.getReference(CHAT_MEMBERS).child(chatID)
+                .get()
+                .addOnSuccessListener { result ->
+                    val chatMembers : ChatMembers? = result.getValue(ChatMembers::class.java)
+                    if (chatMembers != null) {
+                        for (member in chatMembers.members){
+                            if (member.key != currentUserID){
+                                chatUsername = member.key
+                            }
+                        }
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.w("Data reading failure", "Error getting documents.", exception)
+                }
+        return chatUsername
+    }
+
+    fun getChatListFromDatabase(currentUserID: String, callback: Callback<List<Chat>>){
+        val chatRefList = ArrayList<String>()
+        database.getReference(CHAT_MEMBERS)
+                .addValueEventListener(object : ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        for (child in snapshot.children) {
+                            val chatMembers = child.getValue(ChatMembers::class.java)
+                            if (chatMembers != null) {
+                                for (member in chatMembers.members){
+                                    if (member.key == currentUserID){
+                                        chatMembers.chatID?.let { chatRefList.add(it) }
+                                        break
+                                    }
+                                }
+                            }
+                        }
+                        database.getReference(CHATS)
+                                .orderByChild("timestamp")
+                                .addValueEventListener(object : ValueEventListener{
+                                    override fun onDataChange(snapshot: DataSnapshot) {
+                                        val chatList = ArrayList<Chat>()
+                                        for (child in snapshot.children) {
+                                            val chat = child.getValue(Chat::class.java)
+                                            if (chat != null) {
+                                                for ((index, value) in chatRefList.withIndex()){
+                                                    if (chat.chatID.equals(value)){
+                                                        chatList.add(chat)
+                                                        chatRefList.removeAt(index)
+                                                        break
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        callback.onSuccess(chatList)
+                                    }
+                                    override fun onCancelled(error: DatabaseError) {
+                                        Log.w("Data reading failure", "Error getting documents.", error.toException())
+                                    }
+                                })
+                    }
+                    override fun onCancelled(error: DatabaseError) {
+                        Log.w("Data reading failure", "Error getting documents.", error.toException())
+                    }
+                })
+    }
+
+    // Extra Tools
 
     fun setProgressDialogWhenDataLoading(context: Context, message:String): AlertDialog {
         val llPadding = 30

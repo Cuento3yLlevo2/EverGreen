@@ -12,12 +12,12 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.mahi.evergreen.R
-import com.mahi.evergreen.model.ChatMessageItem
+import com.mahi.evergreen.model.ChatMessage
 import de.hdodenhof.circleimageview.CircleImageView
 
 class ChatMessagesAdapter(val chatMessagesListener: ChatMessagesListener, val profileImageUrl: String) : RecyclerView.Adapter<ChatMessagesAdapter.ViewHolder>() {
 
-    var listChats = ArrayList<ChatMessageItem>()
+    var listOfMessages = ArrayList<ChatMessage>()
     val rightMessageItem: Int = 1
     val leftMessageItem: Int = 0
     var firebaseUser = Firebase.auth.currentUser
@@ -41,7 +41,7 @@ class ChatMessagesAdapter(val chatMessagesListener: ChatMessagesListener, val pr
         // Avoids Recycling chats already download from database to be able to keep correct order on layout
         holder.setIsRecyclable(false)
 
-        val chat = listChats[position]
+        val message = listOfMessages[position]
 
         if (currentViewType != rightMessageItem){
             holder.civLeftProfileImage?.let {
@@ -53,17 +53,17 @@ class ChatMessagesAdapter(val chatMessagesListener: ChatMessagesListener, val pr
         }
 
         // If chat.url.isNullOrEmpty() && !chat.message.equals("sent you an image.") We know that the message sent is a Text message
-        if (chat.url.isNullOrEmpty() && !chat.message.equals("sent you an image.")){
+        if (message.url.isNullOrEmpty() && !message.message.equals("sent you an image.")){
             imageChatSent = false
             // Text message - Right side (Current user is the Sender)
-            if(chat.sender.equals(firebaseUser?.uid)){
-                holder.tvRightTextMessage.text = chat.message
+            if(message.sender.equals(firebaseUser?.uid)){
+                holder.tvRightTextMessage.text = message.message
 
             }
 
             // Text message - Left side
-            else if (!chat.sender.equals(firebaseUser?.uid)) {
-                holder.tvLeftTextMessage.text = chat.message
+            else if (!message.sender.equals(firebaseUser?.uid)) {
+                holder.tvLeftTextMessage.text = message.message
             }
 
         } else {
@@ -71,20 +71,20 @@ class ChatMessagesAdapter(val chatMessagesListener: ChatMessagesListener, val pr
             imageChatSent = true
 
             // Image message - Right side (Current user is the Sender)
-            if(chat.sender.equals(firebaseUser?.uid)){
+            if(message.sender.equals(firebaseUser?.uid)){
                 holder.tvRightTextMessage.visibility = View.GONE
                 Glide.with(holder.itemView.context) // contexto
-                        .load(chat.url) // donde esta la url de la imagen
+                        .load(message.url) // donde esta la url de la imagen
                         .placeholder(R.drawable.ic_baseline_image_24)
                         .into(holder.ivRightImageMessage) // donde la vamos a colocar
                 holder.ivRightImageMessage.visibility = View.VISIBLE
             }
 
             // Image message - Left side
-            else if (!chat.sender.equals(firebaseUser?.uid)) {
+            else if (!message.sender.equals(firebaseUser?.uid)) {
                 holder.tvLeftTextMessage.visibility = View.GONE
                 Glide.with(holder.itemView.context) // contexto
-                        .load(chat.url) // donde esta la url de la imagen
+                        .load(message.url) // donde esta la url de la imagen
                         .placeholder(R.drawable.ic_baseline_image_24)
                         .into(holder.ivLeftImageMessage) // donde la vamos a colocar
                 holder.ivLeftImageMessage.visibility = View.VISIBLE
@@ -92,9 +92,9 @@ class ChatMessagesAdapter(val chatMessagesListener: ChatMessagesListener, val pr
         }
 
         // sent and seen messages
-        if (position == listChats.size-1){
+        if (position == listOfMessages.size-1){
 
-            if (chat.isseen == true) {
+            if (message.isSeen == true) {
                 holder.tvLeftIsTextSeen?.let {
                     holder.tvLeftIsTextSeen.text = "Leído"
                     if (imageChatSent)
@@ -126,7 +126,7 @@ class ChatMessagesAdapter(val chatMessagesListener: ChatMessagesListener, val pr
 
 
         holder.itemView.setOnClickListener {
-            chatMessagesListener.onChatClicked(chat, position)
+            chatMessagesListener.onChatClicked(message, position)
         }
 
     }
@@ -136,12 +136,12 @@ class ChatMessagesAdapter(val chatMessagesListener: ChatMessagesListener, val pr
         return layoutParams
     }
 
-    override fun getItemCount() = listChats.size
+    override fun getItemCount() = listOfMessages.size
 
-    fun updateData(chatMessageItems: List<ChatMessageItem>) {
-        listChats.clear()
-        for (chat in chatMessageItems) {
-            listChats.add(chat)
+    fun updateData(chatMessageItems: List<ChatMessage>) {
+        listOfMessages.clear()
+        for (message in chatMessageItems) {
+            listOfMessages.add(message)
         }
         // listChats.addAll(data)
         notifyDataSetChanged()
@@ -161,7 +161,7 @@ class ChatMessagesAdapter(val chatMessagesListener: ChatMessagesListener, val pr
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (listChats[position].sender.equals(firebaseUser?.uid)) {
+        return if (listOfMessages[position].sender.equals(firebaseUser?.uid)) {
             1
         } else {
             0

@@ -1,18 +1,12 @@
 package com.mahi.evergreen.view.ui.fragments
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -29,6 +23,7 @@ import com.google.firebase.storage.UploadTask
 import com.google.firebase.storage.ktx.storage
 import com.mahi.evergreen.databinding.FragmentSettingsBinding
 import com.mahi.evergreen.model.User
+import com.mahi.evergreen.model.UserProfile
 import com.mahi.evergreen.network.FirebaseDatabaseService
 import com.mahi.evergreen.viewmodel.UsersViewModel
 import com.squareup.picasso.Picasso
@@ -54,10 +49,9 @@ class SettingsFragment : Fragment() {
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -73,9 +67,12 @@ class SettingsFragment : Fragment() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val user: User? = snapshot.getValue(User::class.java)
                 if (context!=null && user != null){
-                    binding.tvSettingsUsername.text = user.username
-                    Picasso.get().load(user.profileImage).into(binding.ivSettingsProfileImage)
-                    Glide.with(this@SettingsFragment).load(user.coverImage).into(binding.ivSettingsCoverImage)
+                    val userProfile: UserProfile? = user.profile
+                    if (userProfile!=null){
+                        binding.tvSettingsUsername.text = userProfile.username
+                        Picasso.get().load(userProfile.profileImage).into(binding.ivSettingsProfileImage)
+                        Glide.with(this@SettingsFragment).load(userProfile.coverImage).into(binding.ivSettingsCoverImage)
+                    }
                 }
             }
             override fun onCancelled(error: DatabaseError) {
@@ -117,7 +114,7 @@ class SettingsFragment : Fragment() {
 
         if (imageUri!=null){
             val fileRef = storageRef?.child(System.currentTimeMillis().toString() + ".jpg")
-            var uploadTask: StorageTask<*>
+            val uploadTask: StorageTask<*>
             if (fileRef != null) {
                 uploadTask = fileRef.putFile(imageUri!!)
                 uploadTask.continueWithTask(Continuation <UploadTask.TaskSnapshot, Task<Uri>>{ task ->
@@ -133,9 +130,9 @@ class SettingsFragment : Fragment() {
                         val downloadUri = task.result
                         val url = downloadUri.toString()
                         if (imageChecker == COVER_IMAGE){
-                            dataBaseUsersReference.child(userUid).updateChildren(hashMapOf<String, Any>("coverImage" to url))
+                            dataBaseUsersReference.child(userUid).child("profile").updateChildren(hashMapOf<String, Any>("coverImage" to url))
                         } else if (imageChecker == PROFILE_IMAGE){
-                            dataBaseUsersReference.child(userUid).updateChildren(hashMapOf<String, Any>("profileImage" to url))
+                            dataBaseUsersReference.child(userUid).child("profile").updateChildren(hashMapOf<String, Any>("profileImage" to url))
                         }
                         progressBar.dismiss()
                     }

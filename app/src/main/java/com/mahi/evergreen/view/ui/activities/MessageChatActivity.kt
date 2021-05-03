@@ -1,14 +1,12 @@
 package com.mahi.evergreen.view.ui.activities
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.lifecycle.Observer
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.tasks.Continuation
@@ -24,8 +22,7 @@ import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
 import com.google.firebase.storage.ktx.storage
 import com.mahi.evergreen.databinding.ActivityMessageChatBinding
-import com.mahi.evergreen.model.ChatMessageItem
-import com.mahi.evergreen.model.User
+import com.mahi.evergreen.model.*
 import com.mahi.evergreen.network.FirebaseDatabaseService
 import com.mahi.evergreen.view.adapter.ChatMessagesAdapter
 import com.mahi.evergreen.view.adapter.ChatMessagesListener
@@ -34,16 +31,15 @@ import com.squareup.picasso.Picasso
 
 class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
 
+    private lateinit var binding: ActivityMessageChatBinding
+
     private lateinit var chatMessagesAdapter: ChatMessagesAdapter
     private lateinit var viewModel: ChatMessagesViewModel
-
-    private lateinit var binding: ActivityMessageChatBinding
     private var userIDVisited: String = ""
     private var firebaseUser: FirebaseUser? = null
     private var firebaseDatabaseService = FirebaseDatabaseService()
-    val reference = firebaseDatabaseService.database.reference
-
-    val imageMessageRequestCode = 878
+    private val reference = firebaseDatabaseService.database.reference
+    private val imageMessageRequestCode = 878
     private var imageUri: Uri? = null
     private var storageRef: StorageReference? = null
 
@@ -59,18 +55,21 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
 
         viewModel = ViewModelProvider(this).get(ChatMessagesViewModel::class.java)
 
-
         // Display Chat List for Layout
         val visitedUserDbRef = reference.child("users").child(userIDVisited)
         visitedUserDbRef.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
+
                 val visitedUserData: User? = snapshot.getValue(User::class.java)
-                if (visitedUserData?.profileImage != null) {
-                    Picasso.get().load(visitedUserData.profileImage).into(binding.ivVisitedProfileImage)
+                if (visitedUserData?.profile?.profileImage != null) {
+                    Picasso.get().load(visitedUserData.profile?.profileImage).into(binding.ivVisitedProfileImage)
 
-                    viewModel.refreshChatMessages(firebaseUser?.uid, userIDVisited, visitedUserData.profileImage)
+                    firebaseUser?.uid?.let {
+                        viewModel.getChatIDAndRefreshChatMessages(it, userIDVisited)
+                        // viewModel.refreshChatMessages(viewModel.chatID)
+                    }
 
-                    chatMessagesAdapter = ChatMessagesAdapter(this@MessageChatActivity, visitedUserData.profileImage)
+                    chatMessagesAdapter = ChatMessagesAdapter(this@MessageChatActivity, visitedUserData.profile?.profileImage!!)
 
                     binding.rvMessageChats.apply {
                         val linearLayoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
@@ -79,7 +78,6 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
                         adapter = chatMessagesAdapter
                         setHasFixedSize(true)
                     }
-
                 }
             }
             override fun onCancelled(error: DatabaseError) {
@@ -91,7 +89,7 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
         // When Current User presses the SendMessageBtn the message will be sent to visited user's phone
         binding.ivSendMessageBtn.setOnClickListener {
             val message = binding.etTextMessage.text.toString()
-            sendMessageToUser(firebaseUser?.uid, userIDVisited, message)
+            sendMessageToUser(firebaseUser?.uid, message)
         }
 
         // When Current User presses the AttachImageBtn will appear an activity to ask for the image
@@ -116,22 +114,16 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
     /***
      * Sends texts message from current user to visited user and updates the database to get results on realtime
      */
-    private fun sendMessageToUser(senderID: String?, receiverID: String, message: String) {
+    private fun sendMessageToUser(senderID: String?, message: String) {
         if (message.isBlank()){
             Toast.makeText(this@MessageChatActivity, "El campo de texto esta vació!", Toast.LENGTH_LONG).show()
         } else {
-            val messageKey = reference.push().key
-            val chatMessageItem: ChatMessageItem = ChatMessageItem(senderID, message, receiverID, false, "", messageKey)
-            if (messageKey != null && senderID != null) {
-                reference.child("chats").child(messageKey).setValue(chatMessageItem).addOnCompleteListener { task ->
-                    if (task.isSuccessful){
-                        createChatsRefereces(senderID)
-                    }
-                }
-            }
+            Log.d("ccccMessage", "El Viewmodel Chat ID es ->>>>>>>>>>>> ${viewModel.chatID}")
+            viewModel.writeMessage(senderID, viewModel.chatID, message, "")
         }
         binding.etTextMessage.setText("")
     }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -140,7 +132,7 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
             // If the activity resulted on imageMessageRequestCode we now tha we need to retrieve an image URL from previous activity.
             if (requestCode == imageMessageRequestCode && resultCode == RESULT_OK && data.data != null){
                 imageUri = data.data
-                uploadImageToDatabase(this)
+                uploadImageToDatabase()
             }
         }
     }
@@ -149,17 +141,17 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
     /**
      * Retrieves the Attached image from Activity collecting the Image uri and saving URL on database
      */
-    private fun uploadImageToDatabase(context: Context) {
+    private fun uploadImageToDatabase() {
         val progressBar = firebaseDatabaseService.setProgressDialogWhenDataLoading(this, "La imagen se está enviando...")
         progressBar.show()
 
         if (imageUri!=null){
 
-            val messageID = reference.push().key
+            val imageID = reference.push().key
             storageRef = Firebase.storage.reference.child("Chat Images")
-            val fileRef = storageRef?.child("$messageID.jpg")
+            val fileRef = storageRef?.child("$imageID.jpg")
 
-            var uploadTask: StorageTask<*>
+            val uploadTask: StorageTask<*>
 
             if (fileRef != null) {
                 uploadTask = fileRef.putFile(imageUri!!)
@@ -176,24 +168,12 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
                         val downloadUri = task.result
                         val url = downloadUri.toString()
                         val senderID = firebaseUser?.uid
+                        val message = "sent you an image."
 
-                        val chatMessageItem: ChatMessageItem = ChatMessageItem(senderID,
-                                "sent you an image.",
-                                userIDVisited,
-                                false,
-                                url,
-                                messageID)
+                        Log.d("ccccImage", "El Chat ID es ->>>>>>>>>>>> ${viewModel.chatID}")
 
-                        if (messageID != null && senderID != null) {
-                            reference.child("chats")
-                                    .child(messageID)
-                                    .setValue(chatMessageItem)
-                                    .addOnCompleteListener { task ->
-                                if (task.isSuccessful){
-                                    createChatsRefereces(senderID)
-                                }
-                            }
-                        }
+                        viewModel.writeMessage(senderID, viewModel.chatID, message, url)
+
                         progressBar.dismiss()
                     }
 
@@ -202,50 +182,20 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
         }
     }
 
-
-
-    /**
-     * Creates Chat References to be able to push notifications with the last messages to users
-     */
-    private fun createChatsRefereces(senderID: String) {
-        val chatsListReferenceSender = reference
-                .child("chatLists")
-                .child(senderID)
-                .child(userIDVisited)
-        chatsListReferenceSender.addListenerForSingleValueEvent(object: ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if(!snapshot.exists()){
-                    chatsListReferenceSender.child("id").setValue(userIDVisited)
-                }
-                val chatsListReferenceReceiver = reference
-                        .child("chatLists")
-                        .child(userIDVisited)
-                        .child(senderID)
-                chatsListReferenceReceiver.child("id").setValue(senderID)
-            }
-            override fun onCancelled(error: DatabaseError) {
-                Log.w("Data reading failure", "Error getting documents.", error.toException())
-            }
-        })
-    }
-
-    override fun onChatClicked(chatMessageItem: ChatMessageItem, position: Int) {
+    override fun onChatClicked(chatMessageItem: ChatMessage, position: Int) {
         // what happen if a chat is clicked
     }
 
     override fun observeViewModel() {
-        viewModel.listOfChatMessages.observe(this, Observer<List<ChatMessageItem>> { chat ->
+        viewModel.listOfChatMessages.observe(this, { chat ->
             chatMessagesAdapter.updateData(chat)
-            binding.rvMessageChats.smoothScrollToPosition(chatMessagesAdapter.listChats.size)
+            binding.rvMessageChats.smoothScrollToPosition(chatMessagesAdapter.listOfMessages.size)
         })
 
-        viewModel.isLoading.observe(this, Observer<Boolean> {
+        viewModel.isLoading.observe(this, {
             if(it != null)
                 binding.rlBaseChats.visibility = View.INVISIBLE
         })
     }
-
-
-
 
 }

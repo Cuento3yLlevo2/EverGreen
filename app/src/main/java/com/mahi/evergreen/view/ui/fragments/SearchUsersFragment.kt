@@ -1,11 +1,11 @@
 package com.mahi.evergreen.view.ui.fragments
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -33,10 +33,9 @@ class SearchUsersFragment : Fragment(), UsersListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentSearchUsersBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        return binding.root
     }
 
     @ExperimentalStdlibApi
@@ -73,11 +72,11 @@ class SearchUsersFragment : Fragment(), UsersListener {
     }
 
     override fun observeViewModel() {
-        viewModel.listUsers.observe(viewLifecycleOwner, Observer<List<User>> {user ->
+        viewModel.listUsers.observe(viewLifecycleOwner, Observer { user ->
             usersAdapter.updateData(user)
         })
 
-        viewModel.isLoading.observe(viewLifecycleOwner, Observer<Boolean> {
+        viewModel.isLoading.observe(viewLifecycleOwner, Observer {
             if(it != null)
                 binding.rlBaseUsers.visibility = View.INVISIBLE
         })
@@ -88,15 +87,16 @@ class SearchUsersFragment : Fragment(), UsersListener {
         val options = arrayOf<CharSequence>("Send Message", "Visit Profile")
         val builder : AlertDialog.Builder = AlertDialog.Builder(context)
         builder.setTitle("What do you want?")
-        builder.setItems(options) { dialog, which ->
+        builder.setItems(options) { _, which ->
             when (which) {
                 0 -> {
                     val intent = Intent(context, MessageChatActivity::class.java)
-                    intent.putExtra("visit_user_id", user.userID)
+                    intent.putExtra("visit_user_id", user.uid)
                     startActivity(intent)
                 }
                 1 -> {
-                    Toast.makeText(context, "TODO", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Pending", Toast.LENGTH_SHORT).show()
+                    Log.w("User", user.toString())
                 }
             }
         }

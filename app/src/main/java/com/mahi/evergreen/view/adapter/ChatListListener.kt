@@ -1,8 +1,8 @@
 package com.mahi.evergreen.view.adapter
 
-import com.mahi.evergreen.model.ChatListItem
+import com.mahi.evergreen.model.Chat
 
 interface ChatListListener {
-    fun onChatListItemClicked(chatListItem: ChatListItem, position: Int)
+    fun onChatListItemClicked(chatListItem: Chat, position: Int)
     fun observeViewModel()
 }

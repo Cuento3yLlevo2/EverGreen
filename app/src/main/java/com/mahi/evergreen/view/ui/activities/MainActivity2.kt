@@ -18,7 +18,7 @@ import com.google.firebase.ktx.Firebase
 import com.mahi.evergreen.R
 import com.mahi.evergreen.model.User
 import com.mahi.evergreen.network.FirebaseDatabaseService
-import com.mahi.evergreen.network.USERS_REFERENCE
+import com.mahi.evergreen.network.USERS
 import com.mahi.evergreen.view.ui.fragments.ChatListFragment
 import com.mahi.evergreen.view.ui.fragments.SearchUsersFragment
 import com.mahi.evergreen.view.ui.fragments.SettingsFragment
@@ -40,7 +40,7 @@ class MainActivity2 : AppCompatActivity() {
 
         // First of all, after Authentication we need to get user's data from Realtime Database using the users's uid
         firebaseUser = Firebase.auth.currentUser
-        currentUserReference = firebaseUser?.let { databaseService.database.getReference(USERS_REFERENCE).child(it.uid) }
+        currentUserReference = firebaseUser?.let { databaseService.database.getReference(USERS).child(it.uid) }
 
 
         val toolbar: androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar_main2)
@@ -67,11 +67,12 @@ class MainActivity2 : AppCompatActivity() {
                 // OnDataChange: we need to make sure that the current user still exist
                 if (snapshot.exists()){
                     val userDataSnapshot = snapshot.getValue(User::class.java)
+                    val userProfile = userDataSnapshot?.profile
                     val tvMainUsername = findViewById<TextView>(R.id.tvMainUsername)
                     val civMainProfileImage = findViewById<CircleImageView>(R.id.civMainProfileImage)
-                    if (userDataSnapshot != null) {
-                        tvMainUsername.text = userDataSnapshot.username
-                        Picasso.get().load(userDataSnapshot.profileImage).placeholder(R.drawable.user_default).into(civMainProfileImage)
+                    if (userProfile != null) {
+                        tvMainUsername.text = userProfile.username
+                        Picasso.get().load(userProfile.profileImage).placeholder(R.drawable.user_default).into(civMainProfileImage)
                     }
                 }
             }

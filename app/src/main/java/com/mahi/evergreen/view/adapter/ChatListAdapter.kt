@@ -4,46 +4,50 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.mahi.evergreen.R
-import com.mahi.evergreen.model.ChatListItem
+import com.mahi.evergreen.model.Chat
+import com.mahi.evergreen.network.FirebaseDatabaseService
 
 class ChatListAdapter(val chatListListener: ChatListListener) : RecyclerView.Adapter<ChatListAdapter.ViewHolder>() {
 
-    var listOfChatListItems = ArrayList<ChatListItem>()
+    var listOfChats = ArrayList<Chat>()
     var firebaseUser = Firebase.auth.currentUser
+    var firebaseService = FirebaseDatabaseService()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
             LayoutInflater.from(parent.context).inflate(
                     R.layout.item_inbox_chat_list, parent, false))
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val chatListItem = listOfChatListItems[position]
+        val chat = listOfChats[position]
+        var chatUsername = ""
+        if (chat.chatID != null && firebaseUser?.uid != null){
+            val currentUserID = firebaseUser?.uid
+            chatUsername = currentUserID?.let { firebaseService.getChatUsername(chat.chatID, it) }.toString()
+        }
 
-
-        holder.tvChatPostTitle.text = chatListItem.postTitle
+        holder.tvChatPostTitle.text = chat.postTitle
 
         Glide.with(holder.itemView.context) // contexto
-                .load(chatListItem.postImageURL) // donde esta la url de la imagen
+                .load(chat.postImageURL) // donde esta la url de la imagen
                 .placeholder(R.drawable.post_default_image) // placeholder
                 .into(holder.ivChatPostImage) // donde la vamos a colocar
 
-        holder.tvChatUsername.text = chatListItem.chatUsername
-        // If chat.url.isNullOrEmpty() && !chat.message.equals("sent you an image.") We know that the message sent is a Text message
-        if (chatListItem.lastChatMessageItem?.url.isNullOrEmpty() && !chatListItem.lastChatMessageItem?.message.equals("sent you an image.")){
-            holder.tvChatLastMessage.text = chatListItem.lastChatMessageItem?.message
+        holder.tvChatUsername.text = chatUsername
+        // If  !chat.lastMessage.equals("sent you an image.") We know that the message sent is a Text message
+        if (!chat.lastMessage.equals("sent you an image.")){
+            holder.tvChatLastMessage.text = chat.lastMessage
         } else {
-            // If chat.url is Not NullOrEmpty && chat.message.equals("sent you an image.") We know that massage sent is a Image
+            // If chat.lastMessage.equals("sent you an image.") We know that massage sent is a Image
             holder.tvChatLastMessage.text = "Se ha enviado una imagen"
         }
 
-        if (chatListItem.lastChatMessageItem?.isseen == true) {
+        if (chat.isSeen == true) {
             holder.tvChatLastMessage.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.check_circle,0,0,0)
         } else {
             holder.tvChatLastMessage.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.unchecked_circle,0,0,0)
@@ -51,15 +55,15 @@ class ChatListAdapter(val chatListListener: ChatListListener) : RecyclerView.Ada
 
 
         holder.itemView.setOnClickListener {
-            chatListListener.onChatListItemClicked(chatListItem, position)
+            chatListListener.onChatListItemClicked(chat, position)
         }
     }
 
-    override fun getItemCount() = listOfChatListItems.size
+    override fun getItemCount() = listOfChats.size
 
-    fun updateData(data: List<ChatListItem>) {
-        listOfChatListItems.clear()
-        listOfChatListItems.addAll(data)
+    fun updateData(data: List<Chat>) {
+        listOfChats.clear()
+        listOfChats.addAll(data)
         notifyDataSetChanged()
     }
 

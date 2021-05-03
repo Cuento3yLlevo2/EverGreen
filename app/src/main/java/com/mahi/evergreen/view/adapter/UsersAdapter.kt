@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.mahi.evergreen.R
 import com.mahi.evergreen.model.User
+import com.mahi.evergreen.model.UserProfile
 import de.hdodenhof.circleimageview.CircleImageView
 
 class UsersAdapter(val usersListener: UsersListener) : RecyclerView.Adapter<UsersAdapter.ViewHolder>() {
@@ -22,15 +23,18 @@ class UsersAdapter(val usersListener: UsersListener) : RecyclerView.Adapter<User
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val user = listUsers[position]
+        val userProfile: UserProfile? = user.profile
 
-        Glide.with(holder.itemView.context) // contexto
-            .load(user.profileImage) // donde esta la url de la imagen
-            .apply(RequestOptions.circleCropTransform()) // la convertimos en circular
-            .into(holder.ivSearchProfileImage) // donde la vamos a colocar
+        if (userProfile != null) {
+            Glide.with(holder.itemView.context) // contexto
+                    .load(userProfile.profileImage) // donde esta la url de la imagen
+                    .apply(RequestOptions.circleCropTransform()) // la convertimos en circular
+                    .into(holder.ivSearchProfileImage) // donde la vamos a colocar
 
-        holder.tvSearchUsername.text = user.username
+            holder.tvSearchUsername.text = userProfile.username
+        }
 
-        if (user.status.equals("offline")) {
+        if (user.online == false) {
             holder.civOfflineStatus.visibility = View.VISIBLE
             holder.civOnlineStatus.visibility = View.GONE
         } else {
@@ -41,8 +45,6 @@ class UsersAdapter(val usersListener: UsersListener) : RecyclerView.Adapter<User
         holder.itemView.setOnClickListener {
             usersListener.onUserClicked(user, position)
         }
-
-
 
     }
 
