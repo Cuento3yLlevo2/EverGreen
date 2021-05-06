@@ -1,5 +1,6 @@
 package com.mahi.evergreen.view.ui.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import com.mahi.evergreen.view.adapter.ChatListAdapter
 import com.mahi.evergreen.view.adapter.ChatListListener
 import com.mahi.evergreen.view.adapter.ChatMessagesAdapter
 import com.mahi.evergreen.view.adapter.UsersAdapter
+import com.mahi.evergreen.view.ui.activities.MessageChatActivity
 import com.mahi.evergreen.viewmodel.ChatListViewModel
 import com.mahi.evergreen.viewmodel.ChatMessagesViewModel
 
@@ -52,12 +54,21 @@ class ChatListFragment : Fragment(), ChatListListener {
 
 
         observeViewModel()
+    }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.refreshChatList()
+        observeViewModel()
     }
 
 
     override fun onChatListItemClicked(chatListItem: Chat, position: Int) {
-        // if chat clicked
+        val intent = Intent(context, MessageChatActivity::class.java)
+        intent.putExtra("clicked_chat_id", chatListItem.chatID)
+        // type 1 = chatActivity started from chatList, type 2 = chatActivity started from userList
+        intent.putExtra("type", 1)
+        startActivity(intent)
     }
 
     override fun observeViewModel() {
@@ -75,7 +86,4 @@ class ChatListFragment : Fragment(), ChatListListener {
         super.onDestroyView()
         _binding = null
     }
-
-
-
 }

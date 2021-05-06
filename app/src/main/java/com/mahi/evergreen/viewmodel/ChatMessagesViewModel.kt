@@ -31,7 +31,6 @@ class ChatMessagesViewModel: ViewModel() {
                             override fun onSuccess(result: String?) {
                                 if (result != null) {
                                     chatID = result
-                                    Log.d("cccc3", "El Chat ID es ->>>>>>>>>>>> $chatID")
                                     refreshChatMessages(chatID)
                                 }
                             }
@@ -54,7 +53,6 @@ class ChatMessagesViewModel: ViewModel() {
     }
 
     fun refreshChatMessages(chatID: String) {
-        Log.d("ccccRefresh", "El Chat ID es ->>>>>>>>>>>> $chatID")
         getChatMessagesFromFirebase(chatID)
     }
 

@@ -11,7 +11,9 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.mahi.evergreen.R
 import com.mahi.evergreen.model.Chat
+import com.mahi.evergreen.network.Callback
 import com.mahi.evergreen.network.FirebaseDatabaseService
+import java.lang.Exception
 
 class ChatListAdapter(val chatListListener: ChatListListener) : RecyclerView.Adapter<ChatListAdapter.ViewHolder>() {
 
@@ -24,11 +26,27 @@ class ChatListAdapter(val chatListListener: ChatListListener) : RecyclerView.Ada
                     R.layout.item_inbox_chat_list, parent, false))
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val chat = listOfChats[position]
+        // Reverse to get the chat with new interactions at the top
+        var listOfChatsReversed = listOfChats.reversed()
+        val chat = listOfChatsReversed[position]
         var chatUsername = ""
         if (chat.chatID != null && firebaseUser?.uid != null){
             val currentUserID = firebaseUser?.uid
-            chatUsername = currentUserID?.let { firebaseService.getChatUsername(chat.chatID, it) }.toString()
+            if (currentUserID != null){
+                firebaseService.getChatUsername(chat.chatID, currentUserID, object: Callback<String> {
+                    override fun onSuccess(result: String?) {
+                        if (result != null) {
+                            chatUsername = result
+                            holder.tvChatUsername.text = chatUsername
+                        }
+                    }
+
+                    override fun onFailure(exception: Exception) {
+                        // on failure
+                    }
+
+                })
+            }
         }
 
         holder.tvChatPostTitle.text = chat.postTitle

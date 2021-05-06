@@ -83,7 +83,6 @@ class SearchUsersFragment : Fragment(), UsersListener {
     }
 
     override fun onUserClicked(user: User, position: Int) {
-        Toast.makeText(context, "User Clicked", Toast.LENGTH_LONG).show()
         val options = arrayOf<CharSequence>("Send Message", "Visit Profile")
         val builder : AlertDialog.Builder = AlertDialog.Builder(context)
         builder.setTitle("What do you want?")
@@ -92,6 +91,8 @@ class SearchUsersFragment : Fragment(), UsersListener {
                 0 -> {
                     val intent = Intent(context, MessageChatActivity::class.java)
                     intent.putExtra("visit_user_id", user.uid)
+                    // type 1 = chatActivity started from chatList, type 2 = chatActivity started from userList
+                    intent.putExtra("type", 2)
                     startActivity(intent)
                 }
                 1 -> {

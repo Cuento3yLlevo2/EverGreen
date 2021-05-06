@@ -1,5 +1,6 @@
 package com.mahi.evergreen.view.ui.activities
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -23,11 +24,13 @@ import com.google.firebase.storage.UploadTask
 import com.google.firebase.storage.ktx.storage
 import com.mahi.evergreen.databinding.ActivityMessageChatBinding
 import com.mahi.evergreen.model.*
+import com.mahi.evergreen.network.Callback
 import com.mahi.evergreen.network.FirebaseDatabaseService
 import com.mahi.evergreen.view.adapter.ChatMessagesAdapter
 import com.mahi.evergreen.view.adapter.ChatMessagesListener
 import com.mahi.evergreen.viewmodel.ChatMessagesViewModel
 import com.squareup.picasso.Picasso
+import java.lang.Exception
 
 class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
 
@@ -36,6 +39,8 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
     private lateinit var chatMessagesAdapter: ChatMessagesAdapter
     private lateinit var viewModel: ChatMessagesViewModel
     private var userIDVisited: String = ""
+    private var chatIDFromChatList: String = ""
+    private var type = 0
     private var firebaseUser: FirebaseUser? = null
     private var firebaseDatabaseService = FirebaseDatabaseService()
     private val reference = firebaseDatabaseService.database.reference
@@ -48,42 +53,34 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
         binding = ActivityMessageChatBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-        // retrieve from previous activity the Visited User UID
-        userIDVisited = intent.getStringExtra("visit_user_id").toString()
+
         // retrieve from Firebase.auth the current user UID
         firebaseUser = Firebase.auth.currentUser
-
+        // connect viewModel with View
         viewModel = ViewModelProvider(this).get(ChatMessagesViewModel::class.java)
 
-        // Display Chat List for Layout
-        val visitedUserDbRef = reference.child("users").child(userIDVisited)
-        visitedUserDbRef.addValueEventListener(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-
-                val visitedUserData: User? = snapshot.getValue(User::class.java)
-                if (visitedUserData?.profile?.profileImage != null) {
-                    Picasso.get().load(visitedUserData.profile?.profileImage).into(binding.ivVisitedProfileImage)
-
-                    firebaseUser?.uid?.let {
-                        viewModel.getChatIDAndRefreshChatMessages(it, userIDVisited)
-                        // viewModel.refreshChatMessages(viewModel.chatID)
-                    }
-
-                    chatMessagesAdapter = ChatMessagesAdapter(this@MessageChatActivity, visitedUserData.profile?.profileImage!!)
-
-                    binding.rvMessageChats.apply {
-                        val linearLayoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
-                        linearLayoutManager.stackFromEnd = true
-                        layoutManager = linearLayoutManager
-                        adapter = chatMessagesAdapter
-                        setHasFixedSize(true)
-                    }
-                }
+        // type 1 = chatActivity started from chatList, type 2 = chatActivity started from userList
+        type = intent.getIntExtra("type", 0)
+        when (type) {
+            1 -> {
+                // retrieve from previous activity the chatID
+                chatIDFromChatList = intent.getStringExtra("clicked_chat_id").toString()
+                // update directly viewModel ChatID
+                viewModel.chatID = chatIDFromChatList
+                firebaseUser?.let { displayMessagesWithChatID(chatIDFromChatList, view.context, it.uid) }
             }
-            override fun onCancelled(error: DatabaseError) {
-                Log.w("Data reading failure", "Error getting documents.", error.toException())
+            2 -> {
+                // retrieve from previous activity the Visited User UID
+                userIDVisited = intent.getStringExtra("visit_user_id").toString()
+                firebaseUser?.let { displayMessagesWithVisitedUserID(userIDVisited, view.context, it.uid) }
             }
-        })
+            else -> {
+                Log.w("Activity creation error", "Error: type of activity not declare.")
+            }
+        }
+
+
+
 
 
         // When Current User presses the SendMessageBtn the message will be sent to visited user's phone
@@ -98,6 +95,73 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
         }
 
         observeViewModel()
+    }
+
+    private fun displayMessagesWithVisitedUserID(userIDVisited: String, context: Context, currentUserID: String) {
+        val visitedUserDbRef = reference.child("users").child(userIDVisited)
+        visitedUserDbRef.addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+                val visitedUserData: User? = snapshot.getValue(User::class.java)
+                if (visitedUserData?.profile?.profileImage != null) {
+                    Picasso.get().load(visitedUserData.profile?.profileImage).into(binding.ivVisitedProfileImage)
+
+                    viewModel.getChatIDAndRefreshChatMessages(currentUserID, userIDVisited)
+
+                    chatMessagesAdapter = ChatMessagesAdapter(this@MessageChatActivity, visitedUserData.profile?.profileImage!!)
+
+                    binding.rvMessageChats.apply {
+                        val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                        linearLayoutManager.stackFromEnd = true
+                        layoutManager = linearLayoutManager
+                        adapter = chatMessagesAdapter
+                        setHasFixedSize(true)
+                    }
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                Log.w("Data reading failure", "Error getting documents.", error.toException())
+            }
+        })
+    }
+
+    private fun displayMessagesWithChatID(chatIDFromChatList: String, context: Context, currentUserID: String) {
+        firebaseDatabaseService.getUserIDVisited(chatIDFromChatList, currentUserID, object: Callback<String> {
+            override fun onSuccess(result: String?) {
+                if (result != null) {
+                    userIDVisited = result
+                    val visitedUserDbRef = reference.child("users").child(userIDVisited)
+                    visitedUserDbRef.addValueEventListener(object : ValueEventListener{
+                        override fun onDataChange(snapshot: DataSnapshot) {
+
+                            val visitedUserData: User? = snapshot.getValue(User::class.java)
+                            if (visitedUserData?.profile?.profileImage != null) {
+                                Picasso.get().load(visitedUserData.profile?.profileImage).into(binding.ivVisitedProfileImage)
+
+                                viewModel.refreshChatMessages(chatIDFromChatList)
+
+                                chatMessagesAdapter = ChatMessagesAdapter(this@MessageChatActivity, visitedUserData.profile?.profileImage!!)
+
+                                binding.rvMessageChats.apply {
+                                    val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                                    linearLayoutManager.stackFromEnd = true
+                                    layoutManager = linearLayoutManager
+                                    adapter = chatMessagesAdapter
+                                    setHasFixedSize(true)
+                                }
+                            }
+                        }
+                        override fun onCancelled(error: DatabaseError) {
+                            Log.w("Data reading failure", "Error getting documents.", error.toException())
+                        }
+                    })
+                }
+            }
+
+            override fun onFailure(exception: Exception) {
+                // on failure
+            }
+        })
     }
 
     /**
@@ -118,7 +182,6 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
         if (message.isBlank()){
             Toast.makeText(this@MessageChatActivity, "El campo de texto esta vació!", Toast.LENGTH_LONG).show()
         } else {
-            Log.d("ccccMessage", "El Viewmodel Chat ID es ->>>>>>>>>>>> ${viewModel.chatID}")
             viewModel.writeMessage(senderID, viewModel.chatID, message, "")
         }
         binding.etTextMessage.setText("")
@@ -128,7 +191,6 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (data != null) {
-
             // If the activity resulted on imageMessageRequestCode we now tha we need to retrieve an image URL from previous activity.
             if (requestCode == imageMessageRequestCode && resultCode == RESULT_OK && data.data != null){
                 imageUri = data.data
@@ -182,8 +244,8 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
         }
     }
 
-    override fun onChatClicked(chatMessageItem: ChatMessage, position: Int) {
-        // what happen if a chat is clicked
+    override fun onMessageItemClicked(chatMessageItem: ChatMessage, position: Int) {
+        // what happen if a Message is clicked, we cloud ask the user to delete the message if he wants
     }
 
     override fun observeViewModel() {

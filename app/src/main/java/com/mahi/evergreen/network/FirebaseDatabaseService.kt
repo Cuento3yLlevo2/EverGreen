@@ -100,7 +100,10 @@ class FirebaseDatabaseService {
                     .setValue(chatMessage)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                        Log.d("WriteData", "Message creation successful")
+                            Log.d("WriteData", "Message creation successful")
+                            database.reference.child(CHATS).child(chatKey).updateChildren(hashMapOf<String, Any>(
+                                    "timestamp" to currentTime,
+                                    "lastMessage" to message))
                         }
                     }
         }
@@ -204,45 +207,6 @@ class FirebaseDatabaseService {
                 })
     }
 
-    /* fun getChatListFromDatabase(currentUserID: String?, callback: Callback<List<ChatListItem>>) {
-        var chatListReference = ArrayList<ChatList>()
-        database.getReference(CHAT_MEMBERS)
-                .get()
-                .addOnSuccessListener { result ->
-                    for (child in result.children) {
-                        if (child.key.equals(currentUserID)){
-                            for (children in child.children) {
-                                children.getValue(ChatList::class.java)?.let { chatListReference.add(it) }
-                            }
-                        }
-                    }
-                }
-                .addOnFailureListener { exception ->
-                    Log.w("Data reading failure", "Error getting documents.", exception)
-                }
-
-        var listOfChatListItems = ArrayList<ChatListItem>()
-        database.getReference(USERS)
-                .get()
-                .addOnSuccessListener { result ->
-                    for (child in result.children) {
-
-                        if (child.key?.equals(currentUserID) == false) {
-                            val user = child.getValue(User::class.java)
-
-                            for (eachChatList in listOfChatListItems) {
-
-                            }
-                        }
-                    }
-                    // callback.onSuccess(listOfChatListItems)
-                }
-                .addOnFailureListener { exception ->
-                    Log.w("Data reading failure", "Error getting documents.", exception)
-                }
-
-    }*/
-
     fun getChatIDFromDatabase(currentUserID: String, visitedUserID: String, callback: Callback<String>) {
         var chatID = ""
         database.getReference(CHAT_MEMBERS)
@@ -258,7 +222,6 @@ class FirebaseDatabaseService {
                             }
                         }
                     }
-                    Log.d("cccc1", "El Chat ID es ->>>>>>>>>>>> $chatID")
                     callback.onSuccess(chatID)
                 }
                 .addOnFailureListener { exception ->
@@ -266,7 +229,8 @@ class FirebaseDatabaseService {
                 }
     }
 
-    fun getChatUsername(chatID: String, currentUserID: String): String {
+    fun getChatUsername(chatID: String, currentUserID: String, callback: Callback<String>) {
+        var chatUsernameID = ""
         var chatUsername = ""
         database.getReference(CHAT_MEMBERS).child(chatID)
                 .get()
@@ -275,15 +239,47 @@ class FirebaseDatabaseService {
                     if (chatMembers != null) {
                         for (member in chatMembers.members){
                             if (member.key != currentUserID){
-                                chatUsername = member.key
+                                chatUsernameID = member.key
+                                database.getReference(USERS)
+                                        .child(chatUsernameID)
+                                        .child("profile")
+                                        .child("username")
+                                        .get()
+                                        .addOnSuccessListener { result ->
+                                            chatUsername = result.getValue(String::class.java).toString()
+                                            callback.onSuccess(chatUsername)
+                                        }
+                                        .addOnFailureListener { exception ->
+                                            Log.w("Data reading failure", "Error getting documents.", exception)
+                                        }
                             }
                         }
+
                     }
                 }
                 .addOnFailureListener { exception ->
                     Log.w("Data reading failure", "Error getting documents.", exception)
                 }
-        return chatUsername
+    }
+
+    fun getUserIDVisited(chatIDFromChatList: String, currentUserID: String, callback: Callback<String>) {
+        var chatUsernameID = ""
+        database.getReference(CHAT_MEMBERS).child(chatIDFromChatList)
+            .get()
+            .addOnSuccessListener { result ->
+                val chatMembers : ChatMembers? = result.getValue(ChatMembers::class.java)
+                if (chatMembers != null) {
+                    for (member in chatMembers.members){
+                        if (member.key != currentUserID){
+                            chatUsernameID = member.key
+                            callback.onSuccess(chatUsernameID)
+                        }
+                    }
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w("Data reading failure", "Error getting documents.", exception)
+            }
     }
 
     fun getChatListFromDatabase(currentUserID: String, callback: Callback<List<Chat>>){
@@ -297,7 +293,6 @@ class FirebaseDatabaseService {
                                 for (member in chatMembers.members){
                                     if (member.key == currentUserID){
                                         chatMembers.chatID?.let { chatRefList.add(it) }
-                                        break
                                     }
                                 }
                             }
@@ -312,6 +307,7 @@ class FirebaseDatabaseService {
                                             if (chat != null) {
                                                 for ((index, value) in chatRefList.withIndex()){
                                                     if (chat.chatID.equals(value)){
+
                                                         chatList.add(chat)
                                                         chatRefList.removeAt(index)
                                                         break
@@ -319,6 +315,7 @@ class FirebaseDatabaseService {
                                                 }
                                             }
                                         }
+                                        Log.w("chatsdata1", "chat ->>>> ${chatList.toString()}")
                                         callback.onSuccess(chatList)
                                     }
                                     override fun onCancelled(error: DatabaseError) {
@@ -378,8 +375,5 @@ class FirebaseDatabaseService {
         }
         return dialog
     }
-
-
-
 
 }

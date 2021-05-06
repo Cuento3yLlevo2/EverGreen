@@ -126,7 +126,7 @@ class ChatMessagesAdapter(val chatMessagesListener: ChatMessagesListener, val pr
 
 
         holder.itemView.setOnClickListener {
-            chatMessagesListener.onChatClicked(message, position)
+            chatMessagesListener.onMessageItemClicked(message, position)
         }
 
     }
