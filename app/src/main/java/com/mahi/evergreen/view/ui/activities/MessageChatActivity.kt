@@ -25,7 +25,7 @@ import com.google.firebase.storage.ktx.storage
 import com.mahi.evergreen.databinding.ActivityMessageChatBinding
 import com.mahi.evergreen.model.*
 import com.mahi.evergreen.network.Callback
-import com.mahi.evergreen.network.FirebaseDatabaseService
+import com.mahi.evergreen.network.DatabaseService
 import com.mahi.evergreen.view.adapter.ChatMessagesAdapter
 import com.mahi.evergreen.view.adapter.ChatMessagesListener
 import com.mahi.evergreen.viewmodel.ChatMessagesViewModel
@@ -42,8 +42,8 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
     private var chatIDFromChatList: String = ""
     private var type = 0
     private var firebaseUser: FirebaseUser? = null
-    private var firebaseDatabaseService = FirebaseDatabaseService()
-    private val reference = firebaseDatabaseService.database.reference
+    private var databaseService = DatabaseService()
+    private val reference = databaseService.database.reference
     private val imageMessageRequestCode = 878
     private var imageUri: Uri? = null
     private var storageRef: StorageReference? = null
@@ -126,7 +126,7 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
     }
 
     private fun displayMessagesWithChatID(chatIDFromChatList: String, context: Context, currentUserID: String) {
-        firebaseDatabaseService.getUserIDVisited(chatIDFromChatList, currentUserID, object: Callback<String> {
+        databaseService.getUserIDVisited(chatIDFromChatList, currentUserID, object: Callback<String> {
             override fun onSuccess(result: String?) {
                 if (result != null) {
                     userIDVisited = result
@@ -204,7 +204,7 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
      * Retrieves the Attached image from Activity collecting the Image uri and saving URL on database
      */
     private fun uploadImageToDatabase() {
-        val progressBar = firebaseDatabaseService.setProgressDialogWhenDataLoading(this, "La imagen se está enviando...")
+        val progressBar = databaseService.setProgressDialogWhenDataLoading(this, "La imagen se está enviando...")
         progressBar.show()
 
         if (imageUri!=null){

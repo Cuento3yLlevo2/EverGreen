@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/navHomeFragment">
+
+    <fragment
+        android:id="@+id/navHomeFragment"
+        android:name="com.mahi.evergreen.view.ui.fragments.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_favoritesFragment"
+            app:destination="@id/navFavoritesFragment" />
+        <action
+            android:id="@+id/action_navHomeFragment_to_homeCategoriesDetailDialogFragment"
+            app:destination="@id/homeCategoriesDetailDialogFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/navFavoritesFragment"
+        android:name="com.mahi.evergreen.view.ui.fragments.FavoritesFragment"
+        android:label="fragment_favorites"
+        tools:layout="@layout/fragment_favorites" >
+        <action
+            android:id="@+id/action_favoritesFragment_to_chatListFragment"
+            app:destination="@id/navChatListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/navChatListFragment"
+        android:name="com.mahi.evergreen.view.ui.fragments.ChatListFragment"
+        android:label="fragment_chat_list"
+        tools:layout="@layout/fragment_chat_list" >
+        <action
+            android:id="@+id/action_chatListFragment_to_profileFragment"
+            app:destination="@id/navProfileFragment" />
+        <action
+            android:id="@+id/action_navChatListFragment_to_messageChatActivity"
+            app:destination="@id/messageChatActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/navProfileFragment"
+        android:name="com.mahi.evergreen.view.ui.fragments.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" >
+    </fragment>
+    <dialog
+        android:id="@+id/homeCategoriesDetailDialogFragment"
+        android:name="com.mahi.evergreen.view.ui.fragments.HomeCategoriesDetailDialogFragment"
+        android:label="HomeCategoriesDetailDialogFragment"
+        tools:layout="@layout/fragment_home_categories_detail_dialog"/>
+    <activity
+        android:id="@+id/messageChatActivity"
+        android:name="com.mahi.evergreen.view.ui.activities.MessageChatActivity"
+        android:label="MessageChatActivity"
+        tools:layout="@layout/activity_message_chat"
+
+        />
+
+</navigation>

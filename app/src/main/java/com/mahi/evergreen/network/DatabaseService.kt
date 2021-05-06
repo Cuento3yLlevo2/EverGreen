@@ -27,7 +27,7 @@ const val CHAT_MESSAGES = "chatMessages"
 const val CHAT_MEMBERS = "chatMembers"
 // const val POSTS = "posts"
 
-class FirebaseDatabaseService {
+class DatabaseService {
     val database = Firebase.database("https://evergreen-app-bdbc2-default-rtdb.europe-west1.firebasedatabase.app")
 
     init {

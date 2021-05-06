@@ -45,7 +45,7 @@ class WelcomeActivity : AppCompatActivity() {
         // If there is a user logged we need directly to show the MainActivity
         if(firebaseUser != null)
         {
-            val intent = Intent(this@WelcomeActivity, MainActivity2::class.java)
+            val intent = Intent(this@WelcomeActivity, MainActivity::class.java)
             startActivity(intent)
             finish()
         }

@@ -5,11 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mahi.evergreen.model.ChatMessage
 import com.mahi.evergreen.network.Callback
-import com.mahi.evergreen.network.FirebaseDatabaseService
+import com.mahi.evergreen.network.DatabaseService
 
 class ChatMessagesViewModel: ViewModel() {
 
-    private val firestoreService = FirebaseDatabaseService()
+    private val firestoreService = DatabaseService()
     var chatID: String = ""
     var listOfChatMessages: MutableLiveData<List<ChatMessage>> = MutableLiveData()
     var isLoading = MutableLiveData<Boolean>()

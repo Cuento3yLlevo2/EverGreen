@@ -24,7 +24,7 @@ import com.google.firebase.storage.ktx.storage
 import com.mahi.evergreen.databinding.FragmentSettingsBinding
 import com.mahi.evergreen.model.User
 import com.mahi.evergreen.model.UserProfile
-import com.mahi.evergreen.network.FirebaseDatabaseService
+import com.mahi.evergreen.network.DatabaseService
 import com.mahi.evergreen.viewmodel.UsersViewModel
 import com.squareup.picasso.Picasso
 
@@ -32,7 +32,7 @@ import com.squareup.picasso.Picasso
 class SettingsFragment : Fragment() {
 
     private lateinit var viewModel: UsersViewModel
-    private var firebaseDatabaseService = FirebaseDatabaseService()
+    private var databaseService = DatabaseService()
     private lateinit var dataBaseUsersReference: DatabaseReference
     private lateinit var userUid: String
 
@@ -59,7 +59,7 @@ class SettingsFragment : Fragment() {
 
         viewModel = ViewModelProvider(this).get(UsersViewModel::class.java)
 
-        dataBaseUsersReference = firebaseDatabaseService.getDatabaseUsersReference()
+        dataBaseUsersReference = databaseService.getDatabaseUsersReference()
         userUid = viewModel.getCurrentUserUID().toString()
         storageRef = Firebase.storage.reference.child("Users Images")
 
@@ -109,7 +109,7 @@ class SettingsFragment : Fragment() {
     }
 
     private fun uploadImageToDatabase(context: Context) {
-        val progressBar = firebaseDatabaseService.setProgressDialogWhenDataLoading(context, "Cargando....")
+        val progressBar = databaseService.setProgressDialogWhenDataLoading(context, "Cargando....")
         progressBar.show()
 
         if (imageUri!=null){

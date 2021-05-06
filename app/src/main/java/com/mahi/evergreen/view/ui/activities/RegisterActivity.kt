@@ -15,7 +15,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 import com.mahi.evergreen.R
 import com.mahi.evergreen.network.Callback
-import com.mahi.evergreen.network.FirebaseDatabaseService
+import com.mahi.evergreen.network.DatabaseService
 import java.util.*
 
 /***
@@ -27,7 +27,7 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var etRegisterUsername: EditText
     private lateinit var etRegisterEmail: EditText
     private lateinit var etRegisterPassword: EditText
-    private val databaseService: FirebaseDatabaseService = FirebaseDatabaseService()
+    private val databaseService: DatabaseService = DatabaseService()
     private lateinit var database: FirebaseDatabase
 
 
@@ -126,7 +126,7 @@ class RegisterActivity : AppCompatActivity() {
                                             if (user != null) {
                                                 databaseService.writeNewUser(user.uid, username, userEmail, object: Callback<Boolean> {
                                                     override fun onSuccess(result: Boolean?) {
-                                                        val intent = Intent(this@RegisterActivity, MainActivity2::class.java)
+                                                        val intent = Intent(this@RegisterActivity, MainActivity::class.java)
                                                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                                                         startActivity(intent)
                                                         finish()
@@ -165,35 +165,4 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    /*
-    private fun writeNewUser(userId: String, username: String, email: String) {
-        val defaultProfileImage = "https://firebasestorage.googleapis.com/v0/b/evergreen-app-bdbc2.appspot.com/o/user_default.png?alt=media&token=53382a72-8fc1-4a11-b63f-0cb342bb02c6"
-        val defaultCoverImage = "https://firebasestorage.googleapis.com/v0/b/evergreen-app-bdbc2.appspot.com/o/profile_cover_default.jpg?alt=media&token=07a0cfd5-a6df-4877-8ea6-8e0ecc2d98fb"
-        val user = User(
-                username,
-                email,
-                defaultProfileImage,
-                defaultCoverImage,
-                "offline",
-                username.toLowerCase(Locale.ROOT),
-                userId
-        )
-        Log.w("FireBaseLogs", "Start Writing $userId")
-
-        dbReference = database.reference
-        dbReference.child(USERS_REFERENCE).child(userId).setValue(user)
-                .addOnSuccessListener {
-                    // Write was successful!
-                    Log.w("FireBaseLogs", "Write was successful")
-
-                    val intent = Intent(this@RegisterActivity, MainActivity2::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
-                    finish()
-                }
-                .addOnFailureListener {
-                    // Write failed
-                    Log.w("FireBaseLogs", "Write failed")
-                }
-    }*/
 }

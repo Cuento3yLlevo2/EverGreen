@@ -6,12 +6,12 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.mahi.evergreen.model.Chat
 import com.mahi.evergreen.network.Callback
-import com.mahi.evergreen.network.FirebaseDatabaseService
+import com.mahi.evergreen.network.DatabaseService
 import java.lang.Exception
 
 class ChatListViewModel : ViewModel() {
 
-    val firestoreService = FirebaseDatabaseService()
+    val firestoreService = DatabaseService()
     var chatList: MutableLiveData<List<Chat>> = MutableLiveData()
     var isLoading = MutableLiveData<Boolean>()
 

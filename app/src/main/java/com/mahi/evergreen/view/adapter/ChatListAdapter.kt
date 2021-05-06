@@ -12,14 +12,14 @@ import com.google.firebase.ktx.Firebase
 import com.mahi.evergreen.R
 import com.mahi.evergreen.model.Chat
 import com.mahi.evergreen.network.Callback
-import com.mahi.evergreen.network.FirebaseDatabaseService
+import com.mahi.evergreen.network.DatabaseService
 import java.lang.Exception
 
 class ChatListAdapter(val chatListListener: ChatListListener) : RecyclerView.Adapter<ChatListAdapter.ViewHolder>() {
 
     var listOfChats = ArrayList<Chat>()
     var firebaseUser = Firebase.auth.currentUser
-    var firebaseService = FirebaseDatabaseService()
+    var firebaseService = DatabaseService()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
             LayoutInflater.from(parent.context).inflate(
