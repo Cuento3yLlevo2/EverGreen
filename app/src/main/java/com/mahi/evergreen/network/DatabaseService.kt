@@ -25,7 +25,7 @@ const val USERS = "users"
 const val CHATS = "chats"
 const val CHAT_MESSAGES = "chatMessages"
 const val CHAT_MEMBERS = "chatMembers"
-// const val POSTS = "posts"
+const val POSTS = "posts"
 
 class DatabaseService {
     val database = Firebase.database("https://evergreen-app-bdbc2-default-rtdb.europe-west1.firebasedatabase.app")
@@ -329,6 +329,58 @@ class DatabaseService {
                 })
     }
 
+    fun getPostsFromDatabase(callback: Callback<List<Post>>) {
+        // .orderByChild("updatedAt")
+        database.getReference(POSTS)
+                .addValueEventListener(object : ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val postList = ArrayList<Post>()
+                        for (child in snapshot.children) {
+                            val post = child.getValue(Post::class.java)
+                            if (post != null) {
+                                postList.add(post)
+                            }
+                        }
+                        callback.onSuccess(postList)
+                    }
+                    override fun onCancelled(error: DatabaseError) {
+                        Log.w("Data reading failure", "Error getting documents.", error.toException())
+                    }
+                })
+    }
+
+    fun getFavoritePostsFromDatabase(currentUserID: String, callback: Callback<List<Post>>) {
+        database.getReference(USERS)
+                .child(currentUserID)
+                .child("favoritePosts").addValueEventListener(object : ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val favoritePostsList = ArrayList<String>()
+                        for (child in snapshot.children) {
+                            child.key?.let { favoritePostsList.add(it) }
+                        }
+                        val postList = ArrayList<Post>()
+                        for (favoritePost in favoritePostsList) {
+                            database.getReference(POSTS).child(favoritePost)
+                                    .addValueEventListener(object : ValueEventListener{
+                                        override fun onDataChange(snapshot: DataSnapshot) {
+                                            val post = snapshot.getValue(Post::class.java)
+                                            if (post != null) {
+                                                postList.add(post)
+                                            }
+                                        }
+                                        override fun onCancelled(error: DatabaseError) {
+                                            Log.w("Data reading failure", "Error getting documents.", error.toException())
+                                        }
+                                    })
+                        }
+                        callback.onSuccess(postList)
+                    }
+                    override fun onCancelled(error: DatabaseError) {
+                        Log.w("Data reading failure", "Error getting documents.", error.toException())
+                    }
+                })
+    }
+
     // Extra Tools
 
     fun setProgressDialogWhenDataLoading(context: Context, message:String): AlertDialog {
@@ -375,5 +427,8 @@ class DatabaseService {
         }
         return dialog
     }
+
+
+
 
 }

@@ -10,12 +10,13 @@ class Post(val coverImage: String? = "",
            val title: String? = "",
            val postId: String? = "",
            val publisher: String? = "",
-           val category: Int? = 0,
-           val createdAt: Int? = 0,
-           val updatedAt: Int? = 0,
+           val category: MutableMap<String, Boolean> = HashMap(),
+           val createdAt: Long? = null,
+           val updatedAt: Long? = null,
            val description: String? = "",
            val images: MutableMap<String, Boolean> = HashMap(),
            val membersFollowingAsFavorite: MutableMap<String, Boolean> = HashMap(),
+           var sponsorPofile: SponsorProfile? = SponsorProfile()
 ) {
     // Null default values create a no-argument default constructor, which is needed
     // for deserialization from a DataSnapshot.

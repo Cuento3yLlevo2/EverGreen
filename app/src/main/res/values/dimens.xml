@@ -2,4 +2,8 @@
 <resources>
     <dimen name="toolbar_logo_dimen">40dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="cardCornerRadius">4dp</dimen>
+    <dimen name="textSizeTitle">20sp</dimen>
+    <dimen name="textSizeSubtitle">15sp</dimen>
+    <dimen name="imageViewPostHeight">190dp</dimen>
 </resources>
