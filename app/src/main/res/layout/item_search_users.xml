@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:padding="8dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -9,16 +10,17 @@
         android:id="@+id/ivSearchProfileImage"
         android:layout_width="55dp"
         android:layout_height="55dp"
-        android:src="@drawable/ic_profile"/>
+        android:src="@drawable/ic_profile"
+        android:contentDescription="@string/cd_profile_cover_image" />
 
     <TextView
         android:id="@+id/tvSearchUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="user name"
-        android:layout_toRightOf="@id/ivSearchProfileImage"
+        tools:text="user name"
+        android:layout_toEndOf="@id/ivSearchProfileImage"
         android:layout_centerInParent="true"
-        android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
         android:textSize="19sp"/>
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -30,8 +32,7 @@
         android:src="@color/green"
         android:layout_below="@id/tvSearchUsername"
         android:layout_marginTop="12dp"
-        android:layout_marginLeft="-16dp"
-        android:layout_toRightOf="@id/tvSearchUsername"
+        android:layout_marginStart="-16dp"
         android:layout_toEndOf="@id/ivSearchProfileImage"
         android:visibility="gone"/>
 
@@ -44,8 +45,7 @@
         android:src="@android:color/holo_red_dark"
         android:layout_below="@id/tvSearchUsername"
         android:layout_marginTop="12dp"
-        android:layout_marginLeft="-16dp"
-        android:layout_toRightOf="@id/tvSearchUsername"
+        android:layout_marginStart="-16dp"
         android:layout_toEndOf="@id/ivSearchProfileImage"
         android:visibility="gone"/>
 

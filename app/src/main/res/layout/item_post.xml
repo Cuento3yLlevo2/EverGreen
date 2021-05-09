@@ -33,7 +33,7 @@
                 android:layout_marginStart="18dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="24dp"
-                />
+                android:contentDescription="@string/cd_sponsored_image" />
 
             <TextView
                 android:id="@+id/tvPostSponsoredTitle"
@@ -79,7 +79,8 @@
             android:layout_height="@dimen/imageViewPostHeight"
             android:layout_marginTop="1dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/post_default_image" />
+            android:src="@drawable/post_default_image"
+            android:contentDescription="@string/cd_post_cover_image" />
 
         <View
             android:id="@+id/vPostTitle"
@@ -107,9 +108,8 @@
                 android:textColor="@color/primary_text"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
-                android:drawableStart="@drawable/hand_shake"
                 android:drawablePadding="4dp"
-                />
+                app:drawableStartCompat="@drawable/hand_shake" />
 
             <ImageView
                 android:id="@+id/ivPostUpcyclingIdea"
@@ -122,7 +122,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:visibility="gone"
-                />
+                android:contentDescription="@string/cd_upcycing_ideas_icon" />
 
             <ImageView
                 android:id="@+id/ivPostFavCheck"
@@ -135,7 +135,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginTop="8dp"
                 android:visibility="gone"
-                />
+                android:contentDescription="@string/cd_favorite_check" />
 
             <ImageView
                 android:id="@+id/ivPostFavUncheck"
@@ -147,6 +147,7 @@
                 android:src="@drawable/ic_favorite_border"
                 android:layout_marginEnd="8dp"
                 android:layout_marginTop="8dp"
+                android:contentDescription="@string/cd_favorites_uncheck"
                 />
 
             <ImageView
@@ -160,7 +161,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginTop="8dp"
                 android:visibility="gone"
-                />
+                android:contentDescription="@string/cd_edit_icon" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

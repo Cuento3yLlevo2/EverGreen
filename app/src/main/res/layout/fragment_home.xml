@@ -18,14 +18,15 @@
             <ImageView
                 android:layout_width="@dimen/toolbar_logo_dimen"
                 android:layout_height="@dimen/toolbar_logo_dimen"
-                android:src="@drawable/evergreen_logo" />
+                android:src="@drawable/evergreen_logo"
+                android:contentDescription="@string/cd_evergreen_logo" />
 
             <Button
                 android:id="@+id/buttonSignOut"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/buttonSignOut"
-                android:layout_marginLeft="26dp"
+                android:layout_marginStart="26dp"
                 android:textColor="@color/white"
                 android:textAllCaps="false"
                 />

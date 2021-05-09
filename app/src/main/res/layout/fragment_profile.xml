@@ -4,12 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.ui.fragments.ProfileFragment">
+    tools:context=".view.ui.fragments.ProfileFragment"
+    android:background="@color/chat_background_light_green">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/chat_background_light_green">
+        android:background="@color/chat_background_light_green"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,7 +34,8 @@
                     android:padding="10dp"
                     android:src="@drawable/evergreen_points_icon"
                     app:layout_constraintStart_toEndOf="@id/ivProfileImage"
-                    app:layout_constraintTop_toBottomOf="@id/tvProfileUsername" />
+                    app:layout_constraintTop_toBottomOf="@id/tvProfileUsername"
+                    android:contentDescription="@string/cd_seeds_points_icon" />
 
                 <ImageView
                     android:id="@+id/ivProfileToPublicProfileArrowForward"
@@ -42,13 +45,14 @@
                     android:src="@drawable/ic_arrow_forward"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="@string/cd_arrow_forward" />
 
                 <TextView
                     android:id="@+id/tvProfileSeedsPoints"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="23"
+                    tools:text="23"
                     android:paddingTop="2dp"
                     android:textColor="@color/primary_text"
                     android:textSize="16sp"
@@ -77,7 +81,7 @@
                     android:layout_marginStart="6dp"
                     app:layout_constraintStart_toEndOf="@id/ivProfileImage"
                     app:layout_constraintTop_toTopOf="@id/ivProfileImage"
-                    android:text="Nombre de usuario" />
+                    tools:text="Nombre de usuario" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/ivProfileImage"
@@ -115,7 +119,8 @@
                     android:src="@drawable/ic_twotone_add_circle_24"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="@string/cd_add_circle" />
 
                 <TextView
                     android:id="@+id/tvProfileCreateUpcyclingIdeasText"
@@ -152,7 +157,8 @@
                     android:src="@drawable/ic_arrow_forward"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="@string/cd_arrow_forward" />
 
                 <TextView
                     android:id="@+id/tvProfileUpcyclingIdeasText"
@@ -176,7 +182,8 @@
                     android:src="@drawable/eco_idea_24dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="@string/cd_upcycing_ideas_icon" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -201,7 +208,8 @@
                     android:src="@drawable/ic_twotone_add_circle_24"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="@string/cd_arrow_forward" />
 
                 <TextView
                     android:id="@+id/tvProfileCreateUpcyclingServiceText"
@@ -238,7 +246,8 @@
                     android:src="@drawable/ic_arrow_forward"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="@string/cd_arrow_forward" />
 
                 <TextView
                     android:id="@+id/tvProfileUpcyclingServicesText"
@@ -262,7 +271,8 @@
                     android:src="@drawable/hand_shake"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="@string/cd_upcycing_service_icon" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -304,7 +314,8 @@
                     android:src="@drawable/ic_arrow_forward"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="@string/cd_arrow_forward" />
 
                 <TextView
                     android:id="@+id/tvProfileSettingsText"
@@ -328,7 +339,8 @@
                     android:src="@drawable/ic_baseline_settings_24"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="@string/cd_settings_icon" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -370,7 +382,8 @@
                     android:src="@drawable/ic_arrow_forward"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="@string/cd_arrow_forward" />
 
                 <TextView
                     android:id="@+id/tvProfileSupportText"
@@ -394,7 +407,8 @@
                     android:src="@drawable/ic_contact_support_24"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="@string/cd_support_icon" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

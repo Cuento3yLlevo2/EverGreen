@@ -20,7 +20,8 @@
                 android:layout_marginStart="18dp"
                 android:layout_width="@dimen/toolbar_logo_dimen"
                 android:layout_height="@dimen/toolbar_logo_dimen"
-                android:src="@drawable/evergreen_logo" />
+                android:src="@drawable/evergreen_logo"
+                android:contentDescription="@string/cd_evergreen_logo" />
 
             <TextView
                 android:id="@+id/tvProfileUpcyclingIdeasText"
@@ -31,7 +32,7 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_marginStart="14dp"
-                android:text="Tus publicaciones favoritas" />
+                android:text="@string/favorites_appbar_text" />
 
         </Toolbar>
 

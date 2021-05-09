@@ -34,7 +34,7 @@
                 android:id="@+id/tvVisitedMessageTitle"
                 android:layout_width="220dp"
                 android:layout_height="wrap_content"
-                android:text="Vasos de botellas cortadas"
+                tools:text="Vasos de botellas cortadas"
                 android:textSize="17sp"
                 android:textColor="@color/primary_text"
                 android:ellipsize="end"
@@ -51,7 +51,7 @@
                 android:src="@mipmap/ic_launcher"
                 android:layout_gravity="end"
                 android:layout_marginEnd="6dp"
-                />
+                android:contentDescription="@string/cd_post_cover_image" />
 
         </Toolbar>
 
@@ -94,20 +94,22 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                />
+                android:contentDescription="@string/cd_attach_image_file" />
 
             <EditText
                 android:id="@+id/etTextMessage"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:hint="write message here..."
+                android:hint="@string/hint_write_message"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/ivAttachImageFileBtn"
                 app:layout_constraintEnd_toStartOf="@id/ivSendMessageBtn"
                 android:layout_marginStart="6dp"
-                android:layout_marginEnd="6dp"/>
+                android:layout_marginEnd="6dp"
+                android:importantForAutofill="no"
+                android:inputType="text|textMultiLine" />
 
             <ImageView
                 android:id="@+id/ivSendMessageBtn"
@@ -117,7 +119,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                />
+                android:contentDescription="@string/cd_send_message_icon" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

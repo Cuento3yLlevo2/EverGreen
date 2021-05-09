@@ -37,4 +37,24 @@
     <string name="create_upcycling_service_text">Publica servicios de upcycling</string>
     <string name="profile_support_hint">Habla con nosotros</string>
     <string name="profile_settings_hint">Gestiona tu cuenta</string>
+    <string name="chat_list_appbar_text">Mensajes</string>
+    <string name="favorites_appbar_text">Tus publicaciones favoritas</string>
+    <string name="cd_seeds_points_icon">Imagen de moneda de puntaje del usuario</string>
+    <string name="cd_arrow_forward">Flecha para ir a la siguiente página</string>
+    <string name="cd_add_circle">Botón para crear contenido</string>
+    <string name="cd_support_icon">Icono de soporte</string>
+    <string name="cd_settings_icon">Icono de configuración</string>
+    <string name="cd_upcycing_service_icon">Icono de servicios de upcycing</string>
+    <string name="cd_upcycing_ideas_icon">Icono de ideas de upcycing</string>
+    <string name="cd_sponsored_image">Imagen de la publicidad</string>
+    <string name="cd_post_cover_image">Imagen principal de la publicación</string>
+    <string name="cd_favorite_check">Corazón de favoritos relleno</string>
+    <string name="cd_favorites_uncheck">Corazón de favoritos vacío</string>
+    <string name="cd_edit_icon">Icono de edición de contenido</string>
+    <string name="cd_image_sent">Imagen enviada</string>
+    <string name="hint_search_user">busca un nombre de usuario</string>
+    <string name="cd_evergreen_logo">EverGreen logo</string>
+    <string name="cd_attach_image_file">Icono para enviar una imagen</string>
+    <string name="hint_write_message">envía un mensaje…</string>
+    <string name="cd_send_message_icon">Icono para enviar un mensaje</string>
 </resources>

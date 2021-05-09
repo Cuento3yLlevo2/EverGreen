@@ -2,6 +2,7 @@
 <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -9,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_margin="5dp">
+        android:layout_margin="5dp"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -23,7 +25,8 @@
                 android:layout_height="80dp"
                 android:src="@mipmap/ic_launcher"
                 android:padding="8dp"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop"
+                android:contentDescription="@string/cd_post_cover_image" />
 
         </LinearLayout>
         <LinearLayout
@@ -38,7 +41,7 @@
                 android:id="@+id/tvChatUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Idaira"
+                tools:text="Idaira"
                 android:textSize="14sp"
                 android:textColor="@color/secondary_text"
                 android:ellipsize="end"
@@ -47,7 +50,7 @@
                 android:id="@+id/tvChatPostTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Vasos de botellas cortadas"
+                tools:text="Vasos de botellas cortadas"
                 android:textSize="17sp"
                 android:textColor="@color/primary_text"
                 android:ellipsize="end"
@@ -55,10 +58,11 @@
                 android:textStyle="bold"/>
             <TextView
                 android:paddingStart="8dp"
+                android:paddingEnd="4dp"
                 android:id="@+id/tvChatLastMessage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Quiero 12 vasos para regalar a mi primo, puedo reutilizar mis botellas de vino vacías?"
+                tools:text="Quiero 12 vasos para regalar a mi primo, puedo reutilizar mis botellas de vino vacías?"
                 android:textSize="14sp"
                 android:textColor="@color/secondary_text"
                 android:ellipsize="end"
