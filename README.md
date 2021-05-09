@@ -105,7 +105,7 @@ All this will be done with Kotlin as the programming language and Google Firebas
 
 ## Database Structure
 
-```json
+```
 {
   // Main users data
   "users": {
