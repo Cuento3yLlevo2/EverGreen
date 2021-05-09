@@ -105,112 +105,187 @@ All this will be done with Kotlin as the programming language and Google Firebas
 
 ## Database Structure
 
-    {
-      // Main users data
-      "users": {
-        "user1": {
-          "uid": "idairaID",
-          "profile": {
-            "username": "Idairas",
-            "email": "idairas@fakemail.com",
-            "profileImage": "url//...",
-            "coverImage": "url//..."
-          },
-          "online": false,
-          "search": "idaira",
-          "createdAt": 1459361875666,
-          // An index to track Idaira's created posts
-          "createdPosts": {
-            // the value here doesn't matter, just that the key exists
-             "post2": true,
-             "post3": true
-          },
-          // An index to track Idaira's favorite posts
-          "favoritePosts": {
-             "post1": true,
-             "post5": true
-          }
-        },
-        "user2": { ... },
-        "user3": { ... }
+```json
+{
+  // Main users data
+  "users": {
+    "user1": {
+      "uid": "idairaID",
+      "profile": {
+        "username": "Idairas",
+        "email": "idairas@fakemail.com",
+        "profileImage": "url//...",
+        "coverImage": "url//..."
       },
-    
-      // Main posts data
-      "posts": {
-        "post1": {
-          "coverImage": "url//...1",
-          // Type could be:
-          //// UPCYCLING_SERVICE = 1,
-          //// UPCYCLING_IDEA = 2,
-          //// SPONSORED_AD = 3
-          "type": 1,
-          "minPrice": 12,
-          "title": "Esculturas con materiales reciclados",
-          "postId": "postid",
-          "publisher": "user2",
-          "category": 1,
-          "createdAt": 1459361875666,
-          "updatedAt": 1459361875666,
-          "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-          "images": {
-             "url//...1": true,
-             "url//...2": true,
-             "url//...e3": true,
-          },
-          // This is a necessary redundancy for two-way relationships on JSON.
-          "membersFollowingAsFavorite": {
-            "user1": true,
-            "user3": true,
-          }
-        },
-        "post2": { ... },
-        "post3": { ... }
+      "online": false,
+      "search": "idaira",
+      "createdAt": 1459361875666,
+      // An index to track Idaira's created posts
+      "createdPosts": {
+        // the value here doesn't matter, just that the key exists
+         "post2": true,
+         "post3": true
       },
-    
-      // Chats contains only meta info about each conversation
-      // stored under the chats's unique ID
-      "chats": {
-        "one": {
-          "postID":"post1"
-          "postTitle": "Vasos de Botellas Cortadas",
-          "postImageURL": "url//...",
-          "lastMessage": "yo estoy bien y tu?.",
-          "timestamp": 1459361875666
-        },
-        "two": { ... },
-        "three": { ... }
-      },
-    
-      // Conversation members are easily accessible
-      // and stored by chat conversation ID
-      "chatMembers": {
-        // we'll talk about indices like this below
-        "one": {
-          "user1": true,
-          "user2": true
-        },
-        "two": { ... },
-        "three": { ... }
-      },
-    
-      // Messages are separate from data we may want to iterate quickly
-      // but still easily paginated and queried, and organized by chat
-      // conversation ID
-      "chatMessages": {
-        "one": {
-          "m1": {
-            "sender": "idairaID",
-            "message": "hola como estas?.",
-            "iseen": true,
-            "url": "url//...",
-            "timestamp": 1459361875337
-          },
-          "m2": { ... },
-          "m3": { ... }
-        },
-        "two": { ... },
-        "three": { ... }
+      // An index to track Idaira's favorite posts
+      "favoritePosts": {
+         "post1": true,
+         "post5": true
       }
+    },
+    "user2": { ... },
+    "user3": { ... }
+  },
+
+  // Main posts data
+  "posts": {
+    "post1": {
+      "coverImage": "url//...1",
+      // Type could be:
+      //// UPCYCLING_SERVICE = 1,
+      //// UPCYCLING_IDEA = 2,
+      //// SPONSORED_AD = 3
+      "type": 1,
+      "minPrice": 12,
+      "title": "Esculturas con materiales reciclados",
+      "postId": "postid",
+      "publisher": "user2",
+      "upcyclingCategories": {
+        "11": true,
+        "2": true
+      },
+      "createdAt": 1459361875666,
+      "updatedAt": 1459361875666,
+      "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "images": {
+         "url//...1": true,
+         "url//...2": true,
+         "url//...e3": true,
+      },
+      // This is a necessary redundancy for two-way relationships on JSON.
+      "membersFollowingAsFavorite": {
+        "user1": true,
+        "user3": true,
+      },
+      "sponsorProfile": {
+        "brandImage": "url//...",
+        "title": "coche 100% electrico!",
+        "linkText": "descubrenos"
+      },
+
+    },
+    "post2": { ... },
+    "post3": { ... }
+  },
+
+  // Upcycling Categories to filter posts
+  "upcyclingCategories" : {
+    "1": {
+      "name" : "Cartón",
+      "description" : "Reciclar cartón es la opción fácil, pero ¿alguna vez ha pensado en hacer Upcycling con cajas de cartón? Es fuerte, versátil y casi siempre disponible, así que aquí tienes algunas ideas de Upcycling de cartón para que pruebes."
+    },
+    "2": {
+      "name" : "Vidrio",
+      "description" : "Todos conocemos el sonido de un montón de vidrios rompiéndose al ser depositados en el camión de reciclaje. ¿Por qué no buscar nuevos usos para botellas de vidrio, frascos e incluso ventanas antes de ponerlos inmediatamente en el contenedor de reciclaje?"
+    },
+    "3": {
+      "name" : "Plástico",
+      "description" : "Una botella de plástico vacía es el símbolo por excelencia de nuestra sociedad derrochadora, upcycling es una forma de darle una nueva vida útil al omnipresente plástico."
+    },
+    "4": {
+      "name" : "Joyas",
+      "description" : "Las joyas viejas y rotas son una de las cosas más divertidas para hacer Upcycling. Aquí hay algunas ideas para hacer Upcycling de joyas rotas que no se pueden reparar."
+    },
+    "5": {
+      "name" : "Tela de desecho",
+      "description" : "Hay varias formas de terminar con tela de desecho. La principal es la costura o cuando se desgasta la tela de nuestras sábanas, toallas y manteles. Prepárate porque hay muchas formas de utilizar pequeños trozos de tela y textiles de desecho, así como trozos más grandes de tela no deseada."
+    },
+    "6": {
+      "name" : "Jeans",
+      "description" : "Los jeans viejos obviamente caen en la categoría de ropa, pero hay tantas opciones para reciclar sus viejos jeans, chaquetas, faldas o pantalones cortos que se merecían una categoría propia."
+    },
+    "7": {
+      "name" : "Poliestireno",
+      "description" : "¿No se te hunde el corazón cuando abres algo que has comprado y te das cuenta de que está envuelto en espuma de poliestireno o algún otro tipo de embalaje de espuma o gránulos?"
+    },
+    "8": {
+      "name" : "Ropa",
+      "description" : "Todos compramos demasiada ropa. La moda es voluble y la ropa se desgasta, se rompe o se mancha. Donar ropa que no uses es una buena opción, pero cuando está en mal estado quizás es hora de aplicar upcycling."
+    },
+    "9": {
+      "name" : "Madera",
+      "description" : "Es posible que se sorprenda de lo fácil que es terminar con madera no deseada. Hay muchas cosas que puede hacer para hacer Upcycling de madera, con las herramientas adecuadas."
+    },
+    "10": {
+      "name" : "Papel",
+      "description" : "Afortunadamente, muchos de nosotros ahora recibimos extractos bancarios electrónicos, pero de alguna manera eso no parece reducir la cantidad de correo basura, volantes y circulares de tiendas que se depositan en el buzón todos los días."
+    },
+    "11": {
+      "name" : "Metal",
+      "description" : "Todos sabemos sobre la abundancia de latas en los contenedores de reciclaje, pero hay tantas cosas que puedes hacer con ellas que la próxima vez que las deseches lo pensaras dos veces."
+    },
+    "12": {
+      "name" : "Muebles",
+      "description" : "Afortunadamente, el reciclaje de muebles se está volviendo cada vez más popular e incluso se ha convertido en negocios exitosos para muchos emprendedores individuales, como los/las Artistas y Artesanos que ofrecen sus servicios en nuestra plataforma."
+    },
+    "13": {
+      "name" : "Cachivaches",
+      "description" : "Básicamente son solo cosas rotas o fuera de estilo que heredamos o compramos (¡y luego nos arrepentimos!) Que no encajan en ninguna de las otras categorías."
+    },
+    "14": {
+      "name" : "Otros",
+      "description" : "Cualquier material al que se le pueda aplicar Upcycling que no hayamos incluido en nuestra lista de categorías."
     }
+
+  },
+
+  // Chats contains only meta info about each conversation
+  // stored under the chats's unique ID
+  "chats": {
+    "one": {
+      "postID":"post1"
+      "postTitle": "Vasos de Botellas Cortadas",
+      "postImageURL": "url//...",
+      "lastMessage": "mlolo: yo estoy bien y tu?.",
+      "isSeen": false
+      "timestamp": 1459361875666
+    },
+    "two": { ... },
+    "three": { ... }
+  },
+
+  // Conversation members are easily accessible
+  // and stored by chat conversation ID
+  "chatMembers": {
+    // we'll talk about indices like this below
+    "one": {
+      "user1": true,
+      "user2": true
+    },
+    "two": { ... },
+    "three": { ... }
+  },
+
+  // Messages are separate from data we may want to iterate quickly
+  // but still easily paginated and queried, and organized by chat
+  // conversation ID
+  "chatMessages": {
+    "one": {
+      "m1": {
+        "sender": "idairaID",
+        "message": "hola como estas?.",
+        "iseen": true,
+        "url": "url//...",
+        "timestamp": 1459361875337
+      },
+      "m2": { ... },
+      "m3": { ... }
+    },
+    "two": { ... },
+    "three": { ... }
+  }
+}
+
+```
+
 
 
