@@ -18,15 +18,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-        setActionBar(findViewById(R.id.toolbarMain))
+        setActionBar(findViewById(R.id.toolbarHome))
         title = ""
 
         // Set Navigation Config for app flow
         configNav()
-
-        binding.buttonSignOut.setOnClickListener {
-            signOut()
-        }
 
     }
 
@@ -34,12 +30,6 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupWithNavController(binding.bnvMenu, Navigation.findNavController(this, R.id.fragContent))
     }
 
-    private fun signOut() {
-        FirebaseAuth.getInstance().signOut()
-        val intent = Intent(this@MainActivity, WelcomeActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
-        finish()
-    }
+
 
 }

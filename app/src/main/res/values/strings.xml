@@ -28,4 +28,13 @@
     <string name="buttonSignOut">Cerrar sesión</string>
     <string name="cd_profile_cover_image">profile cover image</string>
     <string name="item_post_sponsored_tag">Ad</string>
+    <string name="profile_seeds_text">Seeds</string>
+    <string name="profile_upcycling_idea_text">Mis ideas de upcycling</string>
+    <string name="profile_upcycling_services_text">Mis servicios de upcycling</string>
+    <string name="profile_settings_text">Configuración</string>
+    <string name="profile_support_text">Soporte</string>
+    <string name="create_upcycling_idea_text">Comparte tus ideas de upcycling</string>
+    <string name="create_upcycling_service_text">Publica servicios de upcycling</string>
+    <string name="profile_support_hint">Habla con nosotros</string>
+    <string name="profile_settings_hint">Gestiona tu cuenta</string>
 </resources>

@@ -1,30 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.ui.fragments.FavoritesFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvFavoritePosts"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbarFavorites"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content">
 
-    <RelativeLayout
-        android:id="@+id/rlBaseFavoritesPost"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        <Toolbar
+            android:id="@+id/toolbarFavorites"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <ImageView
+                android:layout_marginStart="18dp"
+                android:layout_width="@dimen/toolbar_logo_dimen"
+                android:layout_height="@dimen/toolbar_logo_dimen"
+                android:src="@drawable/evergreen_logo" />
+
+            <TextView
+                android:id="@+id/tvProfileUpcyclingIdeasText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:textColor="@color/primary_text"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginStart="14dp"
+                android:text="Tus publicaciones favoritas" />
+
+        </Toolbar>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/primary"
-            android:alpha="0.3"/>
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_height="1dp"
+            android:background="@color/black"
             />
-    </RelativeLayout>
 
-</FrameLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/appbarFavorites">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvFavoritePosts"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <RelativeLayout
+            android:id="@+id/rlBaseFavoritesPost"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:alpha="0.4"/>
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                />
+        </RelativeLayout>
+
+    </FrameLayout>
+
+</RelativeLayout>

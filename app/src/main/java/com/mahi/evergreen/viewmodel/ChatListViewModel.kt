@@ -11,7 +11,7 @@ import java.lang.Exception
 
 class ChatListViewModel : ViewModel() {
 
-    val firestoreService = DatabaseService()
+    private val firestoreService = DatabaseService()
     var chatList: MutableLiveData<List<Chat>> = MutableLiveData()
     var isLoading = MutableLiveData<Boolean>()
 

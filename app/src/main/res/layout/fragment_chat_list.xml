@@ -5,9 +5,47 @@
     android:layout_height="match_parent"
     tools:context=".view.ui.fragments.ChatListFragment">
 
-    <FrameLayout
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbarChatList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <Toolbar
+            android:id="@+id/toolbarChatList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <ImageView
+                android:layout_marginStart="18dp"
+                android:layout_width="@dimen/toolbar_logo_dimen"
+                android:layout_height="@dimen/toolbar_logo_dimen"
+                android:src="@drawable/evergreen_logo" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:textColor="@color/primary_text"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginStart="14dp"
+                android:text="Mensajes" />
+
+        </Toolbar>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black"
+            />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/appbarChatList">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvChatList"

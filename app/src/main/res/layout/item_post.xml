@@ -69,7 +69,7 @@
             android:id="@+id/vPostSponsoredTop"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/primary"
+            android:background="@color/primary_dark"
             android:visibility="gone"
             />
 
@@ -85,7 +85,7 @@
             android:id="@+id/vPostTitle"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/primary"
+            android:background="@color/primary_dark"
             />
 
         <androidx.constraintlayout.widget.ConstraintLayout

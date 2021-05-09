@@ -11,7 +11,7 @@ import com.mahi.evergreen.network.DatabaseService
 import java.lang.Exception
 
 class UsersViewModel: ViewModel() {
-    val firestoreService = DatabaseService()
+    private val firestoreService = DatabaseService()
     var listUsers: MutableLiveData<List<User>> = MutableLiveData()
     var isLoading = MutableLiveData<Boolean>()
     private var firebaseUser: FirebaseUser? = null
@@ -25,7 +25,7 @@ class UsersViewModel: ViewModel() {
         }
     }
 
-    fun getUsersFromFirebase() {
+    private fun getUsersFromFirebase() {
         firebaseUser = Firebase.auth.currentUser
         firestoreService.getUsersExcludingCurrent(firebaseUser, object: Callback<List<User>> {
             override fun onSuccess(result: List<User>?) {
@@ -39,7 +39,7 @@ class UsersViewModel: ViewModel() {
         })
     }
 
-    fun searchForUsers(keyword: String) {
+    private fun searchForUsers(keyword: String) {
         firebaseUser = Firebase.auth.currentUser
         firestoreService.getUsersQuery(keyword, firebaseUser, object: Callback<List<User>> {
             override fun onSuccess(result: List<User>?) {

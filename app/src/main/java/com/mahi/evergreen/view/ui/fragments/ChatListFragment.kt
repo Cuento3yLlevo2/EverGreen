@@ -2,22 +2,18 @@ package com.mahi.evergreen.view.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mahi.evergreen.databinding.FragmentChatListBinding
 import com.mahi.evergreen.model.Chat
 import com.mahi.evergreen.view.adapter.ChatListAdapter
 import com.mahi.evergreen.view.adapter.ChatListListener
-import com.mahi.evergreen.view.adapter.ChatMessagesAdapter
-import com.mahi.evergreen.view.adapter.UsersAdapter
 import com.mahi.evergreen.view.ui.activities.MessageChatActivity
 import com.mahi.evergreen.viewmodel.ChatListViewModel
-import com.mahi.evergreen.viewmodel.ChatMessagesViewModel
 
 
 class ChatListFragment : Fragment(), ChatListListener {
@@ -33,10 +29,9 @@ class ChatListFragment : Fragment(), ChatListListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentChatListBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -72,11 +67,11 @@ class ChatListFragment : Fragment(), ChatListListener {
     }
 
     override fun observeViewModel() {
-        viewModel.chatList.observe(viewLifecycleOwner, Observer { chat ->
+        viewModel.chatList.observe(viewLifecycleOwner, { chat ->
             chatListAdapter.updateData(chat)
         })
 
-        viewModel.isLoading.observe(viewLifecycleOwner, Observer {
+        viewModel.isLoading.observe(viewLifecycleOwner, {
             if(it != null)
                 binding.rlBaseChats.visibility = View.INVISIBLE
         })

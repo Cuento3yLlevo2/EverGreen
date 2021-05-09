@@ -330,8 +330,8 @@ class DatabaseService {
     }
 
     fun getPostsFromDatabase(callback: Callback<List<Post>>) {
-        // .orderByChild("updatedAt")
         database.getReference(POSTS)
+                .orderByChild("updatedAt")
                 .addValueEventListener(object : ValueEventListener{
                     override fun onDataChange(snapshot: DataSnapshot) {
                         val postList = ArrayList<Post>()
@@ -427,8 +427,5 @@ class DatabaseService {
         }
         return dialog
     }
-
-
-
 
 }

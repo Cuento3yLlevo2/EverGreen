@@ -1,16 +1,13 @@
 package com.mahi.evergreen.view.ui.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import com.mahi.evergreen.R
 import com.mahi.evergreen.databinding.FragmentFavoritesBinding
-import com.mahi.evergreen.databinding.FragmentHomeBinding
 import com.mahi.evergreen.model.Post
 import com.mahi.evergreen.view.adapter.PostAdapter
 import com.mahi.evergreen.view.adapter.PostListener
@@ -29,10 +26,9 @@ class FavoritesFragment : Fragment() , PostListener {
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentFavoritesBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -64,11 +60,11 @@ class FavoritesFragment : Fragment() , PostListener {
     }
 
     override fun observeViewModel() {
-        viewModel.postList.observe(viewLifecycleOwner, Observer { post ->
+        viewModel.postList.observe(viewLifecycleOwner, { post ->
             postAdapter.updateData(post)
         })
 
-        viewModel.isLoading.observe(viewLifecycleOwner, Observer {
+        viewModel.isLoading.observe(viewLifecycleOwner, {
             if(it != null)
                 binding.rlBaseFavoritesPost.visibility = View.INVISIBLE
         })

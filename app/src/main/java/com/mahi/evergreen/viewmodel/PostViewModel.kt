@@ -12,7 +12,7 @@ import java.lang.Exception
 
 class PostViewModel : ViewModel() {
 
-    val firestoreService = DatabaseService()
+    private val firestoreService = DatabaseService()
     var postList: MutableLiveData<List<Post>> = MutableLiveData()
     var isLoading = MutableLiveData<Boolean>()
     private var firebaseUser: FirebaseUser? = null

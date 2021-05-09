@@ -5,33 +5,6 @@
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Toolbar
-            android:id="@+id/toolbarMain"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white">
-            <ImageView
-                android:layout_width="@dimen/toolbar_logo_dimen"
-                android:layout_height="@dimen/toolbar_logo_dimen"
-                android:src="@drawable/evergreen_logo" />
-
-            <Button
-                android:id="@+id/buttonSignOut"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/buttonSignOut"
-                android:layout_marginLeft="26dp"
-                android:textColor="@color/white"
-                android:textAllCaps="false"
-                />
-        </Toolbar>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
