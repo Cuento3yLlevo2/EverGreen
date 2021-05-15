@@ -35,7 +35,7 @@
                 android:layout_width="220dp"
                 android:layout_height="wrap_content"
                 tools:text="Vasos de botellas cortadas"
-                android:textSize="17sp"
+                android:textSize="@dimen/textSizeTitle"
                 android:textColor="@color/primary_text"
                 android:ellipsize="end"
                 android:lines="1"
@@ -109,7 +109,8 @@
                 android:layout_marginStart="6dp"
                 android:layout_marginEnd="6dp"
                 android:importantForAutofill="no"
-                android:inputType="text|textMultiLine" />
+                android:inputType="text|textMultiLine"
+                android:textSize="@dimen/textSizeChat"/>
 
             <ImageView
                 android:id="@+id/ivSendMessageBtn"

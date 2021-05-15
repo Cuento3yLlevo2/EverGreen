@@ -8,8 +8,10 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseUser
@@ -22,6 +24,7 @@ import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
 import com.google.firebase.storage.ktx.storage
+import com.mahi.evergreen.R
 import com.mahi.evergreen.databinding.ActivityMessageChatBinding
 import com.mahi.evergreen.model.*
 import com.mahi.evergreen.network.Callback
@@ -30,7 +33,6 @@ import com.mahi.evergreen.view.adapter.ChatMessagesAdapter
 import com.mahi.evergreen.view.adapter.ChatMessagesListener
 import com.mahi.evergreen.viewmodel.ChatMessagesViewModel
 import com.squareup.picasso.Picasso
-import java.lang.Exception
 
 class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
 
@@ -53,13 +55,19 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
         binding = ActivityMessageChatBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+        binding.toolbarMessageChat.navigationIcon = ContextCompat.getDrawable(view.context, R.drawable.arrow_backwards)
+        binding.toolbarMessageChat.setNavigationOnClickListener {
+            finish()
+        }
 
         // retrieve from Firebase.auth the current user UID
         firebaseUser = Firebase.auth.currentUser
         // connect viewModel with View
         viewModel = ViewModelProvider(this).get(ChatMessagesViewModel::class.java)
 
-        // type 1 = chatActivity started from chatList, type 2 = chatActivity started from userList
+        // type 1 = chatActivity started from chatList,
+        // type 2 = chatActivity started from userList,
+        // type 3 = chatActivity started from Post
         type = intent.getIntExtra("type", 0)
         when (type) {
             1 -> {
@@ -68,14 +76,30 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
                 // update directly viewModel ChatID
                 viewModel.chatID = chatIDFromChatList
                 firebaseUser?.let { displayMessagesWithChatID(chatIDFromChatList, view.context, it.uid) }
+                displayChatData(viewModel.chatID)
             }
             2 -> {
                 // retrieve from previous activity the Visited User UID
+                /*
                 userIDVisited = intent.getStringExtra("visit_user_id").toString()
                 firebaseUser?.let { displayMessagesWithVisitedUserID(userIDVisited, view.context, it.uid) }
+                */
+                Log.w("Activity creation error", "Error: type of activity not currentlyused.")
+                finish()
+            }
+            3 -> {
+                // retrieve post data from previous activity
+                val postImageURL = intent.getStringExtra("postImageURL").toString()
+                val postTitle = intent.getStringExtra("postTitle").toString()
+                val postID = intent.getStringExtra("postID").toString()
+                // retrieve from previous activity the Visited User UID
+                userIDVisited = intent.getStringExtra("visit_user_id").toString()
+                firebaseUser?.let { displayMessagesWithVisitedUserID(userIDVisited, view.context, it.uid, postID, postTitle, postImageURL, this) }
+
             }
             else -> {
                 Log.w("Activity creation error", "Error: type of activity not declare.")
+                finish()
             }
         }
 
@@ -95,9 +119,18 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
         }
 
         observeViewModel()
+
     }
 
-    private fun displayMessagesWithVisitedUserID(userIDVisited: String, context: Context, currentUserID: String) {
+    private fun displayMessagesWithVisitedUserID(
+        userIDVisited: String,
+        context: Context,
+        currentUserID: String,
+        postID: String,
+        postTitle: String,
+        postImageURL: String,
+        messageChatActivity: MessageChatActivity
+    ) {
         val visitedUserDbRef = reference.child("users").child(userIDVisited)
         visitedUserDbRef.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -106,7 +139,8 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
                 if (visitedUserData?.profile?.profileImage != null) {
                     Picasso.get().load(visitedUserData.profile?.profileImage).into(binding.ivVisitedProfileImage)
 
-                    viewModel.getChatIDAndRefreshChatMessages(currentUserID, userIDVisited)
+                    viewModel.getChatIDAndRefreshChatMessages(currentUserID, userIDVisited, postID, postTitle, postImageURL, messageChatActivity)
+
 
                     chatMessagesAdapter = ChatMessagesAdapter(this@MessageChatActivity, visitedUserData.profile?.profileImage!!)
 
@@ -117,6 +151,29 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
                         adapter = chatMessagesAdapter
                         setHasFixedSize(true)
                     }
+
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                Log.w("Data reading failure", "Error getting documents.", error.toException())
+            }
+        })
+    }
+
+    fun displayChatData(chatID: String) {
+        val chatRef = reference.child("chats").child(chatID)
+        chatRef.addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+                val chatData: Chat? = snapshot.getValue(Chat::class.java)
+
+                if (chatData != null) {
+                    Glide.with(this@MessageChatActivity) // contexto
+                            .load(chatData.postImageURL) // donde esta la url de la imagen
+                            .placeholder(R.drawable.post_default_image) // placeholder
+                            .into(binding.ivVisitedPostImage) // donde la vamos a colocar
+
+                    chatData.postTitle?.let { binding.tvVisitedMessageTitle.text = it }
                 }
             }
             override fun onCancelled(error: DatabaseError) {
@@ -261,3 +318,4 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
     }
 
 }
+

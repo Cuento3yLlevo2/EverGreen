@@ -43,7 +43,7 @@
                 android:layout_below="@id/ivSettingsProfileImage"
                 android:layout_marginTop="15dp"
                 android:textColor="@color/primary_text"
-                android:textSize="20sp"
+                android:textSize="@dimen/textSizeTitle"
                 android:textStyle="bold"
                 android:layout_marginBottom="20dp"
                 />

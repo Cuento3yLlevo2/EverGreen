@@ -30,10 +30,6 @@ const val POSTS = "posts"
 class DatabaseService {
     val database = Firebase.database("https://evergreen-app-bdbc2-default-rtdb.europe-west1.firebasedatabase.app")
 
-    init {
-        // database.setPersistenceEnabled(true)
-    }
-
     // Write to Realtime Database
 
     fun writeNewUser(userId: String, username: String, email: String, callback: Callback<Boolean>) {
@@ -45,6 +41,7 @@ class DatabaseService {
                 email,
                 defaultProfileImage,
                 defaultCoverImage,
+            0
         )
 
         val user = User(
@@ -67,14 +64,21 @@ class DatabaseService {
                 }
     }
 
-    fun writeNewChat(senderID: String, receiverID: String, callback: Callback<String>) {
-        var chatID = ""
+    fun writeNewChat(
+        postImageURL: String,
+        postTitle: String,
+        postID: String,
+        receiverID: String,
+        senderID: String,
+        callback: Callback<String>
+    ) {
+        var chatID: String
         val currentTime = System.currentTimeMillis()
         val chatKey = database.reference.push().key
         if (chatKey != null) {
 
-            val chat = Chat("postID", "PostTitle", "PostImage", null, false, currentTime, chatKey)
-            val chatMembers = ChatMembers(chatKey, hashMapOf(senderID to true, receiverID to true))
+            val chat = Chat(postID, postTitle, postImageURL, null, false, currentTime, chatKey)
+            val chatMembers = ChatMembers(chatKey, postID, hashMapOf(senderID to true, receiverID to true))
             database.reference.child(CHATS).child(chatKey).setValue(chat).addOnCompleteListener { task ->
                 if (task.isSuccessful){
                     database.reference.child(CHAT_MEMBERS).child(chatKey).setValue(chatMembers).addOnCompleteListener {
@@ -207,7 +211,12 @@ class DatabaseService {
                 })
     }
 
-    fun getChatIDFromDatabase(currentUserID: String, visitedUserID: String, callback: Callback<String>) {
+    fun getChatIDFromDatabase(
+        postID: String,
+        currentUserID: String,
+        visitedUserID: String,
+        callback: Callback<String>
+    ) {
         var chatID = ""
         database.getReference(CHAT_MEMBERS)
                 .get()
@@ -215,10 +224,12 @@ class DatabaseService {
                     for (child in result.children) {
                         val chatMembers : ChatMembers? = child.getValue(ChatMembers::class.java)
                         if (chatMembers != null) {
-                            if(chatMembers.members == hashMapOf(currentUserID to true, visitedUserID to true)){
-                                chatID = chatMembers.chatID.toString()
-                            } else if (chatMembers.members == hashMapOf(visitedUserID to true, currentUserID to true)) {
-                                chatID = chatMembers.chatID.toString()
+                            if (chatMembers.postID == postID) {
+                                if(chatMembers.members == hashMapOf(currentUserID to true, visitedUserID to true)){
+                                    chatID = chatMembers.chatID.toString()
+                                } else if (chatMembers.members == hashMapOf(visitedUserID to true, currentUserID to true)) {
+                                    chatID = chatMembers.chatID.toString()
+                                }
                             }
                         }
                     }
@@ -230,8 +241,8 @@ class DatabaseService {
     }
 
     fun getChatUsername(chatID: String, currentUserID: String, callback: Callback<String>) {
-        var chatUsernameID = ""
-        var chatUsername = ""
+        var chatUsernameID: String
+        var chatUsername: String
         database.getReference(CHAT_MEMBERS).child(chatID)
                 .get()
                 .addOnSuccessListener { result ->
@@ -263,7 +274,7 @@ class DatabaseService {
     }
 
     fun getUserIDVisited(chatIDFromChatList: String, currentUserID: String, callback: Callback<String>) {
-        var chatUsernameID = ""
+        var chatUsernameID: String
         database.getReference(CHAT_MEMBERS).child(chatIDFromChatList)
             .get()
             .addOnSuccessListener { result ->
@@ -315,7 +326,6 @@ class DatabaseService {
                                                 }
                                             }
                                         }
-                                        Log.w("chatsdata1", "chat ->>>> ${chatList.toString()}")
                                         callback.onSuccess(chatList)
                                     }
                                     override fun onCancelled(error: DatabaseError) {

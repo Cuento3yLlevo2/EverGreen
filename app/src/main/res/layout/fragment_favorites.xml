@@ -29,18 +29,12 @@
                 android:layout_height="wrap_content"
                 android:padding="8dp"
                 android:textColor="@color/primary_text"
-                android:textSize="20sp"
+                android:textSize="@dimen/textSizeTitle"
                 android:textStyle="bold"
                 android:layout_marginStart="14dp"
                 android:text="@string/favorites_appbar_text" />
 
         </Toolbar>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/black"
-            />
 
     </com.google.android.material.appbar.AppBarLayout>
 

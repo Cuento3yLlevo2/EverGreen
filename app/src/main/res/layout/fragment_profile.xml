@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.ui.fragments.ProfileFragment"
-    android:background="@color/chat_background_light_green">
+    android:background="@color/background_light_green">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/chat_background_light_green"
+        android:background="@color/background_light_green"
         >
 
         <LinearLayout
@@ -20,9 +20,13 @@
             >
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clProfileToPublicProfile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white">
+                android:background="@drawable/ripple"
+                android:clickable="true"
+                android:focusable="true"
+                >
 
 
                 <ImageView
@@ -53,9 +57,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="23"
-                    android:paddingTop="2dp"
+                    android:paddingTop="4dp"
                     android:textColor="@color/primary_text"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/textSizeSubtitle"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@id/ivProfileSeedsPointsIcon"
                     app:layout_constraintTop_toTopOf="@id/ivProfileSeedsPointsIcon" />
@@ -66,7 +70,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/profile_seeds_text"
                     android:textColor="@color/primary_text"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/textSizeSubtitle"
                     app:layout_constraintStart_toEndOf="@id/ivProfileSeedsPointsIcon"
                     app:layout_constraintTop_toBottomOf="@id/tvProfileSeedsPoints" />
 
@@ -76,7 +80,7 @@
                     android:layout_height="wrap_content"
                     android:padding="8dp"
                     android:textColor="@color/primary_text"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/textSizeTitle"
                     android:textStyle="bold"
                     android:layout_marginStart="6dp"
                     app:layout_constraintStart_toEndOf="@id/ivProfileImage"
@@ -99,54 +103,60 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0.5dp"
                 android:background="@color/primary_dark"
                 />
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
+                android:layout_height="115dp">
 
                 <ImageView
-                    android:id="@+id/ivProfileToCreateUpcyclingIdeasArrowForward"
-                    android:layout_width="38dp"
-                    android:layout_height="38dp"
-                    android:layout_marginEnd="38dp"
-                    android:layout_marginTop="14dp"
-                    android:layout_marginBottom="10dp"
-                    android:src="@drawable/ic_twotone_add_circle_24"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:id="@+id/ivProfileToCreateUpcyclingIdeas"
+                    android:layout_width="200dp"
+                    android:layout_height="70dp"
+                    android:padding="16dp"
+                    android:src="@drawable/add_upcycling_idea"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:contentDescription="@string/cd_add_circle" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="17dp"
+                    android:contentDescription="@string/cd_add_circle"
+                    android:background="@drawable/ripple_oval_images"
+                    android:clickable="true"
+                    android:focusable="true"/>
 
                 <TextView
                     android:id="@+id/tvProfileCreateUpcyclingIdeasText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="8dp"
-                    android:textColor="@color/primary_text"
-                    android:textSize="20sp"
-                    android:layout_marginStart="10dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="@dimen/textSizeTitle"
+                    android:textStyle="italic"
+                    android:layout_marginBottom="15dp"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     android:text="@string/create_upcycling_idea_text" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0.5dp"
                 android:background="@color/primary_dark"
                 />
 
+
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clProfileToUpcyclingIdeas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white">
+                android:background="@drawable/ripple"
+                android:clickable="true"
+                android:focusable="true">
 
 
                 <ImageView
@@ -166,20 +176,21 @@
                     android:layout_height="wrap_content"
                     android:padding="8dp"
                     android:textColor="@color/primary_text"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
+                    android:textSize="@dimen/textSizeTitle"
                     android:layout_marginStart="14dp"
                     app:layout_constraintStart_toEndOf="@id/ivProfileUpcyclingIdeasIcon"
                     app:layout_constraintTop_toTopOf="parent"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:text="@string/profile_upcycling_idea_text" />
 
                 <ImageView
                     android:id="@+id/ivProfileUpcyclingIdeasIcon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="18dp"
-                    android:src="@drawable/eco_idea_24dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginVertical="13dp"
+                    android:layout_marginStart="20dp"
+                    android:src="@drawable/upcycling_idea"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -189,53 +200,59 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0.5dp"
                 android:background="@color/primary_dark"
                 />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="115dp">
 
 
                 <ImageView
-                    android:id="@+id/ivProfileToCreateUpcyclingServiceArrowForward"
-                    android:layout_width="38dp"
-                    android:layout_height="38dp"
-                    android:layout_marginEnd="38dp"
-                    android:layout_marginTop="14dp"
-                    android:layout_marginBottom="10dp"
-                    android:src="@drawable/ic_twotone_add_circle_24"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:id="@+id/ivProfileToCreateUpcyclingServices"
+                    android:layout_width="200dp"
+                    android:layout_height="70dp"
+                    android:padding="14dp"
+                    android:src="@drawable/add_service_recycable"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:contentDescription="@string/cd_arrow_forward" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="15dp"
+                    android:contentDescription="@string/cd_add_circle"
+                    android:background="@drawable/ripple_oval_images"
+                    android:clickable="true"
+                    android:focusable="true"/>
 
                 <TextView
-                    android:id="@+id/tvProfileCreateUpcyclingServiceText"
+                    android:id="@+id/tvProfileCreateUpcyclingServicesText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="8dp"
-                    android:textColor="@color/primary_text"
-                    android:textSize="20sp"
-                    android:layout_marginStart="10dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="@dimen/textSizeTitle"
+                    android:textStyle="italic"
+                    android:layout_marginBottom="15dp"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     android:text="@string/create_upcycling_service_text" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0.5dp"
                 android:background="@color/primary_dark"
                 />
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clProfileToUpcyclingServices"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white">
+                android:background="@drawable/ripple"
+                android:clickable="true"
+                android:focusable="true">
 
 
                 <ImageView
@@ -255,7 +272,7 @@
                     android:layout_height="wrap_content"
                     android:padding="8dp"
                     android:textColor="@color/primary_text"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/textSizeTitle"
                     android:textStyle="bold"
                     android:layout_marginStart="14dp"
                     app:layout_constraintStart_toEndOf="@id/ivProfileUpcyclingServicesIcon"
@@ -265,10 +282,11 @@
 
                 <ImageView
                     android:id="@+id/ivProfileUpcyclingServicesIcon"
-                    android:layout_width="32dp"
-                    android:layout_height="36dp"
-                    android:layout_margin="18dp"
-                    android:src="@drawable/hand_shake"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginVertical="13dp"
+                    android:layout_marginStart="20dp"
+                    android:src="@drawable/upcycling_service"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -278,16 +296,17 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0.5dp"
                 android:background="@color/primary_dark"
                 />
+
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
-                android:textColor="@color/primary_text"
-                android:textSize="20sp"
+                android:textColor="@color/secondary_text"
+                android:textSize="@dimen/textSizeTitle"
                 android:layout_marginStart="10dp"
                 android:text="@string/profile_settings_hint"
                 android:layout_marginTop="4dp"
@@ -296,14 +315,18 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0.5dp"
                 android:background="@color/primary_dark"
                 />
 
+
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clProfileToProfileSettings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white">
+                android:background="@drawable/ripple"
+                android:clickable="true"
+                android:focusable="true">
 
 
                 <ImageView
@@ -323,7 +346,7 @@
                     android:layout_height="wrap_content"
                     android:padding="8dp"
                     android:textColor="@color/primary_text"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/textSizeTitle"
                     android:textStyle="bold"
                     android:layout_marginStart="14dp"
                     app:layout_constraintStart_toEndOf="@id/ivProfileSettingsIcon"
@@ -335,7 +358,8 @@
                     android:id="@+id/ivProfileSettingsIcon"
                     android:layout_width="32dp"
                     android:layout_height="36dp"
-                    android:layout_margin="18dp"
+                    android:layout_marginVertical="8dp"
+                    android:layout_marginStart="18dp"
                     android:src="@drawable/ic_baseline_settings_24"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -346,16 +370,17 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0.5dp"
                 android:background="@color/primary_dark"
                 />
+
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
-                android:textColor="@color/primary_text"
-                android:textSize="20sp"
+                android:textColor="@color/secondary_text"
+                android:textSize="@dimen/textSizeTitle"
                 android:layout_marginStart="10dp"
                 android:text="@string/profile_support_hint"
                 android:layout_marginTop="4dp"
@@ -364,14 +389,17 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0.5dp"
                 android:background="@color/primary_dark"
                 />
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clProfileToSupport"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white">
+                android:background="@drawable/ripple"
+                android:clickable="true"
+                android:focusable="true">
 
 
                 <ImageView
@@ -391,7 +419,7 @@
                     android:layout_height="wrap_content"
                     android:padding="8dp"
                     android:textColor="@color/primary_text"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/textSizeTitle"
                     android:textStyle="bold"
                     android:layout_marginStart="14dp"
                     app:layout_constraintStart_toEndOf="@id/ivProfileSupportIcon"
@@ -403,7 +431,8 @@
                     android:id="@+id/ivProfileSupportIcon"
                     android:layout_width="32dp"
                     android:layout_height="36dp"
-                    android:layout_margin="18dp"
+                    android:layout_marginVertical="8dp"
+                    android:layout_marginStart="18dp"
                     android:src="@drawable/ic_contact_support_24"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -414,7 +443,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0.5dp"
                 android:background="@color/primary_dark"
                 />
 

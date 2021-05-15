@@ -11,8 +11,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.lifecycle.*
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mahi.evergreen.R
 import com.mahi.evergreen.databinding.FragmentSearchUsersBinding
 import com.mahi.evergreen.model.User
 import com.mahi.evergreen.view.adapter.UsersAdapter
@@ -89,9 +92,12 @@ class SearchUsersFragment : Fragment(), UsersListener {
         builder.setItems(options) { _, which ->
             when (which) {
                 0 -> {
+                    // type 1 = chatActivity started from chatList,
+                    // type 2 = chatActivity started from userList,
+                    // type 3 = chatActivity started from Post
+
                     val intent = Intent(context, MessageChatActivity::class.java)
                     intent.putExtra("visit_user_id", user.uid)
-                    // type 1 = chatActivity started from chatList, type 2 = chatActivity started from userList
                     intent.putExtra("type", 2)
                     startActivity(intent)
                 }

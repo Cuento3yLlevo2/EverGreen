@@ -5,10 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.firebase.auth.FirebaseAuth
+import com.mahi.evergreen.R
 import com.mahi.evergreen.databinding.FragmentHomeBinding
 import com.mahi.evergreen.model.Post
 import com.mahi.evergreen.view.adapter.PostAdapter
@@ -21,6 +24,7 @@ class HomeFragment : Fragment(), PostListener {
 
     private lateinit var postAdapter: PostAdapter
     private lateinit var viewModel: PostViewModel
+
 
     private var _binding: FragmentHomeBinding? = null
     // This property is only valid between onCreateView and
@@ -70,7 +74,9 @@ class HomeFragment : Fragment(), PostListener {
 
 
     override fun onPostItemClicked(postItem: Post, position: Int) {
-        // what happens when clicked
+        val postValues = postItem.toMap()
+        val bundle = bundleOf("post" to postValues)
+        findNavController().navigate(R.id.postDetailDialogFragment, bundle)
     }
 
     override fun observeViewModel() {

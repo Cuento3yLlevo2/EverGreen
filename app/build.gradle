@@ -90,8 +90,11 @@ dependencies {
     // Retrofit: Converters can be added to support other types. In this case GSON
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     // Glide: is a fast and efficient open source media management and image loading framework for Android that wraps media decoding, memory and disk caching, and resource pooling into a simple and easy to use interface. more info https://github.com/bumptech/glide
-    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    // LoopingViewPager: looping effect for gallery of post images. More info https://github.com/siralam/LoopingViewPager
+    implementation 'com.asksira.android:loopingviewpager:1.4.1'
 
 }
 
+apply plugin: "androidx.navigation.safeargs.kotlin"
 apply plugin: 'com.google.gms.google-services'

@@ -5,9 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mahi.evergreen.R
 import com.mahi.evergreen.databinding.FragmentChatListBinding
 import com.mahi.evergreen.model.Chat
 import com.mahi.evergreen.view.adapter.ChatListAdapter
@@ -59,9 +62,11 @@ class ChatListFragment : Fragment(), ChatListListener {
 
 
     override fun onChatListItemClicked(chatListItem: Chat, position: Int) {
+        // type 1 = chatActivity started from chatList,
+        // type 2 = chatActivity started from userList,
+        // type 3 = chatActivity started from Post
         val intent = Intent(context, MessageChatActivity::class.java)
         intent.putExtra("clicked_chat_id", chatListItem.chatID)
-        // type 1 = chatActivity started from chatList, type 2 = chatActivity started from userList
         intent.putExtra("type", 1)
         startActivity(intent)
     }
