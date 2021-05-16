@@ -4,9 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.mahi.evergreen.R
 import com.mahi.evergreen.databinding.FragmentFavoritesBinding
 import com.mahi.evergreen.model.Post
 import com.mahi.evergreen.view.adapter.PostAdapter
@@ -56,17 +60,25 @@ class FavoritesFragment : Fragment() , PostListener {
 
 
     override fun onPostItemClicked(postItem: Post, position: Int) {
-        // what happens when clicked
+        val postValues = postItem.toMap()
+        val bundle = bundleOf("post" to postValues)
+        findNavController().navigate(R.id.action_navFavoritesFragment_to_postDetailDialogFragment, bundle)
     }
 
     override fun observeViewModel() {
         viewModel.postList.observe(viewLifecycleOwner, { post ->
             postAdapter.updateData(post)
+            if (post.isEmpty()) {
+                binding.rlFavoritesListEmpty.visibility = View.VISIBLE
+            } else {
+                binding.rlFavoritesListEmpty.visibility = View.GONE
+            }
         })
 
         viewModel.isLoading.observe(viewLifecycleOwner, {
             if(it != null)
                 binding.rlBaseFavoritesPost.visibility = View.INVISIBLE
+
         })
     }
 

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
+import androidx.navigation.fragment.findNavController
 import com.mahi.evergreen.R
 import com.mahi.evergreen.databinding.FragmentProfileSettingsDetailDialogBinding
 
@@ -34,6 +35,7 @@ class ProfileSettingsDetailDialogFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.toolbarSettings.navigationIcon = ContextCompat.getDrawable(view.context, R.drawable.arrow_backwards)
         binding.toolbarSettings.setNavigationOnClickListener {
+            findNavController().popBackStack()
             dismiss()
         }
         binding.toolbarSettings.title = resources.getString(R.string.profile_settings_text)

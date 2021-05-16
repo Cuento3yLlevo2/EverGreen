@@ -28,6 +28,9 @@
         <action
             android:id="@+id/action_favoritesFragment_to_chatListFragment"
             app:destination="@id/navChatListFragment" />
+        <action
+            android:id="@+id/action_navFavoritesFragment_to_postDetailDialogFragment"
+            app:destination="@id/postDetailDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/navChatListFragment"
@@ -86,12 +89,20 @@
         android:id="@+id/profileIdeasDetailDialogFragment"
         android:name="com.mahi.evergreen.view.ui.fragments.ProfileIdeasDetailDialogFragment"
         android:label="fragment_profile_ideas_detail_dialog"
-        tools:layout="@layout/fragment_profile_ideas_detail_dialog" />
+        tools:layout="@layout/fragment_profile_ideas_detail_dialog" >
+        <action
+            android:id="@+id/action_profileIdeasDetailDialogFragment_to_postDetailDialogFragment"
+            app:destination="@id/postDetailDialogFragment" />
+    </fragment>
     <fragment
         android:id="@+id/profileServicesDetailDialogFragment"
         android:name="com.mahi.evergreen.view.ui.fragments.ProfileServicesDetailDialogFragment"
         android:label="fragment_profile_services_detail_dialog"
-        tools:layout="@layout/fragment_profile_services_detail_dialog" />
+        tools:layout="@layout/fragment_profile_services_detail_dialog" >
+        <action
+            android:id="@+id/action_profileServicesDetailDialogFragment_to_postDetailDialogFragment"
+            app:destination="@id/postDetailDialogFragment" />
+    </fragment>
     <fragment
         android:id="@+id/profileSettingsDetailDialogFragment"
         android:name="com.mahi.evergreen.view.ui.fragments.ProfileSettingsDetailDialogFragment"

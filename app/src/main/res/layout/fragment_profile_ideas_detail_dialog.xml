@@ -53,6 +53,38 @@
                 />
         </RelativeLayout>
 
+        <RelativeLayout
+            android:id="@+id/rlIdeasListEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/background_light_green"
+                />
+            <ImageView
+                android:id="@+id/ivIdeasListEmptyImage"
+                android:layout_width="wrap_content"
+                android:layout_height="130dp"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/post_default_image"
+                android:layout_above="@id/tvIdeasListEmptyText"
+                />
+            <TextView
+                android:id="@+id/tvIdeasListEmptyText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:textStyle="italic"
+                android:textColor="@color/secondary_text"
+                android:textSize="@dimen/textSizeSubtitle"
+                android:text="@string/ideas_list_empty"
+                android:layout_centerInParent="true"
+                />
+        </RelativeLayout>
+
     </FrameLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

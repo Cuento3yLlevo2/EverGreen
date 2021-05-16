@@ -42,6 +42,28 @@ class PostViewModel : ViewModel() {
         getFavoritePostsFromFirebase(currentUserID)
     }
 
+    fun refreshProfilePostListByType(type: Int) {
+        firebaseUser = Firebase.auth.currentUser
+        val currentUserID = firebaseUser?.uid
+        getProfilePostsFromFirebaseByType(type, currentUserID)
+    }
+
+    private fun getProfilePostsFromFirebaseByType(type: Int, currentUserID: String?) {
+        if (currentUserID != null) {
+            firestoreService.getProfilePostsFromDatabaseByType(type, currentUserID, object: Callback<List<Post>> {
+                override fun onSuccess(result: List<Post>?) {
+                    postList.postValue(result)
+                    processFinished()
+                }
+
+                override fun onFailure(exception: Exception) {
+                    processFinished()
+                }
+            }
+            )
+        }
+    }
+
     private fun getFavoritePostsFromFirebase(currentUserID: String?) {
         if (currentUserID != null) {
             firestoreService.getFavoritePostsFromDatabase(currentUserID, object: Callback<List<Post>> {
@@ -61,7 +83,5 @@ class PostViewModel : ViewModel() {
     fun processFinished() {
         isLoading.value = true
     }
-
-
 
 }

@@ -62,4 +62,7 @@
     <string name="public_profile_upcycling_service_text">Servicios de upcycling</string>
     <string name="public_profile_upcycling_idea_text">Ideas de upcycling</string>
     <string name="sent_message_btn_text">Enviar un mensaje</string>
+    <string name="favorites_list_empty">Aún no tienes publicaciones favoritas</string>
+    <string name="services_list_empty">Aún no tienes servicios de upcycling creados</string>
+    <string name="ideas_list_empty">Aún no tienes ideas de upcycling creadas</string>
 </resources>

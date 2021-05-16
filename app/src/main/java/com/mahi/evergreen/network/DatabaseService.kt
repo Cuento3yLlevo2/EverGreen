@@ -18,14 +18,15 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.mahi.evergreen.model.*
-import java.util.*
-import kotlin.collections.ArrayList
 
 const val USERS = "users"
 const val CHATS = "chats"
 const val CHAT_MESSAGES = "chatMessages"
 const val CHAT_MEMBERS = "chatMembers"
 const val POSTS = "posts"
+const val POST_SERVICE_TYPE = 1
+const val POST_IDEA_TYPE = 2
+// const val POST_AD_TYPE = 3
 
 class DatabaseService {
     val database = Firebase.database("https://evergreen-app-bdbc2-default-rtdb.europe-west1.firebasedatabase.app")
@@ -47,7 +48,7 @@ class DatabaseService {
         val user = User(
                 userId,
                 userProfile,
-                username.toLowerCase(Locale.ROOT),
+                username.lowercase(),
                 false,
                 createdAt
         )
@@ -256,8 +257,8 @@ class DatabaseService {
                                         .child("profile")
                                         .child("username")
                                         .get()
-                                        .addOnSuccessListener { result ->
-                                            chatUsername = result.getValue(String::class.java).toString()
+                                        .addOnSuccessListener { chatUsernameResult ->
+                                            chatUsername = chatUsernameResult.getValue(String::class.java).toString()
                                             callback.onSuccess(chatUsername)
                                         }
                                         .addOnFailureListener { exception ->
@@ -391,6 +392,40 @@ class DatabaseService {
                 })
     }
 
+    fun getProfilePostsFromDatabaseByType(type: Int, currentUserID: String, callback: Callback<List<Post>>) {
+        database.getReference(USERS)
+                .child(currentUserID)
+                .child("favoritePosts").addValueEventListener(object : ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val favoritePostsList = ArrayList<String>()
+                        for (child in snapshot.children) {
+                            child.key?.let { favoritePostsList.add(it) }
+                        }
+                        val postList = ArrayList<Post>()
+                        for (favoritePost in favoritePostsList) {
+                            database.getReference(POSTS).child(favoritePost)
+                                    .addValueEventListener(object : ValueEventListener{
+                                        override fun onDataChange(snapshot: DataSnapshot) {
+                                            val post = snapshot.getValue(Post::class.java)
+                                            if (post != null) {
+                                                if (post.type == type) {
+                                                    postList.add(post)
+                                                }
+                                            }
+                                        }
+                                        override fun onCancelled(error: DatabaseError) {
+                                            Log.w("Data reading failure", "Error getting documents.", error.toException())
+                                        }
+                                    })
+                        }
+                        callback.onSuccess(postList)
+                    }
+                    override fun onCancelled(error: DatabaseError) {
+                        Log.w("Data reading failure", "Error getting documents.", error.toException())
+                    }
+                })
+    }
+
     // Extra Tools
 
     fun setProgressDialogWhenDataLoading(context: Context, message:String): AlertDialog {
@@ -437,5 +472,7 @@ class DatabaseService {
         }
         return dialog
     }
+
+
 
 }

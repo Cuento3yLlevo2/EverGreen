@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
+import androidx.navigation.fragment.findNavController
 import com.mahi.evergreen.R
 import com.mahi.evergreen.databinding.FragmentProfilePublicDetailDialogBinding
 
@@ -33,6 +34,7 @@ class ProfilePublicDetailDialogFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.toolbarPublicProfile.navigationIcon = ContextCompat.getDrawable(view.context, R.drawable.arrow_backwards)
         binding.toolbarPublicProfile.setNavigationOnClickListener {
+            findNavController().popBackStack()
             dismiss()
         }
         binding.toolbarPublicProfile.title = "Username"

@@ -41,6 +41,7 @@ class Post (val coverImage: String? = "",
     }
 
     @Exclude
+    @Suppress("UNCHECKED_CAST")
     fun getPostFromMap(map: Map<*, *>): Post {
         return Post(
             map["coverImage"] as String?,
