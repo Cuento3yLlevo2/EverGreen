@@ -54,6 +54,8 @@
         android:text="@string/register_btn"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
+        android:textSize="@dimen/textSizeTitle"
+        android:textAllCaps="false"
         />
 
     <Button
@@ -64,6 +66,8 @@
         android:text="@string/login_btn"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
+        android:textSize="@dimen/textSizeTitle"
+        android:textAllCaps="false"
         />
 
 

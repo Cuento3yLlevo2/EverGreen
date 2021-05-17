@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.mahi.evergreen.model.ChatMessage
 import com.mahi.evergreen.network.Callback
 import com.mahi.evergreen.network.DatabaseService
+import com.mahi.evergreen.view.ui.activities.MessageChatActivity
 
 class ChatMessagesViewModel: ViewModel() {
 
@@ -20,18 +21,26 @@ class ChatMessagesViewModel: ViewModel() {
         firestoreService.writeNewMessage(senderID, chatID, message, url)
     }
 
-    fun getChatIDAndRefreshChatMessages(currentUserID: String, visitedUserID: String) {
-        firestoreService.getChatIDFromDatabase(currentUserID, visitedUserID, object: Callback<String>
+    fun getChatIDAndRefreshChatMessages(
+        currentUserID: String,
+        visitedUserID: String,
+        postID: String,
+        postTitle: String,
+        postImageURL: String,
+        messageChatActivity: MessageChatActivity
+    ) {
+        firestoreService.getChatIDFromDatabase(postID, currentUserID, visitedUserID, object: Callback<String>
         {
             override fun onSuccess(result: String?) {
                 if (result != null) {
                     chatID = result
                     if (chatID == ""){
-                        firestoreService.writeNewChat(currentUserID, visitedUserID, object: Callback<String>{
+                        firestoreService.writeNewChat(postImageURL, postTitle, postID, currentUserID, visitedUserID, object: Callback<String>{
                             override fun onSuccess(result: String?) {
                                 if (result != null) {
                                     chatID = result
                                     refreshChatMessages(chatID)
+                                    messageChatActivity.displayChatData(chatID)
                                 }
                             }
 
@@ -42,6 +51,7 @@ class ChatMessagesViewModel: ViewModel() {
                     } else {
                         Log.d("cccc2", "El Chat ID es ->>>>>>>>>>>> $chatID")
                         refreshChatMessages(chatID)
+                        messageChatActivity.displayChatData(chatID)
                     }
                 }
             }

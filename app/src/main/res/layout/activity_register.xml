@@ -54,7 +54,8 @@
             android:textColor="@color/primary_text"
             android:textColorHint="@color/secondary_text"
             android:layout_marginTop="40dp"
-            android:autofillHints="@string/register_hint_username" />
+            android:autofillHints="@string/register_hint_username"
+            android:textSize="@dimen/textSizeTitle"/>
 
         <EditText
             android:id="@+id/etRegisterEmail"
@@ -65,7 +66,8 @@
             android:textColor="@color/primary_text"
             android:textColorHint="@color/secondary_text"
             android:layout_marginTop="10dp"
-            android:autofillHints="@string/register_hint_email" />
+            android:autofillHints="@string/register_hint_email"
+            android:textSize="@dimen/textSizeTitle"/>
 
         <EditText
             android:id="@+id/etRegisterPassword"
@@ -76,7 +78,8 @@
             android:hint="@string/register_hint_password"
             android:textColor="@color/primary_text"
             android:textColorHint="@color/secondary_text"
-            android:autofillHints="@string/register_hint_password" />
+            android:autofillHints="@string/register_hint_password"
+            android:textSize="@dimen/textSizeTitle"/>
 
         <Button
             android:id="@+id/buttonActivityRegister"
@@ -84,6 +87,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
             android:text="@string/continue_btn"
+            android:textSize="@dimen/textSizeTitle"
+            android:textAllCaps="false"
             />
 
         <TextView
@@ -91,7 +96,7 @@
             android:layout_marginTop="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:textSize="@dimen/textSizeSubtitle"
             android:textStyle="bold"
             android:text="@string/already_member_login_link"
             android:textAlignment="center"

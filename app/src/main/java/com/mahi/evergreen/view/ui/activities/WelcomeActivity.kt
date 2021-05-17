@@ -38,6 +38,9 @@ class WelcomeActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
+        // setPersistenceEnabled to true at the beginning of the application
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
+
         // When the Activity starts we need to know whether the user has already login or not.
         // therefore we call the FirebaseAuth.getInstance().currentUser to return the user if there is one
         firebaseUser = Firebase.auth.currentUser

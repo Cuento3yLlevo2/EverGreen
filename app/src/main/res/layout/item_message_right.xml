@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         tools:text="there is some text"
-        android:textSize="18sp"
+        android:textSize="@dimen/textSizeChat"
         android:padding="8dp"
         android:background="@drawable/background_right"
         android:textColor="@color/primary_text"/>

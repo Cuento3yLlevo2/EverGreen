@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".view.ui.fragments.ProfilePublicDetailDialogFragment">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:elevation="0dp">
+
+        <Toolbar
+            android:id="@+id/toolbarPublicProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/ivProfileToPublicProfileShareIcon"
+                    android:layout_width="34dp"
+                    android:layout_height="26dp"
+                    android:layout_marginEnd="12dp"
+                    android:src="@drawable/ic_baseline_share_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="@string/cd_share_icon" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        >
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingVertical="14dp"
+                >
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="280dp"
+                    android:background="@color/white">
+
+
+                    <ImageView
+                        android:id="@+id/ivPublicProfileSeedsPointsIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:contentDescription="@string/cd_seeds_points_icon"
+                        android:src="@drawable/evergreen_points_icon"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvPublicProfileUsername" />
+
+
+                    <TextView
+                        android:id="@+id/tvPublicProfileSeedsPoints"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="2dp"
+                        android:textColor="@color/primary_text"
+                        android:textSize="@dimen/textSizeSubtitle"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/ivPublicProfileSeedsPointsIcon"
+                        tools:text="23" />
+
+                    <TextView
+                        android:id="@+id/tvPublicProfileUsername"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:textColor="@color/primary_text"
+                        android:textSize="@dimen/textSizeTitle"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/ivPublicProfileImage"
+                        tools:text="Nombre de usuario" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/ivPublicProfileImage"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:layout_margin="8dp"
+                        android:padding="4dp"
+                        android:src="@drawable/user_default"
+                        app:civ_border_color="@color/chat_background_light_green"
+                        app:civ_border_width="0.8dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/primary_dark"
+                    />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clPublicProfileToUpcyclingIdeas"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ripple"
+                    android:clickable="true"
+                    android:focusable="true">
+
+
+                    <ImageView
+                        android:id="@+id/ivPublicProfileToUpcyclingIdeasArrowForward"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="48dp"
+                        android:src="@drawable/ic_arrow_forward"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:contentDescription="@string/cd_arrow_forward" />
+
+                    <TextView
+                        android:id="@+id/tvPublicProfileUpcyclingIdeasText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:textColor="@color/primary_text"
+                        android:textSize="@dimen/textSizeTitle"
+                        android:textStyle="bold"
+                        android:layout_marginStart="14dp"
+                        app:layout_constraintStart_toEndOf="@id/ivProfileUpcyclingIdeasIcon"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:text="@string/public_profile_upcycling_idea_text" />
+
+                    <ImageView
+                        android:id="@+id/ivProfileUpcyclingIdeasIcon"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_margin="18dp"
+                        android:src="@drawable/upcycling_idea"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:contentDescription="@string/cd_upcycing_ideas_icon" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/primary_dark"
+                    />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clPublicProfileToUpcyclingServices"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ripple"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:id="@+id/ivPublicProfileToUpcyclingServicesArrowForward"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="48dp"
+                        android:src="@drawable/ic_arrow_forward"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:contentDescription="@string/cd_arrow_forward" />
+
+                    <TextView
+                        android:id="@+id/tvPublicProfileUpcyclingServicesText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:textColor="@color/primary_text"
+                        android:textSize="@dimen/textSizeTitle"
+                        android:textStyle="bold"
+                        android:layout_marginStart="14dp"
+                        app:layout_constraintStart_toEndOf="@id/ivProfileUpcyclingServicesIcon"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:text="@string/public_profile_upcycling_service_text" />
+
+                    <ImageView
+                        android:id="@+id/ivProfileUpcyclingServicesIcon"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_margin="18dp"
+                        android:src="@drawable/upcycling_service"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:contentDescription="@string/cd_upcycing_service_icon" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/primary_dark"
+                    />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clPublicProfileFeedback"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ripple"
+                    android:clickable="true"
+                    android:focusable="true">
+
+
+                    <ImageView
+                        android:id="@+id/ivPublicProfileFeedbackArrowForward"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="48dp"
+                        android:src="@drawable/ic_arrow_forward"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:contentDescription="@string/cd_arrow_forward" />
+
+                    <TextView
+                        android:id="@+id/tvPublicProfileFeedbackIconText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:textColor="@color/primary_text"
+                        android:textSize="@dimen/textSizeTitle"
+                        android:textStyle="bold"
+                        android:layout_marginStart="14dp"
+                        app:layout_constraintStart_toEndOf="@id/ivPublicProfileFeedbackIcon"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:text="@string/public_profile_feedback_text" />
+
+                    <ImageView
+                        android:id="@+id/ivPublicProfileFeedbackIcon"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_margin="18dp"
+                        android:src="@drawable/ic_baseline_comment_24"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:contentDescription="@string/cd_upcycing_service_icon" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/primary_dark"
+                    />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </FrameLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

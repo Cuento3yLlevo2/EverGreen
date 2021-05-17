@@ -18,21 +18,19 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.mahi.evergreen.model.*
-import java.util.*
-import kotlin.collections.ArrayList
 
 const val USERS = "users"
 const val CHATS = "chats"
 const val CHAT_MESSAGES = "chatMessages"
 const val CHAT_MEMBERS = "chatMembers"
 const val POSTS = "posts"
+const val UPCYCLING_CATEGORIES = "upcyclingCategories"
+const val POST_SERVICE_TYPE = 1
+const val POST_IDEA_TYPE = 2
+// const val POST_AD_TYPE = 3
 
 class DatabaseService {
     val database = Firebase.database("https://evergreen-app-bdbc2-default-rtdb.europe-west1.firebasedatabase.app")
-
-    init {
-        // database.setPersistenceEnabled(true)
-    }
 
     // Write to Realtime Database
 
@@ -45,12 +43,13 @@ class DatabaseService {
                 email,
                 defaultProfileImage,
                 defaultCoverImage,
+            0
         )
 
         val user = User(
                 userId,
                 userProfile,
-                username.toLowerCase(Locale.ROOT),
+                username.lowercase(),
                 false,
                 createdAt
         )
@@ -67,14 +66,21 @@ class DatabaseService {
                 }
     }
 
-    fun writeNewChat(senderID: String, receiverID: String, callback: Callback<String>) {
-        var chatID = ""
+    fun writeNewChat(
+        postImageURL: String,
+        postTitle: String,
+        postID: String,
+        receiverID: String,
+        senderID: String,
+        callback: Callback<String>
+    ) {
+        var chatID: String
         val currentTime = System.currentTimeMillis()
         val chatKey = database.reference.push().key
         if (chatKey != null) {
 
-            val chat = Chat("postID", "PostTitle", "PostImage", null, false, currentTime, chatKey)
-            val chatMembers = ChatMembers(chatKey, hashMapOf(senderID to true, receiverID to true))
+            val chat = Chat(postID, postTitle, postImageURL, null, false, currentTime, chatKey)
+            val chatMembers = ChatMembers(chatKey, postID, hashMapOf(senderID to true, receiverID to true))
             database.reference.child(CHATS).child(chatKey).setValue(chat).addOnCompleteListener { task ->
                 if (task.isSuccessful){
                     database.reference.child(CHAT_MEMBERS).child(chatKey).setValue(chatMembers).addOnCompleteListener {
@@ -207,7 +213,12 @@ class DatabaseService {
                 })
     }
 
-    fun getChatIDFromDatabase(currentUserID: String, visitedUserID: String, callback: Callback<String>) {
+    fun getChatIDFromDatabase(
+        postID: String,
+        currentUserID: String,
+        visitedUserID: String,
+        callback: Callback<String>
+    ) {
         var chatID = ""
         database.getReference(CHAT_MEMBERS)
                 .get()
@@ -215,10 +226,12 @@ class DatabaseService {
                     for (child in result.children) {
                         val chatMembers : ChatMembers? = child.getValue(ChatMembers::class.java)
                         if (chatMembers != null) {
-                            if(chatMembers.members == hashMapOf(currentUserID to true, visitedUserID to true)){
-                                chatID = chatMembers.chatID.toString()
-                            } else if (chatMembers.members == hashMapOf(visitedUserID to true, currentUserID to true)) {
-                                chatID = chatMembers.chatID.toString()
+                            if (chatMembers.postID == postID) {
+                                if(chatMembers.members == hashMapOf(currentUserID to true, visitedUserID to true)){
+                                    chatID = chatMembers.chatID.toString()
+                                } else if (chatMembers.members == hashMapOf(visitedUserID to true, currentUserID to true)) {
+                                    chatID = chatMembers.chatID.toString()
+                                }
                             }
                         }
                     }
@@ -230,8 +243,8 @@ class DatabaseService {
     }
 
     fun getChatUsername(chatID: String, currentUserID: String, callback: Callback<String>) {
-        var chatUsernameID = ""
-        var chatUsername = ""
+        var chatUsernameID: String
+        var chatUsername: String
         database.getReference(CHAT_MEMBERS).child(chatID)
                 .get()
                 .addOnSuccessListener { result ->
@@ -245,8 +258,8 @@ class DatabaseService {
                                         .child("profile")
                                         .child("username")
                                         .get()
-                                        .addOnSuccessListener { result ->
-                                            chatUsername = result.getValue(String::class.java).toString()
+                                        .addOnSuccessListener { chatUsernameResult ->
+                                            chatUsername = chatUsernameResult.getValue(String::class.java).toString()
                                             callback.onSuccess(chatUsername)
                                         }
                                         .addOnFailureListener { exception ->
@@ -263,7 +276,7 @@ class DatabaseService {
     }
 
     fun getUserIDVisited(chatIDFromChatList: String, currentUserID: String, callback: Callback<String>) {
-        var chatUsernameID = ""
+        var chatUsernameID: String
         database.getReference(CHAT_MEMBERS).child(chatIDFromChatList)
             .get()
             .addOnSuccessListener { result ->
@@ -315,7 +328,6 @@ class DatabaseService {
                                                 }
                                             }
                                         }
-                                        Log.w("chatsdata1", "chat ->>>> ${chatList.toString()}")
                                         callback.onSuccess(chatList)
                                     }
                                     override fun onCancelled(error: DatabaseError) {
@@ -327,6 +339,27 @@ class DatabaseService {
                         Log.w("Data reading failure", "Error getting documents.", error.toException())
                     }
                 })
+    }
+
+    fun getUpcyclingCategoriesFromDatabase(callback: Callback<List<UpcyclingCategory>>) {
+        database.getReference(UPCYCLING_CATEGORIES)
+            .orderByChild("name")
+            .addValueEventListener(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val upcyclingCategList = ArrayList<UpcyclingCategory>()
+                    for (child in snapshot.children) {
+                        val upcyclingCategory = child.getValue(UpcyclingCategory::class.java)
+                        if (upcyclingCategory != null) {
+                            upcyclingCategList.add(upcyclingCategory)
+                        }
+                    }
+                    callback.onSuccess(upcyclingCategList)
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    Log.w("Data reading failure", "Error getting documents.", error.toException())
+                }
+            })
+
     }
 
     fun getPostsFromDatabase(callback: Callback<List<Post>>) {
@@ -366,6 +399,40 @@ class DatabaseService {
                                             val post = snapshot.getValue(Post::class.java)
                                             if (post != null) {
                                                 postList.add(post)
+                                            }
+                                        }
+                                        override fun onCancelled(error: DatabaseError) {
+                                            Log.w("Data reading failure", "Error getting documents.", error.toException())
+                                        }
+                                    })
+                        }
+                        callback.onSuccess(postList)
+                    }
+                    override fun onCancelled(error: DatabaseError) {
+                        Log.w("Data reading failure", "Error getting documents.", error.toException())
+                    }
+                })
+    }
+
+    fun getProfilePostsFromDatabaseByType(type: Int, currentUserID: String, callback: Callback<List<Post>>) {
+        database.getReference(USERS)
+                .child(currentUserID)
+                .child("favoritePosts").addValueEventListener(object : ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val favoritePostsList = ArrayList<String>()
+                        for (child in snapshot.children) {
+                            child.key?.let { favoritePostsList.add(it) }
+                        }
+                        val postList = ArrayList<Post>()
+                        for (favoritePost in favoritePostsList) {
+                            database.getReference(POSTS).child(favoritePost)
+                                    .addValueEventListener(object : ValueEventListener{
+                                        override fun onDataChange(snapshot: DataSnapshot) {
+                                            val post = snapshot.getValue(Post::class.java)
+                                            if (post != null) {
+                                                if (post.type == type) {
+                                                    postList.add(post)
+                                                }
                                             }
                                         }
                                         override fun onCancelled(error: DatabaseError) {
@@ -427,5 +494,8 @@ class DatabaseService {
         }
         return dialog
     }
+
+
+
 
 }

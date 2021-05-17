@@ -14,8 +14,11 @@
             android:id="@+id/action_homeFragment_to_favoritesFragment"
             app:destination="@id/navFavoritesFragment" />
         <action
-            android:id="@+id/action_navHomeFragment_to_homeCategoriesDetailDialogFragment"
-            app:destination="@id/homeCategoriesDetailDialogFragment" />
+            android:id="@+id/action_navHomeFragment_to_categoriesDetailDialogFragment"
+            app:destination="@id/categoriesDetailDialogFragment" />
+        <action
+            android:id="@+id/action_navHomeFragment_to_postDetailDialogFragment"
+            app:destination="@id/postDetailDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/navFavoritesFragment"
@@ -25,6 +28,9 @@
         <action
             android:id="@+id/action_favoritesFragment_to_chatListFragment"
             app:destination="@id/navChatListFragment" />
+        <action
+            android:id="@+id/action_navFavoritesFragment_to_postDetailDialogFragment"
+            app:destination="@id/postDetailDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/navChatListFragment"
@@ -43,18 +49,76 @@
         android:name="com.mahi.evergreen.view.ui.fragments.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_navProfileFragment_to_profilePublicDetailDialogFragment"
+            app:destination="@id/profilePublicDetailDialogFragment" />
+        <action
+            android:id="@+id/action_navProfileFragment_to_profileIdeasDetailDialogFragment"
+            app:destination="@id/profileIdeasDetailDialogFragment" />
+        <action
+            android:id="@+id/action_navProfileFragment_to_profileServicesDetailDialogFragment"
+            app:destination="@id/profileServicesDetailDialogFragment" />
+        <action
+            android:id="@+id/action_navProfileFragment_to_profileSettingsDetailDialogFragment"
+            app:destination="@id/profileSettingsDetailDialogFragment" />
+        <action
+            android:id="@+id/action_navProfileFragment_to_profileSupportDetailDialogFragment"
+            app:destination="@id/profileSupportDetailDialogFragment" />
+        <action
+            android:id="@+id/action_navProfileFragment_to_categoriesDetailDialogFragment"
+            app:destination="@id/categoriesDetailDialogFragment" />
     </fragment>
     <dialog
-        android:id="@+id/homeCategoriesDetailDialogFragment"
-        android:name="com.mahi.evergreen.view.ui.fragments.HomeCategoriesDetailDialogFragment"
+        android:id="@+id/categoriesDetailDialogFragment"
+        android:name="com.mahi.evergreen.view.ui.fragments.CategoriesDetailDialogFragment"
         android:label="HomeCategoriesDetailDialogFragment"
-        tools:layout="@layout/fragment_home_categories_detail_dialog"/>
+        tools:layout="@layout/fragment_categories_detail_dialog"/>
     <activity
         android:id="@+id/messageChatActivity"
         android:name="com.mahi.evergreen.view.ui.activities.MessageChatActivity"
         android:label="MessageChatActivity"
         tools:layout="@layout/activity_message_chat"
-
         />
+    <dialog
+        android:id="@+id/postDetailDialogFragment"
+        android:name="com.mahi.evergreen.view.ui.fragments.PostDetailDialogFragment"
+        android:label="PostDetailDialogFragment" >
+        <action
+            android:id="@+id/action_postDetailDialogFragment_to_messageChatActivity"
+            app:destination="@id/messageChatActivity" />
+    </dialog>
+    <fragment
+        android:id="@+id/profilePublicDetailDialogFragment"
+        android:name="com.mahi.evergreen.view.ui.fragments.ProfilePublicDetailDialogFragment"
+        android:label="fragment_profile_public_detail_dialog"
+        tools:layout="@layout/fragment_profile_public_detail_dialog" />
+    <fragment
+        android:id="@+id/profileIdeasDetailDialogFragment"
+        android:name="com.mahi.evergreen.view.ui.fragments.ProfileIdeasDetailDialogFragment"
+        android:label="fragment_profile_ideas_detail_dialog"
+        tools:layout="@layout/fragment_profile_ideas_detail_dialog" >
+        <action
+            android:id="@+id/action_profileIdeasDetailDialogFragment_to_postDetailDialogFragment"
+            app:destination="@id/postDetailDialogFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileServicesDetailDialogFragment"
+        android:name="com.mahi.evergreen.view.ui.fragments.ProfileServicesDetailDialogFragment"
+        android:label="fragment_profile_services_detail_dialog"
+        tools:layout="@layout/fragment_profile_services_detail_dialog" >
+        <action
+            android:id="@+id/action_profileServicesDetailDialogFragment_to_postDetailDialogFragment"
+            app:destination="@id/postDetailDialogFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileSettingsDetailDialogFragment"
+        android:name="com.mahi.evergreen.view.ui.fragments.ProfileSettingsDetailDialogFragment"
+        android:label="fragment_profile_settings_detail_dialog"
+        tools:layout="@layout/fragment_profile_settings_detail_dialog" />
+    <fragment
+        android:id="@+id/profileSupportDetailDialogFragment"
+        android:name="com.mahi.evergreen.view.ui.fragments.ProfileSupportDetailDialogFragment"
+        android:label="fragment_profile_support_detail_dialog"
+        tools:layout="@layout/fragment_profile_support_detail_dialog" />
 
 </navigation>

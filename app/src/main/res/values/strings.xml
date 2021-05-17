@@ -6,7 +6,7 @@
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
+    <string name="next">Si</string>
     <string name="previous">Previous</string>
 
     <string name="hello_first_fragment">Hello first fragment</string>
@@ -33,8 +33,8 @@
     <string name="profile_upcycling_services_text">Mis servicios de upcycling</string>
     <string name="profile_settings_text">Configuración</string>
     <string name="profile_support_text">Soporte</string>
-    <string name="create_upcycling_idea_text">Comparte tus ideas de upcycling</string>
-    <string name="create_upcycling_service_text">Publica servicios de upcycling</string>
+    <string name="create_upcycling_idea_text">Comparte tus ideas de upcycling!</string>
+    <string name="create_upcycling_service_text">Publica servicios de upcycling!</string>
     <string name="profile_support_hint">Habla con nosotros</string>
     <string name="profile_settings_hint">Gestiona tu cuenta</string>
     <string name="chat_list_appbar_text">Mensajes</string>
@@ -57,4 +57,16 @@
     <string name="cd_attach_image_file">Icono para enviar una imagen</string>
     <string name="hint_write_message">envía un mensaje…</string>
     <string name="cd_send_message_icon">Icono para enviar un mensaje</string>
+    <string name="cd_share_icon">Icono para compartir</string>
+    <string name="public_profile_feedback_text">Opiniones</string>
+    <string name="public_profile_upcycling_service_text">Servicios de upcycling</string>
+    <string name="public_profile_upcycling_idea_text">Ideas de upcycling</string>
+    <string name="sent_message_btn_text">Enviar un mensaje</string>
+    <string name="favorites_list_empty">Aún no tienes publicaciones favoritas</string>
+    <string name="services_list_empty">Aún no tienes servicios de upcycling creados</string>
+    <string name="ideas_list_empty">Aún no tienes ideas de upcycling creadas</string>
+    <string name="hint_search_upcycling">Busca una idea de Upcycling</string>
+    <string name="categories_toolbar_text">Categorías</string>
+    <string name="chat_list_empty_text">Aún no tienes conversaciones iniciadas</string>
+    <string name="upcycling_creation_categories_toolbar_text">Selecciona una categoría</string>
 </resources>

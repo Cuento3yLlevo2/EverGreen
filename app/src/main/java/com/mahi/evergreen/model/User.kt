@@ -1,5 +1,6 @@
 package com.mahi.evergreen.model
 
+import com.google.firebase.database.Exclude
 import com.google.firebase.database.IgnoreExtraProperties
 
 @IgnoreExtraProperties
@@ -15,4 +16,30 @@ data class User(
 ) {
     // Null default values create a no-argument default constructor, which is needed
     // for deserialization from a DataSnapshot.
+    @Exclude
+    fun toMap(): Map<String, Any?> {
+            return mapOf(
+                    "uid" to uid,
+                    "profile" to profile,
+                    "search" to search,
+                    "online" to online,
+                    "createdAt" to createdAt,
+                    "createdPosts" to createdPosts,
+                    "favoritePosts" to favoritePosts
+            )
+    }
+
+        @Exclude
+        @Suppress("UNCHECKED_CAST")
+        fun getPostFromMap(map: Map<*, *>): User {
+                return User(
+                        map["uid"] as String?,
+                        map["profile"] as UserProfile?,
+                        map["search"] as String?,
+                        map["online"] as Boolean?,
+                        map["createdAt"] as Long?,
+                        map["createdPosts"] as MutableMap<String, Boolean>,
+                        map["favoritePosts"] as MutableMap<String, Boolean>
+                )
+        }
 }
