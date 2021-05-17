@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".view.ui.fragments.HomeFragment">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -15,22 +16,54 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white">
-            <ImageView
-                android:layout_width="@dimen/toolbar_logo_dimen"
-                android:layout_height="@dimen/toolbar_logo_dimen"
-                android:src="@drawable/evergreen_logo"
-                android:contentDescription="@string/cd_evergreen_logo" />
 
-            <Button
-                android:id="@+id/buttonSignOut"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/buttonSignOut"
-                android:layout_marginStart="26dp"
-                android:textColor="@color/white"
-                android:textAllCaps="false"
-                android:textSize="@dimen/textSizeSubtitle"
-                />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/toolbarLogo"
+                    android:layout_width="@dimen/toolbar_logo_dimen"
+                    android:layout_height="@dimen/toolbar_logo_dimen"
+                    android:src="@drawable/evergreen_logo"
+                    android:contentDescription="@string/cd_evergreen_logo"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <EditText
+                    android:id="@+id/etSearchPost"
+                    android:layout_width="0dp"
+                    android:layout_height="38dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:inputType="text"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:importantForAutofill="no"
+                    android:textSize="@dimen/textSizeTitle"
+                    android:hint="@string/hint_search_upcycling"
+                    app:layout_constraintEnd_toStartOf="@id/ivHomeToCategories"
+                    app:layout_constraintStart_toEndOf="@+id/toolbarLogo"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:background="@drawable/custom_edit_text_rounded"
+                    />
+
+                <ImageView
+                    android:id="@+id/ivHomeToCategories"
+                    android:layout_width="@dimen/toolbar_logo_dimen"
+                    android:layout_height="@dimen/toolbar_logo_dimen"
+                    android:src="@drawable/ic_view_stream"
+                    android:layout_marginEnd="12dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:padding="4dp"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
         </Toolbar>
 
         <View

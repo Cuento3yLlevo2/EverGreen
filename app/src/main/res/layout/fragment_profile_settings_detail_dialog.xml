@@ -38,18 +38,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingVertical="14dp"
                 >
 
                 <TextView
-                    android:id="@+id/tvSupportFAQs"
+                    android:id="@+id/tvEditProfile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="8dp"
+                    android:paddingVertical="16dp"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
                     android:textColor="@color/primary_text"
                     android:textSize="@dimen/textSizeTitle"
-                    android:layout_marginStart="14dp"
-                    android:text="Editar perfil" />
+                    android:text="Editar perfil"
+                    android:background="@drawable/ripple"
+                    android:clickable="true"
+                    android:focusable="true"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -58,14 +61,18 @@
                     />
 
                 <TextView
-                    android:id="@+id/tvSupportContact"
+                    android:id="@+id/tvNotifications"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="8dp"
+                    android:paddingVertical="16dp"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
                     android:textColor="@color/primary_text"
                     android:textSize="@dimen/textSizeTitle"
-                    android:layout_marginStart="14dp"
-                    android:text="Notificaciones" />
+                    android:text="Notificaciones"
+                    android:background="@drawable/ripple"
+                    android:clickable="true"
+                    android:focusable="true"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -74,14 +81,18 @@
                     />
 
                 <TextView
-                    android:id="@+id/tvSupportLegal"
+                    android:id="@+id/tvSingOut"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="8dp"
+                    android:paddingVertical="16dp"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
                     android:textColor="@color/primary_text"
                     android:textSize="@dimen/textSizeTitle"
-                    android:layout_marginStart="14dp"
-                    android:text="Cerrar sesión" />
+                    android:text="@string/buttonSignOut"
+                    android:background="@drawable/ripple"
+                    android:clickable="true"
+                    android:focusable="true"/>
 
             </LinearLayout>
 

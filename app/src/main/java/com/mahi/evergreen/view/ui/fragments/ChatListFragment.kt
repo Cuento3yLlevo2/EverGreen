@@ -74,6 +74,11 @@ class ChatListFragment : Fragment(), ChatListListener {
     override fun observeViewModel() {
         viewModel.chatList.observe(viewLifecycleOwner, { chat ->
             chatListAdapter.updateData(chat)
+            if (chat.isEmpty()) {
+                binding.rlChatListEmpty.visibility = View.VISIBLE
+            } else {
+                binding.rlChatListEmpty.visibility = View.GONE
+            }
         })
 
         viewModel.isLoading.observe(viewLifecycleOwner, {

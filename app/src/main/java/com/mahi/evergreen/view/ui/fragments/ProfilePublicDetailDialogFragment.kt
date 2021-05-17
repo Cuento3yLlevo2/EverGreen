@@ -9,6 +9,8 @@ import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import com.mahi.evergreen.R
 import com.mahi.evergreen.databinding.FragmentProfilePublicDetailDialogBinding
+import com.mahi.evergreen.model.User
+import com.squareup.picasso.Picasso
 
 class ProfilePublicDetailDialogFragment : DialogFragment() {
 
@@ -16,6 +18,8 @@ class ProfilePublicDetailDialogFragment : DialogFragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
+    private var currentUserData: User? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +41,14 @@ class ProfilePublicDetailDialogFragment : DialogFragment() {
             findNavController().popBackStack()
             dismiss()
         }
-        binding.toolbarPublicProfile.title = "Username"
+
+        val userMap = arguments?.getSerializable("user") as Map<*, *>
+        currentUserData = User().getPostFromMap(userMap)
+
+        binding.tvPublicProfileUsername.text = currentUserData!!.profile?.username ?: "Nombre de usuario"
+        Picasso.get().load(currentUserData!!.profile?.profileImage).placeholder(R.drawable.user_default).into(binding.ivPublicProfileImage)
+        binding.tvPublicProfileSeedsPoints.text = currentUserData!!.profile?.seedsPoints.toString()
+
     }
 
     override fun onStart() {

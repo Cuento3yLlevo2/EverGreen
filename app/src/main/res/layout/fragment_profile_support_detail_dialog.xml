@@ -38,18 +38,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingVertical="14dp"
                 >
 
                 <TextView
                     android:id="@+id/tvSupportFAQs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="8dp"
+                    android:paddingVertical="16dp"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
                     android:textColor="@color/primary_text"
                     android:textSize="@dimen/textSizeTitle"
-                    android:layout_marginStart="14dp"
-                    android:text="Preguntas Frecuentes" />
+                    android:text="Preguntas Frecuentes"
+                    android:background="@drawable/ripple"
+                    android:clickable="true"
+                    android:focusable="true"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -61,11 +64,15 @@
                     android:id="@+id/tvSupportContact"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="8dp"
+                    android:paddingVertical="16dp"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
                     android:textColor="@color/primary_text"
                     android:textSize="@dimen/textSizeTitle"
-                    android:layout_marginStart="14dp"
-                    android:text="Contacta con nosotros" />
+                    android:text="Contacta con nosotros"
+                    android:background="@drawable/ripple"
+                    android:clickable="true"
+                    android:focusable="true"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -77,11 +84,15 @@
                     android:id="@+id/tvSupportLegal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="8dp"
+                    android:paddingVertical="16dp"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
                     android:textColor="@color/primary_text"
                     android:textSize="@dimen/textSizeTitle"
-                    android:layout_marginStart="14dp"
-                    android:text="Condiciones Legales" />
+                    android:text="Condiciones Legales"
+                    android:background="@drawable/ripple"
+                    android:clickable="true"
+                    android:focusable="true"/>
 
             </LinearLayout>
 

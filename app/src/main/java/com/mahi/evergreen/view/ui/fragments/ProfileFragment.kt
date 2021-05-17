@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -29,6 +30,8 @@ import com.mahi.evergreen.databinding.FragmentProfileBinding
 import com.mahi.evergreen.model.User
 import com.mahi.evergreen.model.UserProfile
 import com.mahi.evergreen.network.DatabaseService
+import com.mahi.evergreen.network.POST_IDEA_TYPE
+import com.mahi.evergreen.network.POST_SERVICE_TYPE
 import com.mahi.evergreen.viewmodel.UsersViewModel
 import com.squareup.picasso.Picasso
 
@@ -48,6 +51,7 @@ class ProfileFragment : Fragment() {
     private val pickImageRequestCode = 438
     private var imageUri: Uri? = null
     private var storageRef: StorageReference? = null
+    private var currentUserData: User? = null
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -70,6 +74,7 @@ class ProfileFragment : Fragment() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val user: User? = snapshot.getValue(User::class.java)
                 if (context!=null && user != null){
+                    currentUserData = user
                     val userProfile: UserProfile? = user.profile
                     if (userProfile!=null){
                         binding.tvProfileUsername.text = userProfile.username
@@ -88,17 +93,22 @@ class ProfileFragment : Fragment() {
         }
 
         binding.clProfileToPublicProfile.setOnClickListener {
-            findNavController().navigate(R.id.action_navProfileFragment_to_profilePublicDetailDialogFragment)
+            if (currentUserData != null){
+                val userValues = currentUserData!!.toMap()
+                val bundle = bundleOf("user" to userValues)
+                findNavController().navigate(R.id.action_navProfileFragment_to_profilePublicDetailDialogFragment, bundle)
+            }
+
         }
 
         binding.ivProfileToCreateUpcyclingIdeas.setOnClickListener {
-            Toast.makeText(context, "Crear upcycling Idea", Toast.LENGTH_SHORT).show()
-            // findNavController().navigate(R.id.postDetailDialogFragment)
+            val bundle = bundleOf("isUpcyclingCreationAction" to true, "upcyclingType" to POST_IDEA_TYPE)
+            findNavController().navigate(R.id.action_navProfileFragment_to_categoriesDetailDialogFragment, bundle)
         }
 
         binding.ivProfileToCreateUpcyclingServices.setOnClickListener {
-            Toast.makeText(context, "Crear upcycling Service", Toast.LENGTH_SHORT).show()
-            // findNavController().navigate(R.id.postDetailDialogFragment)
+            val bundle = bundleOf("isUpcyclingCreationAction" to true, "upcyclingType" to POST_SERVICE_TYPE)
+            findNavController().navigate(R.id.action_navProfileFragment_to_categoriesDetailDialogFragment, bundle)
         }
 
         binding.clProfileToUpcyclingIdeas.setOnClickListener {

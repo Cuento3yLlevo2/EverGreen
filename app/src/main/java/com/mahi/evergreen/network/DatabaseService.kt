@@ -24,6 +24,7 @@ const val CHATS = "chats"
 const val CHAT_MESSAGES = "chatMessages"
 const val CHAT_MEMBERS = "chatMembers"
 const val POSTS = "posts"
+const val UPCYCLING_CATEGORIES = "upcyclingCategories"
 const val POST_SERVICE_TYPE = 1
 const val POST_IDEA_TYPE = 2
 // const val POST_AD_TYPE = 3
@@ -340,6 +341,27 @@ class DatabaseService {
                 })
     }
 
+    fun getUpcyclingCategoriesFromDatabase(callback: Callback<List<UpcyclingCategory>>) {
+        database.getReference(UPCYCLING_CATEGORIES)
+            .orderByChild("name")
+            .addValueEventListener(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val upcyclingCategList = ArrayList<UpcyclingCategory>()
+                    for (child in snapshot.children) {
+                        val upcyclingCategory = child.getValue(UpcyclingCategory::class.java)
+                        if (upcyclingCategory != null) {
+                            upcyclingCategList.add(upcyclingCategory)
+                        }
+                    }
+                    callback.onSuccess(upcyclingCategList)
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    Log.w("Data reading failure", "Error getting documents.", error.toException())
+                }
+            })
+
+    }
+
     fun getPostsFromDatabase(callback: Callback<List<Post>>) {
         database.getReference(POSTS)
                 .orderByChild("updatedAt")
@@ -472,6 +494,7 @@ class DatabaseService {
         }
         return dialog
     }
+
 
 
 

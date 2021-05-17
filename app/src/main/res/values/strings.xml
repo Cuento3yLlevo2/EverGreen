@@ -65,4 +65,8 @@
     <string name="favorites_list_empty">Aún no tienes publicaciones favoritas</string>
     <string name="services_list_empty">Aún no tienes servicios de upcycling creados</string>
     <string name="ideas_list_empty">Aún no tienes ideas de upcycling creadas</string>
+    <string name="hint_search_upcycling">Busca una idea de Upcycling</string>
+    <string name="categories_toolbar_text">Categorías</string>
+    <string name="chat_list_empty_text">Aún no tienes conversaciones iniciadas</string>
+    <string name="upcycling_creation_categories_toolbar_text">Selecciona una categoría</string>
 </resources>
