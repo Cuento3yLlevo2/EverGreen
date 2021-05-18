@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -17,7 +18,9 @@ import com.mahi.evergreen.view.adapter.UpcyclingCategoriesAdapter
 import com.mahi.evergreen.view.adapter.UpcyclingCategoriesListener
 import com.mahi.evergreen.viewmodel.UpcyclingCategoriesViewModel
 
-class CategoriesDetailDialogFragment : DialogFragment(), UpcyclingCategoriesListener {
+class CategoriesDetailDialogFragment : BaseDialogFragment(), UpcyclingCategoriesListener {
+
+    override var bottomNavigationViewVisibility: Int = View.GONE
 
     private lateinit var upcyclingCategoriesAdapter: UpcyclingCategoriesAdapter
     private lateinit var viewModel: UpcyclingCategoriesViewModel
@@ -81,7 +84,13 @@ class CategoriesDetailDialogFragment : DialogFragment(), UpcyclingCategoriesList
         upcyclingCategoryItem: UpcyclingCategory,
         position: Int
     ) {
-        Toast.makeText(context, "Próximamente", Toast.LENGTH_SHORT).show()
+        if (isUpcyclingCreationAction == true){
+            val bundle = bundleOf("upcyclingType" to upcyclingType, "categoryID" to upcyclingCategoryItem.id)
+            findNavController().navigate(R.id.action_categoriesDetailDialogFragment_to_upcyclingCreationFragment, bundle)
+        } else {
+            Toast.makeText(context, "Próximamente", Toast.LENGTH_SHORT).show()
+        }
+
     }
 
     override fun observeViewModel() {
@@ -96,7 +105,8 @@ class CategoriesDetailDialogFragment : DialogFragment(), UpcyclingCategoriesList
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
+        bottomNavigationViewVisibility = View.GONE
         _binding = null
+        super.onDestroyView()
     }
 }

@@ -5,23 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import com.mahi.evergreen.R
-import com.mahi.evergreen.databinding.FragmentProfilePublicDetailDialogBinding
-import com.mahi.evergreen.model.User
-import com.squareup.picasso.Picasso
+import com.mahi.evergreen.databinding.FragmentUpcyclingCreationBinding
+import com.mahi.evergreen.network.POST_IDEA_TYPE
+import com.mahi.evergreen.network.POST_SERVICE_TYPE
 
-class ProfilePublicDetailDialogFragment : BaseDialogFragment() {
+class UpcyclingCreationFragment : BaseDialogFragment() {
 
     override var bottomNavigationViewVisibility: Int = View.GONE
 
-    private var _binding: FragmentProfilePublicDetailDialogBinding? = null
+    private var upcyclingType: Int? = 0
+    private var categoryID: String? = null
+
+    private var _binding: FragmentUpcyclingCreationBinding? = null
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-
-    private var currentUserData: User? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,27 +29,28 @@ class ProfilePublicDetailDialogFragment : BaseDialogFragment() {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentProfilePublicDetailDialogBinding.inflate(inflater, container, false)
+        _binding = FragmentUpcyclingCreationBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.toolbarPublicProfile.navigationIcon = ContextCompat.getDrawable(view.context, R.drawable.arrow_backwards)
-        binding.toolbarPublicProfile.setNavigationOnClickListener {
+        binding.toolbarUpcyclingCreation.navigationIcon = ContextCompat.getDrawable(view.context, R.drawable.arrow_backwards)
+        binding.toolbarUpcyclingCreation.setNavigationOnClickListener {
             findNavController().popBackStack()
             dismiss()
         }
 
-        val userMap = arguments?.getSerializable("user") as Map<*, *>
-        currentUserData = User().getPostFromMap(userMap)
-
-        binding.tvPublicProfileUsername.text = currentUserData!!.profile?.username ?: "Nombre de usuario"
-        Picasso.get().load(currentUserData!!.profile?.profileImage).placeholder(R.drawable.user_default).into(binding.ivPublicProfileImage)
-        binding.tvPublicProfileSeedsPoints.text = currentUserData!!.profile?.seedsPoints.toString()
+        upcyclingType = arguments?.getInt("upcyclingType")
+        categoryID = arguments?.getString("categoryID")
+        if (upcyclingType == POST_SERVICE_TYPE){
+            binding.toolbarUpcyclingCreation.title = resources.getString(R.string.upcycling_service_creation_toolbar_text)
+        } else if(upcyclingType == POST_IDEA_TYPE) {
+            binding.toolbarUpcyclingCreation.title = resources.getString(R.string.upcycling_idea_creation_toolbar_text)
+        }
 
     }
 

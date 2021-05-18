@@ -72,7 +72,11 @@
         android:id="@+id/categoriesDetailDialogFragment"
         android:name="com.mahi.evergreen.view.ui.fragments.CategoriesDetailDialogFragment"
         android:label="HomeCategoriesDetailDialogFragment"
-        tools:layout="@layout/fragment_categories_detail_dialog"/>
+        tools:layout="@layout/fragment_categories_detail_dialog">
+        <action
+            android:id="@+id/action_categoriesDetailDialogFragment_to_upcyclingCreationFragment"
+            app:destination="@id/upcyclingCreationFragment" />
+    </dialog>
     <activity
         android:id="@+id/messageChatActivity"
         android:name="com.mahi.evergreen.view.ui.activities.MessageChatActivity"
@@ -120,5 +124,9 @@
         android:name="com.mahi.evergreen.view.ui.fragments.ProfileSupportDetailDialogFragment"
         android:label="fragment_profile_support_detail_dialog"
         tools:layout="@layout/fragment_profile_support_detail_dialog" />
+    <fragment
+        android:id="@+id/upcyclingCreationFragment"
+        android:name="com.mahi.evergreen.view.ui.fragments.UpcyclingCreationFragment"
+        android:label="UpcyclingCreationFragment" />
 
 </navigation>

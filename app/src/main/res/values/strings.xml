@@ -69,4 +69,6 @@
     <string name="categories_toolbar_text">Categorías</string>
     <string name="chat_list_empty_text">Aún no tienes conversaciones iniciadas</string>
     <string name="upcycling_creation_categories_toolbar_text">Selecciona una categoría</string>
+    <string name="upcycling_service_creation_toolbar_text">Crea tu servicio de Upcycling</string>
+    <string name="upcycling_idea_creation_toolbar_text">Crea tu idea de Upcycling</string>
 </resources>

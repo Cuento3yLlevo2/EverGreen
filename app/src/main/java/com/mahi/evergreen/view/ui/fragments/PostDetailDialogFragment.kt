@@ -28,7 +28,9 @@ import com.mahi.evergreen.viewmodel.PostViewModel
 import com.squareup.picasso.Picasso
 
 
-class PostDetailDialogFragment : DialogFragment() {
+class PostDetailDialogFragment : BaseDialogFragment() {
+
+    override var bottomNavigationViewVisibility: Int = View.GONE
 
     private lateinit var viewModel: PostViewModel
     private var adapter: PostImagesViewPagerAdapter? = null
@@ -160,8 +162,9 @@ class PostDetailDialogFragment : DialogFragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
+        bottomNavigationViewVisibility = View.VISIBLE
         _binding = null
+        super.onDestroyView()
     }
 
 

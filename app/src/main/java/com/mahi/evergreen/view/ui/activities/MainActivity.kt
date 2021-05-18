@@ -30,6 +30,12 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupWithNavController(binding.bnvMenu, Navigation.findNavController(this, R.id.fragContent))
     }
 
+    fun setBottomNavigationVisibility(visibility: Int) {
+        // get the reference of the bottomNavigationView and set the visibility.
+        binding.bnvMenu.visibility = visibility
+    }
+
+
 
 
 }

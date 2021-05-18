@@ -10,7 +10,9 @@ import androidx.navigation.fragment.findNavController
 import com.mahi.evergreen.R
 import com.mahi.evergreen.databinding.FragmentProfileSupportDetailDialogBinding
 
-class ProfileSupportDetailDialogFragment : DialogFragment() {
+class ProfileSupportDetailDialogFragment : BaseDialogFragment() {
+
+    override var bottomNavigationViewVisibility: Int = View.GONE
 
     private var _binding: FragmentProfileSupportDetailDialogBinding? = null
     // This property is only valid between onCreateView and
@@ -47,7 +49,8 @@ class ProfileSupportDetailDialogFragment : DialogFragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
+        bottomNavigationViewVisibility = View.VISIBLE
         _binding = null
+        super.onDestroyView()
     }
 }

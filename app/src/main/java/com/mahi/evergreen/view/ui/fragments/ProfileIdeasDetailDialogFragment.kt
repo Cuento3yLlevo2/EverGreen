@@ -19,7 +19,9 @@ import com.mahi.evergreen.view.adapter.PostListener
 import com.mahi.evergreen.viewmodel.PostViewModel
 
 
-class ProfileIdeasDetailDialogFragment : DialogFragment() , PostListener {
+class ProfileIdeasDetailDialogFragment : BaseDialogFragment() , PostListener {
+
+    override var bottomNavigationViewVisibility: Int = View.GONE
 
     private lateinit var postAdapter: PostAdapter
     private lateinit var viewModel: PostViewModel
@@ -92,7 +94,8 @@ class ProfileIdeasDetailDialogFragment : DialogFragment() , PostListener {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
+        bottomNavigationViewVisibility = View.VISIBLE
         _binding = null
+        super.onDestroyView()
     }
 }
