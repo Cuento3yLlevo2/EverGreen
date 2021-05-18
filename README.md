@@ -181,61 +181,12 @@ All this will be done with Kotlin as the programming language and Google Firebas
   "upcyclingCategories" : {
     "1": {
       "name" : "Cartón",
-      "description" : "Reciclar cartón es la opción fácil, pero ¿alguna vez ha pensado en hacer Upcycling con cajas de cartón? Es fuerte, versátil y casi siempre disponible, así que aquí tienes algunas ideas de Upcycling de cartón para que pruebes."
+      "creatorHelp":"La mayoría de las veces simplemente lo aplanamos y lo colocamos en el contenedor de reciclaje de cartón designado. El cartón tiene mucho potencia que aprovechar y está en tus manos hacer el cambio.",
+      "description" : "Reciclar cartón es la opción fácil, pero ¿alguna vez ha pensado en hacer Upcycling con cajas de cartón? Es fuerte, versátil y casi siempre disponible, así que aquí tienes algunas ideas de Upcycling de cartón para que pruebes.",
+      "image": "url/..."
     },
-    "2": {
-      "name" : "Vidrio",
-      "description" : "Todos conocemos el sonido de un montón de vidrios rompiéndose al ser depositados en el camión de reciclaje. ¿Por qué no buscar nuevos usos para botellas de vidrio, frascos e incluso ventanas antes de ponerlos inmediatamente en el contenedor de reciclaje?"
-    },
-    "3": {
-      "name" : "Plástico",
-      "description" : "Una botella de plástico vacía es el símbolo por excelencia de nuestra sociedad derrochadora, upcycling es una forma de darle una nueva vida útil al omnipresente plástico."
-    },
-    "4": {
-      "name" : "Joyas",
-      "description" : "Las joyas viejas y rotas son una de las cosas más divertidas para hacer Upcycling. Aquí hay algunas ideas para hacer Upcycling de joyas rotas que no se pueden reparar."
-    },
-    "5": {
-      "name" : "Tela de desecho",
-      "description" : "Hay varias formas de terminar con tela de desecho. La principal es la costura o cuando se desgasta la tela de nuestras sábanas, toallas y manteles. Prepárate porque hay muchas formas de utilizar pequeños trozos de tela y textiles de desecho, así como trozos más grandes de tela no deseada."
-    },
-    "6": {
-      "name" : "Jeans",
-      "description" : "Los jeans viejos obviamente caen en la categoría de ropa, pero hay tantas opciones para reciclar sus viejos jeans, chaquetas, faldas o pantalones cortos que se merecían una categoría propia."
-    },
-    "7": {
-      "name" : "Poliestireno",
-      "description" : "¿No se te hunde el corazón cuando abres algo que has comprado y te das cuenta de que está envuelto en espuma de poliestireno o algún otro tipo de embalaje de espuma o gránulos?"
-    },
-    "8": {
-      "name" : "Ropa",
-      "description" : "Todos compramos demasiada ropa. La moda es voluble y la ropa se desgasta, se rompe o se mancha. Donar ropa que no uses es una buena opción, pero cuando está en mal estado quizás es hora de aplicar upcycling."
-    },
-    "9": {
-      "name" : "Madera",
-      "description" : "Es posible que se sorprenda de lo fácil que es terminar con madera no deseada. Hay muchas cosas que puede hacer para hacer Upcycling de madera, con las herramientas adecuadas."
-    },
-    "10": {
-      "name" : "Papel",
-      "description" : "Afortunadamente, muchos de nosotros ahora recibimos extractos bancarios electrónicos, pero de alguna manera eso no parece reducir la cantidad de correo basura, volantes y circulares de tiendas que se depositan en el buzón todos los días."
-    },
-    "11": {
-      "name" : "Metal",
-      "description" : "Todos sabemos sobre la abundancia de latas en los contenedores de reciclaje, pero hay tantas cosas que puedes hacer con ellas que la próxima vez que las deseches lo pensaras dos veces."
-    },
-    "12": {
-      "name" : "Muebles",
-      "description" : "Afortunadamente, el reciclaje de muebles se está volviendo cada vez más popular e incluso se ha convertido en negocios exitosos para muchos emprendedores individuales, como los/las Artistas y Artesanos que ofrecen sus servicios en nuestra plataforma."
-    },
-    "13": {
-      "name" : "Cachivaches",
-      "description" : "Básicamente son solo cosas rotas o fuera de estilo que heredamos o compramos (¡y luego nos arrepentimos!) Que no encajan en ninguna de las otras categorías."
-    },
-    "14": {
-      "name" : "Otros",
-      "description" : "Cualquier material al que se le pueda aplicar Upcycling que no hayamos incluido en nuestra lista de categorías."
-    }
-
+    "2": {...},
+    "3": {...}
   },
 
   // Chats contains only meta info about each conversation
