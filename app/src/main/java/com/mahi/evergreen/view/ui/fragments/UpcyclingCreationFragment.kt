@@ -60,10 +60,6 @@ class UpcyclingCreationFragment : BaseDialogFragment() {
     private var databaseService = DatabaseService()
     private var firebaseUser: FirebaseUser? = null
     private var storageRef: StorageReference? = null
-
-
-
-
     private var _binding: FragmentUpcyclingCreationBinding? = null
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -642,6 +638,7 @@ class UpcyclingCreationFragment : BaseDialogFragment() {
                             databaseService.writeNewPost(coverURL, type, minPrice, title, publisherID, category, description, images, object: Callback<Boolean> {
                                 override fun onSuccess(result: Boolean?) {
                                     Log.i("FireBaseLogs", "Write post success")
+
                                     binding.UpcyclingCreationProgressBar.visibility = View.GONE
                                     binding.bUpcyclingCreationClose.visibility = View.VISIBLE
                                 }

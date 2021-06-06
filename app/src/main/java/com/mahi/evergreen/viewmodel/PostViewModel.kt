@@ -1,5 +1,6 @@
 package com.mahi.evergreen.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseUser
@@ -14,6 +15,7 @@ class PostViewModel : ViewModel() {
 
     private val firestoreService = DatabaseService()
     var postList: MutableLiveData<List<Post>> = MutableLiveData()
+    var createdPostIDList: MutableLiveData<List<String>> = MutableLiveData()
     var isLoading = MutableLiveData<Boolean>()
     private var firebaseUser: FirebaseUser? = null
 
@@ -48,7 +50,9 @@ class PostViewModel : ViewModel() {
         getProfilePostsFromFirebaseByType(type, currentUserID)
     }
 
+
     private fun getProfilePostsFromFirebaseByType(type: Int, currentUserID: String?) {
+        Log.d("DebugPost", "type => $type and user => $currentUserID")
         if (currentUserID != null) {
             firestoreService.getProfilePostsFromDatabaseByType(type, currentUserID, object: Callback<List<Post>> {
                 override fun onSuccess(result: List<Post>?) {
@@ -63,6 +67,37 @@ class PostViewModel : ViewModel() {
             )
         }
     }
+
+
+    /*
+    private fun getProfilePostsFromFirebaseByType(type: Int, currentUserID: String?) {
+        Log.d("DebugPost", "type => $type and user => $currentUserID")
+        if (currentUserID != null) {
+            firestoreService.getProfileCreatedPostsList(currentUserID, object: Callback<List<String>> {
+                override fun onSuccess(result: List<String>?) {
+                    createdPostIDList.postValue(result)
+                    firestoreService.getProfilePostsFromDatabaseByType(createdPostIDList, type ,currentUserID, object: Callback<List<Post>> {
+                        override fun onSuccess(result: List<Post>?) {
+                            postList.postValue(result)
+                            processFinished()
+                        }
+
+                        override fun onFailure(exception: Exception) {
+                            processFinished()
+                        }
+                    }
+                    )
+                }
+
+                override fun onFailure(exception: Exception) {
+                    processFinished()
+                }
+            }
+            )
+        }
+    }
+
+     */
 
     private fun getFavoritePostsFromFirebase(currentUserID: String?) {
         if (currentUserID != null) {

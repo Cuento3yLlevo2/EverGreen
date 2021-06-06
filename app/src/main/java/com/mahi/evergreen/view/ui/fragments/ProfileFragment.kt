@@ -73,7 +73,7 @@ class ProfileFragment : Fragment() {
         dataBaseUsersReference.child(userUid).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val user: User? = snapshot.getValue(User::class.java)
-                if (context!=null && user != null){
+                if (context!=null && user != null && _binding != null){
                     currentUserData = user
                     val userProfile: UserProfile? = user.profile
                     if (userProfile!=null){

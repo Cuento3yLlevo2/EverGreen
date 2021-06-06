@@ -51,6 +51,8 @@ class ProfilePublicDetailDialogFragment : BaseDialogFragment() {
         Picasso.get().load(currentUserData!!.profile?.profileImage).placeholder(R.drawable.user_default).into(binding.ivPublicProfileImage)
         binding.tvPublicProfileSeedsPoints.text = currentUserData!!.profile?.seedsPoints.toString()
 
+
+
     }
 
     override fun onStart() {

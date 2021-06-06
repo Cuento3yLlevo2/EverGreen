@@ -146,6 +146,9 @@ class DatabaseService {
                 .addOnSuccessListener {
                     // Write was successful!
                     Log.w("FireBaseLogs", "Write was successful")
+
+                    database.reference.child(USERS).child(publisherID).child("createdPosts").updateChildren(hashMapOf<String, Any>(postKey to true))
+
                     callback.onSuccess(true)
                 }
                 .addOnFailureListener {
@@ -432,6 +435,10 @@ class DatabaseService {
                             child.key?.let { favoritePostsList.add(it) }
                         }
                         val postList = ArrayList<Post>()
+                        var counter = 1
+                        if (favoritePostsList.isEmpty()){
+                            callback.onSuccess(postList)
+                        }
                         for (favoritePost in favoritePostsList) {
                             database.getReference(POSTS).child(favoritePost)
                                     .addValueEventListener(object : ValueEventListener{
@@ -440,13 +447,17 @@ class DatabaseService {
                                             if (post != null) {
                                                 postList.add(post)
                                             }
+                                            if (counter == favoritePostsList.size){
+                                                callback.onSuccess(postList)
+                                            }
+                                            counter++
                                         }
                                         override fun onCancelled(error: DatabaseError) {
+                                            counter++
                                             Log.w("Data reading failure", "Error getting documents.", error.toException())
                                         }
                                     })
                         }
-                        callback.onSuccess(postList)
                     }
                     override fun onCancelled(error: DatabaseError) {
                         Log.w("Data reading failure", "Error getting documents.", error.toException())
@@ -457,35 +468,62 @@ class DatabaseService {
     fun getProfilePostsFromDatabaseByType(type: Int, currentUserID: String, callback: Callback<List<Post>>) {
         database.getReference(USERS)
                 .child(currentUserID)
-                .child("favoritePosts").addValueEventListener(object : ValueEventListener{
+                .child("createdPosts").addValueEventListener(object : ValueEventListener{
                     override fun onDataChange(snapshot: DataSnapshot) {
-                        val favoritePostsList = ArrayList<String>()
+                        val createdPostsList = ArrayList<String>()
                         for (child in snapshot.children) {
-                            child.key?.let { favoritePostsList.add(it) }
+                            child.key?.let { createdPostsList.add(it) }
                         }
                         val postList = ArrayList<Post>()
-                        for (favoritePost in favoritePostsList) {
-                            database.getReference(POSTS).child(favoritePost)
-                                    .addValueEventListener(object : ValueEventListener{
-                                        override fun onDataChange(snapshot: DataSnapshot) {
-                                            val post = snapshot.getValue(Post::class.java)
-                                            if (post != null) {
-                                                if (post.type == type) {
-                                                    postList.add(post)
-                                                }
-                                            }
-                                        }
-                                        override fun onCancelled(error: DatabaseError) {
-                                            Log.w("Data reading failure", "Error getting documents.", error.toException())
-                                        }
-                                    })
+                        var counter = 1
+                        if (createdPostsList.isEmpty()){
+                            callback.onSuccess(postList)
                         }
-                        callback.onSuccess(postList)
+                        for (createdPost in createdPostsList) {
+                            getPostFromDatabaseByType(type, createdPost, object: Callback<Post> {
+                                override fun onSuccess(result: Post?) {
+                                    if (result != null) {
+                                        postList.add(result)
+                                    }
+                                    Log.d("DebugPost", "counter => $counter Listsize => ${createdPostsList.size}")
+                                    if (counter == createdPostsList.size){
+                                        callback.onSuccess(postList)
+                                    }
+                                    counter++
+                                }
+                                override fun onFailure(exception: Exception) {
+                                    counter++
+
+                                }
+                            }
+                            )
+                        }
                     }
                     override fun onCancelled(error: DatabaseError) {
                         Log.w("Data reading failure", "Error getting documents.", error.toException())
                     }
                 })
+    }
+
+
+
+    private fun getPostFromDatabaseByType(type: Int, createdPost: String, callback: Callback<Post>) {
+        database.getReference(POSTS).child(createdPost)
+            .addValueEventListener(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val post = snapshot.getValue(Post::class.java)
+                    if (post != null) {
+                        if (post.type == type) {
+                            callback.onSuccess(post)
+                        } else {
+                            callback.onSuccess(null)
+                        }
+                    }
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    Log.w("Data reading failure", "Error getting documents.", error.toException())
+                }
+            })
     }
 
     // Extra Tools
@@ -534,8 +572,6 @@ class DatabaseService {
         }
         return dialog
     }
-
-
 
 
 }
