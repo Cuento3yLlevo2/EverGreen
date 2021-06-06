@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
@@ -73,6 +72,11 @@ class PostDetailDialogFragment : BaseDialogFragment() {
         for (image in post.images) {
             arrayListImages.add(image.value)
         }
+        val arrayListImagesReversed = arrayListImages.reversed()
+        arrayListImages.clear()
+        for (image in arrayListImagesReversed) {
+            arrayListImages.add(image)
+        }
 
         adapter = PostImagesViewPagerAdapter(arrayListImages, false)
         binding.viewpager.adapter = adapter
@@ -122,8 +126,6 @@ class PostDetailDialogFragment : BaseDialogFragment() {
             intent.putExtra("type", 3)
             startActivity(intent)
         }
-
-
     }
 
     private fun displayPostPublisherData(postPublisherID: String) {

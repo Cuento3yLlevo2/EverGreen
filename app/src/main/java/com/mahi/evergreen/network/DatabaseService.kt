@@ -115,6 +115,46 @@ class DatabaseService {
         }
     }
 
+    fun writeNewPost(coverImage: String,
+                     type: Int,
+                     minPrice: Double?,
+                     title: String,
+                     publisherID: String,
+                     category: MutableMap<String, Boolean>,
+                     description: String,
+                     images: MutableMap<String, String>,
+                     callback: Callback<Boolean>) {
+
+        val createdAt = System.currentTimeMillis()
+        val postKey = database.reference.child(POSTS).push().key
+        val post = Post(
+            coverImage,
+            type,
+            minPrice,
+            title,
+            postKey,
+            publisherID,
+            category,
+            createdAt,
+            createdAt, // updatedAt
+            description,
+            images
+        )
+
+        if (postKey != null) {
+            database.reference.child(POSTS).child(postKey).setValue(post)
+                .addOnSuccessListener {
+                    // Write was successful!
+                    Log.w("FireBaseLogs", "Write was successful")
+                    callback.onSuccess(true)
+                }
+                .addOnFailureListener {
+                    // Write failed
+                    Log.w("FireBaseLogs", "Write failed")
+                }
+        }
+    }
+
 
 
     // Read From Realtime Database

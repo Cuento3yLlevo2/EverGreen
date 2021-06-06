@@ -1,13 +1,13 @@
 package com.mahi.evergreen.view.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
-import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -85,7 +85,8 @@ class CategoriesDetailDialogFragment : BaseDialogFragment(), UpcyclingCategories
         position: Int
     ) {
         if (isUpcyclingCreationAction == true){
-            val bundle = bundleOf("upcyclingType" to upcyclingType, "categoryID" to upcyclingCategoryItem.id)
+            val bundle = bundleOf("upcyclingType" to upcyclingType, "categoryID" to upcyclingCategoryItem.id.toString())
+            Log.d("debugImage", "categoryID => ${upcyclingCategoryItem.id.toString()}")
             findNavController().navigate(R.id.action_categoriesDetailDialogFragment_to_upcyclingCreationFragment, bundle)
         } else {
             Toast.makeText(context, "Próximamente", Toast.LENGTH_SHORT).show()
