@@ -19,8 +19,31 @@ class PostViewModel : ViewModel() {
     var isLoading = MutableLiveData<Boolean>()
     private var firebaseUser: FirebaseUser? = null
 
+
     fun refreshPostList() {
         getPostsFromFirebase()
+    }
+
+    fun refreshFavoritePostList() {
+        firebaseUser = Firebase.auth.currentUser
+        val currentUserID = firebaseUser?.uid
+        getFavoritePostsFromFirebase(currentUserID)
+    }
+
+    fun refreshProfilePostListByType(type: Int) {
+        firebaseUser = Firebase.auth.currentUser
+        val currentUserID = firebaseUser?.uid
+        getProfilePostsFromFirebaseByType(type, currentUserID)
+    }
+
+    fun refreshProfilePostListByCategory(categoryID: String) {
+        getPostsFromFirebaseByCategory(categoryID)
+    }
+
+    fun changeFavPostState(postId: String?, action: Int) {
+        firebaseUser = Firebase.auth.currentUser
+        val currentUserID = firebaseUser?.uid
+        changeFavPostStateInFirebase(currentUserID, postId, action)
     }
 
     private fun getPostsFromFirebase() {
@@ -37,19 +60,6 @@ class PostViewModel : ViewModel() {
         }
         )
     }
-
-    fun refreshFavoritePostList() {
-        firebaseUser = Firebase.auth.currentUser
-        val currentUserID = firebaseUser?.uid
-        getFavoritePostsFromFirebase(currentUserID)
-    }
-
-    fun refreshProfilePostListByType(type: Int) {
-        firebaseUser = Firebase.auth.currentUser
-        val currentUserID = firebaseUser?.uid
-        getProfilePostsFromFirebaseByType(type, currentUserID)
-    }
-
 
     private fun getProfilePostsFromFirebaseByType(type: Int, currentUserID: String?) {
         Log.d("DebugPost", "type => $type and user => $currentUserID")
@@ -68,37 +78,6 @@ class PostViewModel : ViewModel() {
         }
     }
 
-
-    /*
-    private fun getProfilePostsFromFirebaseByType(type: Int, currentUserID: String?) {
-        Log.d("DebugPost", "type => $type and user => $currentUserID")
-        if (currentUserID != null) {
-            firestoreService.getProfileCreatedPostsList(currentUserID, object: Callback<List<String>> {
-                override fun onSuccess(result: List<String>?) {
-                    createdPostIDList.postValue(result)
-                    firestoreService.getProfilePostsFromDatabaseByType(createdPostIDList, type ,currentUserID, object: Callback<List<Post>> {
-                        override fun onSuccess(result: List<Post>?) {
-                            postList.postValue(result)
-                            processFinished()
-                        }
-
-                        override fun onFailure(exception: Exception) {
-                            processFinished()
-                        }
-                    }
-                    )
-                }
-
-                override fun onFailure(exception: Exception) {
-                    processFinished()
-                }
-            }
-            )
-        }
-    }
-
-     */
-
     private fun getFavoritePostsFromFirebase(currentUserID: String?) {
         if (currentUserID != null) {
             firestoreService.getFavoritePostsFromDatabase(currentUserID, object: Callback<List<Post>> {
@@ -115,8 +94,43 @@ class PostViewModel : ViewModel() {
         }
     }
 
+    private fun getPostsFromFirebaseByCategory(categoryID: String) {
+        firestoreService.getPostsFromDatabaseByCategory(categoryID, object: Callback<List<Post>> {
+            override fun onSuccess(result: List<Post>?) {
+                postList.postValue(result)
+                processFinished()
+            }
+
+            override fun onFailure(exception: Exception) {
+                processFinished()
+            }
+        }
+        )
+    }
+
+    private fun changeFavPostStateInFirebase(currentUserID: String?, postId: String?, action: Int) {
+        firestoreService.changeFavPostStateInDatabase(currentUserID, postId, action, object: Callback<Boolean> {
+            override fun onSuccess(result: Boolean?) {
+                if (result == true){
+                    Log.i("firestoreService", "Writing changeFavPostState success")
+
+                } else {
+                    Log.w("firestoreService", "Writing changeFavPostState failed")
+                }
+            }
+
+            override fun onFailure(exception: Exception) {
+                Log.w("firestoreService", exception.toString())
+            }
+        }
+        )
+    }
+
     fun processFinished() {
         isLoading.value = true
     }
+
+
+
 
 }

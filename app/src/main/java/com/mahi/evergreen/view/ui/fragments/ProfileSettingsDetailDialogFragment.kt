@@ -60,7 +60,6 @@ class ProfileSettingsDetailDialogFragment : BaseDialogFragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         setHasOptionsMenu(false)
-        inflater
     }
 
     override fun onStart() {

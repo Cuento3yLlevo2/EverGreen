@@ -57,6 +57,9 @@
     <string name="cd_attach_image_file">Icono para enviar una imagen</string>
     <string name="hint_write_message">envía un mensaje…</string>
     <string name="cd_send_message_icon">Icono para enviar un mensaje</string>
+    <string name="chat_image_sent">Se ha enviado una imagen</string>
+    <string name="message_read">Leído</string>
+    <string name="message_sent">Enviado</string>
     <string name="cd_share_icon">Icono para compartir</string>
     <string name="public_profile_feedback_text">Opiniones</string>
     <string name="public_profile_upcycling_service_text">Servicios de upcycling</string>
@@ -65,6 +68,7 @@
     <string name="favorites_list_empty">Aún no tienes publicaciones favoritas</string>
     <string name="services_list_empty">Aún no tienes servicios de upcycling creados</string>
     <string name="ideas_list_empty">Aún no tienes ideas de upcycling creadas</string>
+    <string name="category_post_filtering_empty">Aún no hay publicaciones en esta categoría</string>
     <string name="hint_search_upcycling">Busca una idea de Upcycling</string>
     <string name="categories_toolbar_text">Categorías</string>
     <string name="chat_list_empty_text">Aún no tienes conversaciones iniciadas</string>

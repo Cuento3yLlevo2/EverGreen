@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.mahi.evergreen.R
 import com.mahi.evergreen.databinding.FragmentFavoritesBinding
 import com.mahi.evergreen.model.Post
+import com.mahi.evergreen.network.ADD_FAV_POST
+import com.mahi.evergreen.network.REMOVE_FAV_POST
 import com.mahi.evergreen.view.adapter.PostAdapter
 import com.mahi.evergreen.view.adapter.PostListener
 import com.mahi.evergreen.viewmodel.PostViewModel
@@ -48,6 +50,10 @@ class FavoritesFragment : Fragment() , PostListener {
             adapter = postAdapter
         }
 
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            findNavController().navigate(R.id.navHomeFragment)
+        }
+
 
         observeViewModel()
     }
@@ -63,6 +69,14 @@ class FavoritesFragment : Fragment() , PostListener {
         val postValues = postItem.toMap()
         val bundle = bundleOf("post" to postValues)
         findNavController().navigate(R.id.action_navFavoritesFragment_to_postDetailDialogFragment, bundle)
+    }
+
+    override fun onPostFavCheckClicked(postItem: Post, position: Int) {
+        viewModel.changeFavPostState(postItem.postId, REMOVE_FAV_POST)
+    }
+
+    override fun onPostFavUncheckClicked(postItem: Post, position: Int) {
+        viewModel.changeFavPostState(postItem.postId, ADD_FAV_POST)
     }
 
     override fun observeViewModel() {

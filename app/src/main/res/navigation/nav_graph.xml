@@ -76,6 +76,9 @@
         <action
             android:id="@+id/action_categoriesDetailDialogFragment_to_upcyclingCreationFragment"
             app:destination="@id/upcyclingCreationFragment" />
+        <action
+            android:id="@+id/action_categoriesDetailDialogFragment_to_categoriesPostFilteringFragment"
+            app:destination="@id/categoriesPostFilteringFragment" />
     </dialog>
     <activity
         android:id="@+id/messageChatActivity"
@@ -90,6 +93,9 @@
         <action
             android:id="@+id/action_postDetailDialogFragment_to_messageChatActivity"
             app:destination="@id/messageChatActivity" />
+        <action
+            android:id="@+id/action_postDetailDialogFragment_to_navHomeFragment"
+            app:destination="@id/navHomeFragment" />
     </dialog>
     <fragment
         android:id="@+id/profilePublicDetailDialogFragment"
@@ -128,5 +134,17 @@
         android:id="@+id/upcyclingCreationFragment"
         android:name="com.mahi.evergreen.view.ui.fragments.UpcyclingCreationFragment"
         android:label="UpcyclingCreationFragment" />
+    <fragment
+        android:id="@+id/categoriesPostFilteringFragment"
+        android:name="com.mahi.evergreen.view.ui.fragments.CategoriesPostFilteringFragment"
+        android:label="fragment_categories_post_filtering"
+        tools:layout="@layout/fragment_categories_post_filtering" >
+        <action
+            android:id="@+id/action_categoriesPostFilteringFragment_to_postDetailDialogFragment"
+            app:destination="@id/postDetailDialogFragment" />
+        <action
+            android:id="@+id/action_categoriesPostFilteringFragment_to_categoriesDetailDialogFragment"
+            app:destination="@id/categoriesDetailDialogFragment" />
+    </fragment>
 
 </navigation>

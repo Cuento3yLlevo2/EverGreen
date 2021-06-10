@@ -13,7 +13,7 @@ abstract class BaseDialogFragment: DialogFragment() {
         super.onActivityCreated(savedInstanceState)
         // get the reference of the parent activity and call the setBottomNavigationVisibility method.
         if (activity is MainActivity) {
-            var  mainActivity = activity as MainActivity
+            val mainActivity = activity as MainActivity
             mainActivity.setBottomNavigationVisibility(bottomNavigationViewVisibility)
         }
     }
@@ -22,14 +22,14 @@ abstract class BaseDialogFragment: DialogFragment() {
     override fun onResume() {
         super.onResume()
         if (activity is MainActivity) {
-            var  mainActivity = activity as MainActivity
+            val mainActivity = activity as MainActivity
             mainActivity.setBottomNavigationVisibility(bottomNavigationViewVisibility)
         }
     }
 
    override fun onDestroy() {
        super.onDestroy()
-       var  mainActivity = activity as MainActivity
+       val mainActivity = activity as MainActivity
        mainActivity.setBottomNavigationVisibility(bottomNavigationViewVisibility)
    }
 }

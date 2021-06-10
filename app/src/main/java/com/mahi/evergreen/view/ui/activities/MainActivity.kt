@@ -1,11 +1,9 @@
 package com.mahi.evergreen.view.ui.activities
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
-import com.google.firebase.auth.FirebaseAuth
 import com.mahi.evergreen.R
 import com.mahi.evergreen.databinding.ActivityMainBinding
 
@@ -34,8 +32,5 @@ class MainActivity : AppCompatActivity() {
         // get the reference of the bottomNavigationView and set the visibility.
         binding.bnvMenu.visibility = visibility
     }
-
-
-
 
 }

@@ -6,14 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
-import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.mahi.evergreen.R
 import com.mahi.evergreen.databinding.FragmentProfileIdeasDetailDialogBinding
 import com.mahi.evergreen.model.Post
+import com.mahi.evergreen.network.ADD_FAV_POST
 import com.mahi.evergreen.network.POST_IDEA_TYPE
+import com.mahi.evergreen.network.REMOVE_FAV_POST
 import com.mahi.evergreen.view.adapter.PostAdapter
 import com.mahi.evergreen.view.adapter.PostListener
 import com.mahi.evergreen.viewmodel.PostViewModel
@@ -73,8 +74,18 @@ class ProfileIdeasDetailDialogFragment : BaseDialogFragment() , PostListener {
 
     override fun onPostItemClicked(postItem: Post, position: Int) {
         val postValues = postItem.toMap()
-        val bundle = bundleOf("post" to postValues)
+        val bundle = bundleOf("post" to postValues, "isCategoryFiltering" to false)
         findNavController().navigate(R.id.action_profileIdeasDetailDialogFragment_to_postDetailDialogFragment, bundle)
+    }
+
+    override fun onPostFavCheckClicked(postItem: Post, position: Int) {
+        viewModel.changeFavPostState(postItem.postId, REMOVE_FAV_POST)
+        viewModel.refreshProfilePostListByType(POST_IDEA_TYPE)
+    }
+
+    override fun onPostFavUncheckClicked(postItem: Post, position: Int) {
+        viewModel.changeFavPostState(postItem.postId, ADD_FAV_POST)
+        viewModel.refreshProfilePostListByType(POST_IDEA_TYPE)
     }
 
     override fun observeViewModel() {

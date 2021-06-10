@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -44,12 +44,15 @@ class ChatListFragment : Fragment(), ChatListListener {
 
         viewModel.refreshChatList()
 
-        chatListAdapter = ChatListAdapter(this)
+        chatListAdapter = ChatListAdapter(this, context)
         binding.rvChatList.apply {
             layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
             adapter = chatListAdapter
         }
 
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            findNavController().navigate(R.id.navHomeFragment)
+        }
 
         observeViewModel()
     }

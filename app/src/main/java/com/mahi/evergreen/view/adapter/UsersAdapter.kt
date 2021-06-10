@@ -13,9 +13,9 @@ import com.mahi.evergreen.model.User
 import com.mahi.evergreen.model.UserProfile
 import de.hdodenhof.circleimageview.CircleImageView
 
-class UsersAdapter(val usersListener: UsersListener) : RecyclerView.Adapter<UsersAdapter.ViewHolder>() {
+class UsersAdapter(private val usersListener: UsersListener) : RecyclerView.Adapter<UsersAdapter.ViewHolder>() {
 
-    var listUsers = ArrayList<User>()
+    private var listUsers = ArrayList<User>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
         LayoutInflater.from(parent.context).inflate(
@@ -26,20 +26,22 @@ class UsersAdapter(val usersListener: UsersListener) : RecyclerView.Adapter<User
         val userProfile: UserProfile? = user.profile
 
         if (userProfile != null) {
-            Glide.with(holder.itemView.context) // contexto
+            holder.ivSearchProfileImage?.let {
+                Glide.with(holder.itemView.context) // contexto
                     .load(userProfile.profileImage) // donde esta la url de la imagen
                     .apply(RequestOptions.circleCropTransform()) // la convertimos en circular
-                    .into(holder.ivSearchProfileImage) // donde la vamos a colocar
+                    .into(it)
+            } // donde la vamos a colocar
 
-            holder.tvSearchUsername.text = userProfile.username
+            holder.tvSearchUsername?.text = userProfile.username
         }
 
         if (user.online == false) {
-            holder.civOfflineStatus.visibility = View.VISIBLE
-            holder.civOnlineStatus.visibility = View.GONE
+            holder.civOfflineStatus?.visibility = View.VISIBLE
+            holder.civOnlineStatus?.visibility = View.GONE
         } else {
-            holder.civOfflineStatus.visibility = View.GONE
-            holder.civOnlineStatus.visibility = View.VISIBLE
+            holder.civOfflineStatus?.visibility = View.GONE
+            holder.civOnlineStatus?.visibility = View.VISIBLE
         }
 
         holder.itemView.setOnClickListener {
@@ -57,9 +59,9 @@ class UsersAdapter(val usersListener: UsersListener) : RecyclerView.Adapter<User
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val ivSearchProfileImage = itemView.findViewById<ImageView>(R.id.ivSearchProfileImage)
-        val tvSearchUsername = itemView.findViewById<TextView>(R.id.tvSearchUsername)
-        val civOnlineStatus = itemView.findViewById<CircleImageView>(R.id.civOnlineStatus)
-        val civOfflineStatus = itemView.findViewById<CircleImageView>(R.id.civOfflineStatus)
+        val ivSearchProfileImage: ImageView? = itemView.findViewById(R.id.ivSearchProfileImage)
+        val tvSearchUsername: TextView? = itemView.findViewById(R.id.tvSearchUsername)!!
+        val civOnlineStatus: CircleImageView? = itemView.findViewById(R.id.civOnlineStatus)
+        val civOfflineStatus: CircleImageView? = itemView.findViewById(R.id.civOfflineStatus)
     }
 }

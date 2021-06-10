@@ -9,7 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -125,6 +125,10 @@ class ProfileFragment : Fragment() {
 
         binding.clProfileToSupport.setOnClickListener {
             findNavController().navigate(R.id.action_navProfileFragment_to_profileSupportDetailDialogFragment)
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            findNavController().navigate(R.id.navHomeFragment)
         }
 
     }

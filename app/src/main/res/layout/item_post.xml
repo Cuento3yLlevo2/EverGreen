@@ -81,7 +81,6 @@
             android:layout_height="@dimen/imageViewPostHeight"
             android:layout_marginTop="1dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/post_default_image"
             android:contentDescription="@string/cd_post_cover_image" />
 
         <View
@@ -177,6 +176,7 @@
             android:textColor="@color/primary_text"
             android:padding="8dp"
             android:ellipsize="end"
+            android:lines="2"
             />
 
         <com.google.android.material.button.MaterialButton

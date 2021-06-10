@@ -11,8 +11,8 @@ import com.mahi.evergreen.R
 import com.mahi.evergreen.model.UpcyclingCategory
 
 class UpcyclingCategoriesAdapter(
-    val isUpcyclingCreationAction: Boolean?,
-    val upcyclingCategListener: UpcyclingCategoriesListener
+    private val isUpcyclingCreationAction: Boolean?,
+    private val upcyclingCategListener: UpcyclingCategoriesListener
 ) : RecyclerView.Adapter<UpcyclingCategoriesAdapter.ViewHolder>() {
 
     var listOfUpcycingCateg = ArrayList<UpcyclingCategory>()
@@ -25,17 +25,19 @@ class UpcyclingCategoriesAdapter(
 
         val category = listOfUpcycingCateg[position]
 
-        Glide.with(holder.itemView.context) // contexto
-            .load(category.image) // donde esta la url de la imagen
-            .placeholder(R.drawable.shape_topico) // placeholder
-            .into(holder.ivCategoryImage) // donde la vamos a colocar
+        holder.ivCategoryImage?.let {
+            Glide.with(holder.itemView.context) // contexto
+                .load(category.image) // donde esta la url de la imagen
+                .placeholder(R.drawable.shape_topico) // placeholder
+                .into(it)
+        } // donde la vamos a colocar
 
-        holder.tvCategoryName.text = category.name
+        holder.tvCategoryName?.text = category.name
 
         if(isUpcyclingCreationAction != true){
-            holder.tvCategoryDesc.text = category.description
+            holder.tvCategoryDesc?.text = category.description
         } else {
-            holder.tvCategoryDesc.text = category.creatorHelp
+            holder.tvCategoryDesc?.text = category.creatorHelp
         }
 
 
@@ -54,8 +56,8 @@ class UpcyclingCategoriesAdapter(
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val ivCategoryImage = itemView.findViewById<ImageView>(R.id.ivCategoryImage)
-        val tvCategoryName = itemView.findViewById<TextView>(R.id.tvCategoryName)
-        val tvCategoryDesc = itemView.findViewById<TextView>(R.id.tvCategoryDesc)
+        val ivCategoryImage: ImageView? = itemView.findViewById(R.id.ivCategoryImage)!!
+        val tvCategoryName: TextView? = itemView.findViewById(R.id.tvCategoryName)
+        val tvCategoryDesc: TextView? = itemView.findViewById(R.id.tvCategoryDesc)
     }
 }

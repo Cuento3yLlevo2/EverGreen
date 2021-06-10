@@ -10,14 +10,16 @@
     <ImageView
         android:layout_marginTop="25dp"
         android:layout_width="wrap_content"
-        android:layout_height="80dp"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
         android:src="@drawable/evergreen_logo"
         android:contentDescription="@string/content_description_evergreen_logo" />
 
     <TextView
         android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
         android:textSize="30sp"
         android:textStyle="bold"
         android:text="@string/welcome_app_title"
@@ -29,7 +31,8 @@
     <TextView
         android:layout_marginTop="10dp"
         android:layout_width="190dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="0.3"
         android:textSize="20sp"
         android:textStyle="bold"
         android:text="@string/welcome_app_subtitle"
@@ -40,16 +43,17 @@
 
     <ImageView
         android:layout_marginTop="10dp"
-        android:paddingVertical="8dp"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="0dp"
+        android:layout_weight="1.5"
         android:src="@drawable/many_hands_holding_garbage"
         android:contentDescription="@string/evergreen_welcome_image" />
 
     <Button
         android:id="@+id/buttonWelcomeRegister"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="0.3"
         android:layout_marginTop="20dp"
         android:text="@string/register_btn"
         android:layout_marginLeft="20dp"
@@ -61,8 +65,10 @@
     <Button
         android:id="@+id/buttonWelcomeLogin"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="0.3"
         android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
         android:text="@string/login_btn"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"

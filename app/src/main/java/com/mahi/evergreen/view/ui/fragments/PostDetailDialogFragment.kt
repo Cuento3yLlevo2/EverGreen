@@ -1,5 +1,6 @@
 package com.mahi.evergreen.view.ui.fragments
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -9,7 +10,9 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -19,7 +22,9 @@ import com.mahi.evergreen.R
 import com.mahi.evergreen.databinding.FragmentPostDetailDialogBinding
 import com.mahi.evergreen.model.Post
 import com.mahi.evergreen.model.User
+import com.mahi.evergreen.network.ADD_FAV_POST
 import com.mahi.evergreen.network.DatabaseService
+import com.mahi.evergreen.network.REMOVE_FAV_POST
 import com.mahi.evergreen.view.adapter.PostAdapter
 import com.mahi.evergreen.view.adapter.PostImagesViewPagerAdapter
 import com.mahi.evergreen.view.ui.activities.MessageChatActivity
@@ -27,11 +32,12 @@ import com.mahi.evergreen.viewmodel.PostViewModel
 import com.squareup.picasso.Picasso
 
 
-class PostDetailDialogFragment : BaseDialogFragment() {
+class PostDetailDialogFragment : BaseDialogFragment(), DialogInterface.OnDismissListener {
 
     override var bottomNavigationViewVisibility: Int = View.GONE
-
     private lateinit var viewModel: PostViewModel
+    private lateinit var categoryMap: Map<*, *>
+    private var isCategoryFiltering: Boolean? = false
     private var adapter: PostImagesViewPagerAdapter? = null
     var firebaseUser = Firebase.auth.currentUser
     private var databaseService = DatabaseService()
@@ -60,6 +66,10 @@ class PostDetailDialogFragment : BaseDialogFragment() {
         binding.toolbarPostDetails.navigationIcon = ContextCompat.getDrawable(view.context, R.drawable.arrow_backwards)
         binding.toolbarPostDetails.setNavigationOnClickListener {
             dismiss()
+        }
+        isCategoryFiltering = arguments?.getBoolean("isCategoryFiltering", false)
+        if(isCategoryFiltering == true) {
+            categoryMap = arguments?.getSerializable("upcyclingCategory") as Map<*, *>
         }
 
         val postMap = arguments?.getSerializable("post") as Map<*, *>
@@ -105,17 +115,29 @@ class PostDetailDialogFragment : BaseDialogFragment() {
             PostAdapter.UPCYCLING_SERVICE -> {
                 val postServiceTitle = "desde ${post.minPrice}€"
                 binding.tvPostDetailUpcyclingService.text = postServiceTitle
-                setFavoriteState(post)
+                setFavoriteState(post.membersFollowingAsFavorite)
 
             }
             PostAdapter.UPCYCLING_IDEA -> {
                 binding.tvPostDetailUpcyclingService.visibility = View.GONE
                 binding.ivPostDetailUpcyclingIdea.visibility = View.VISIBLE
-                setFavoriteState(post)
+                setFavoriteState(post.membersFollowingAsFavorite)
             }
         }
 
         post.publisher?.let { displayPostPublisherData(it) }
+
+        binding.ivPostDetailFavCheck.setOnClickListener {
+            viewModel.changeFavPostState(post.postId, REMOVE_FAV_POST)
+            binding.ivPostDetailFavUncheck.visibility = View.VISIBLE
+            binding.ivPostDetailFavCheck.visibility = View.GONE
+        }
+
+        binding.ivPostDetailFavUncheck.setOnClickListener {
+            viewModel.changeFavPostState(post.postId, ADD_FAV_POST)
+            binding.ivPostDetailFavUncheck.visibility = View.GONE
+            binding.ivPostDetailFavCheck.visibility = View.VISIBLE
+        }
 
         binding.bPostDetailChatBtn.setOnClickListener {
             val intent = Intent(context, MessageChatActivity::class.java)
@@ -128,13 +150,16 @@ class PostDetailDialogFragment : BaseDialogFragment() {
         }
     }
 
+
+
+
     private fun displayPostPublisherData(postPublisherID: String) {
         val postPublisherData = reference.child("users").child(postPublisherID)
         postPublisherData.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
 
                 val userData: User? = snapshot.getValue(User::class.java)
-                if (userData?.profile?.profileImage != null) {
+                if (userData?.profile?.profileImage != null && _binding != null) {
                     Picasso.get()
                             .load(userData.profile?.profileImage)
                             .placeholder(R.drawable.user_default)
@@ -149,12 +174,29 @@ class PostDetailDialogFragment : BaseDialogFragment() {
         })
     }
 
-    private fun setFavoriteState(post: Post) {
-        for(member in post.membersFollowingAsFavorite){
-            if (member.key == firebaseUser?.uid){
-                binding.ivPostDetailFavUncheck.visibility = View.GONE
-                binding.ivPostDetailFavCheck.visibility = View.VISIBLE
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        if(isCategoryFiltering == true) {
+            val bundle = bundleOf("upcyclingCategory" to categoryMap)
+            findNavController().previousBackStackEntry?.destination?.id?.let {
+                findNavController().navigate(
+                    it, bundle
+                )
             }
+        } else {
+            findNavController().previousBackStackEntry?.destination?.id?.let {
+                findNavController().navigate(
+                    it
+                )
+            }
+        }
+    }
+
+    private fun setFavoriteState(membersFollowingAsFavorite: MutableMap<String, Boolean>
+    ) {
+        if (membersFollowingAsFavorite.containsKey(firebaseUser?.uid)){
+            binding.ivPostDetailFavUncheck.visibility = View.GONE
+            binding.ivPostDetailFavCheck.visibility = View.VISIBLE
         }
     }
 

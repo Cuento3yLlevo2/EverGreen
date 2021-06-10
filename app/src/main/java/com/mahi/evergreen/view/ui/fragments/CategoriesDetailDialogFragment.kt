@@ -1,11 +1,9 @@
 package com.mahi.evergreen.view.ui.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
@@ -26,6 +24,7 @@ class CategoriesDetailDialogFragment : BaseDialogFragment(), UpcyclingCategories
     private lateinit var viewModel: UpcyclingCategoriesViewModel
     private var isUpcyclingCreationAction: Boolean? = false
     private var upcyclingType: Int? = 0
+    private var upcyclingCategorycliked = false
 
     private var _binding: FragmentCategoriesDetailDialogBinding? = null
     // This property is only valid between onCreateView and
@@ -48,18 +47,22 @@ class CategoriesDetailDialogFragment : BaseDialogFragment(), UpcyclingCategories
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.toolbarCategories.navigationIcon = ContextCompat.getDrawable(view.context, R.drawable.arrow_backwards)
-        binding.toolbarCategories.setNavigationOnClickListener {
-            findNavController().popBackStack()
-            dismiss()
-        }
 
-        isUpcyclingCreationAction = arguments?.getBoolean("isUpcyclingCreationAction")
+        isUpcyclingCreationAction = arguments?.getBoolean("isUpcyclingCreationAction", false)
         if (isUpcyclingCreationAction == true){
             upcyclingType = arguments?.getInt("upcyclingType")
-            Toast.makeText(context, "upcyclingType = $upcyclingType", Toast.LENGTH_SHORT).show()
             binding.toolbarCategories.title = resources.getString(R.string.upcycling_creation_categories_toolbar_text)
         } else {
             binding.toolbarCategories.title = resources.getString(R.string.categories_toolbar_text)
+        }
+
+        binding.toolbarCategories.setNavigationOnClickListener {
+            // findNavController().popBackStack()
+            if(isUpcyclingCreationAction == false){
+                findNavController().navigate(R.id.navHomeFragment)
+            } else if (isUpcyclingCreationAction == true) {
+                dismiss()
+            }
         }
 
         viewModel = ViewModelProvider(this).get(UpcyclingCategoriesViewModel::class.java)
@@ -80,16 +83,26 @@ class CategoriesDetailDialogFragment : BaseDialogFragment(), UpcyclingCategories
         dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        if(!upcyclingCategorycliked && isUpcyclingCreationAction == false){
+            findNavController().navigate(R.id.navHomeFragment)
+        }
+    }
+
     override fun onUpcyclingCategoryItemClicked(
         upcyclingCategoryItem: UpcyclingCategory,
         position: Int
     ) {
         if (isUpcyclingCreationAction == true){
+            upcyclingCategorycliked = true
             val bundle = bundleOf("upcyclingType" to upcyclingType, "categoryID" to upcyclingCategoryItem.id.toString())
-            Log.d("debugImage", "categoryID => ${upcyclingCategoryItem.id.toString()}")
             findNavController().navigate(R.id.action_categoriesDetailDialogFragment_to_upcyclingCreationFragment, bundle)
         } else {
-            Toast.makeText(context, "Próximamente", Toast.LENGTH_SHORT).show()
+            upcyclingCategorycliked = true
+            val upcyclingCategoryValues = upcyclingCategoryItem.toMap()
+            val bundle = bundleOf("upcyclingCategory" to upcyclingCategoryValues)
+            findNavController().navigate(R.id.action_categoriesDetailDialogFragment_to_categoriesPostFilteringFragment, bundle)
         }
 
     }
@@ -106,7 +119,11 @@ class CategoriesDetailDialogFragment : BaseDialogFragment(), UpcyclingCategories
     }
 
     override fun onDestroyView() {
-        bottomNavigationViewVisibility = View.GONE
+        bottomNavigationViewVisibility = if(upcyclingCategorycliked){
+            View.GONE
+        } else {
+            View.VISIBLE
+        }
         _binding = null
         super.onDestroyView()
     }

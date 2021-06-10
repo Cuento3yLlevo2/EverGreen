@@ -1,5 +1,6 @@
 package com.mahi.evergreen.view.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,14 +16,18 @@ import com.mahi.evergreen.R
 import com.mahi.evergreen.model.ChatMessage
 import de.hdodenhof.circleimageview.CircleImageView
 
-class ChatMessagesAdapter(val chatMessagesListener: ChatMessagesListener, val profileImageUrl: String) : RecyclerView.Adapter<ChatMessagesAdapter.ViewHolder>() {
+class ChatMessagesAdapter(
+    private val chatMessagesListener: ChatMessagesListener,
+    private val profileImageUrl: String,
+    val context: Context?
+) : RecyclerView.Adapter<ChatMessagesAdapter.ViewHolder>() {
 
     var listOfMessages = ArrayList<ChatMessage>()
-    val rightMessageItem: Int = 1
-    val leftMessageItem: Int = 0
+    private val rightMessageItem: Int = 1
+    private val leftMessageItem: Int = 0
     var firebaseUser = Firebase.auth.currentUser
-    var currentViewType: Int? = null
-    var imageChatSent : Boolean = false
+    private var currentViewType: Int? = null
+    private var imageChatSent : Boolean = false
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -44,11 +49,13 @@ class ChatMessagesAdapter(val chatMessagesListener: ChatMessagesListener, val pr
         val message = listOfMessages[position]
 
         if (currentViewType != rightMessageItem){
-            holder.civLeftProfileImage?.let {
-                Glide.with(holder.itemView.context) // contexto
+            holder.civLeftProfileImage.let {
+                holder.civLeftProfileImage?.let { it1 ->
+                    Glide.with(holder.itemView.context) // contexto
                         .load(profileImageUrl) // donde esta la url de la imagen
                         .apply(RequestOptions.circleCropTransform()) // la convertimos en circular
-                        .into(holder.civLeftProfileImage) // donde la vamos a colocar
+                        .into(it1)
+                } // donde la vamos a colocar
             }
         }
 
@@ -57,13 +64,13 @@ class ChatMessagesAdapter(val chatMessagesListener: ChatMessagesListener, val pr
             imageChatSent = false
             // Text message - Right side (Current user is the Sender)
             if(message.sender.equals(firebaseUser?.uid)){
-                holder.tvRightTextMessage.text = message.message
+                holder.tvRightTextMessage?.text = message.message
 
             }
 
             // Text message - Left side
             else if (!message.sender.equals(firebaseUser?.uid)) {
-                holder.tvLeftTextMessage.text = message.message
+                holder.tvLeftTextMessage?.text = message.message
             }
 
         } else {
@@ -72,22 +79,26 @@ class ChatMessagesAdapter(val chatMessagesListener: ChatMessagesListener, val pr
 
             // Image message - Right side (Current user is the Sender)
             if(message.sender.equals(firebaseUser?.uid)){
-                holder.tvRightTextMessage.visibility = View.GONE
-                Glide.with(holder.itemView.context) // contexto
+                holder.tvRightTextMessage?.visibility = View.GONE
+                holder.ivRightImageMessage?.let {
+                    Glide.with(holder.itemView.context) // contexto
                         .load(message.url) // donde esta la url de la imagen
                         .placeholder(R.drawable.ic_baseline_image_24)
-                        .into(holder.ivRightImageMessage) // donde la vamos a colocar
-                holder.ivRightImageMessage.visibility = View.VISIBLE
+                        .into(it)
+                } // donde la vamos a colocar
+                holder.ivRightImageMessage?.visibility = View.VISIBLE
             }
 
             // Image message - Left side
             else if (!message.sender.equals(firebaseUser?.uid)) {
-                holder.tvLeftTextMessage.visibility = View.GONE
-                Glide.with(holder.itemView.context) // contexto
+                holder.tvLeftTextMessage?.visibility = View.GONE
+                holder.ivLeftImageMessage?.let {
+                    Glide.with(holder.itemView.context) // contexto
                         .load(message.url) // donde esta la url de la imagen
                         .placeholder(R.drawable.ic_baseline_image_24)
-                        .into(holder.ivLeftImageMessage) // donde la vamos a colocar
-                holder.ivLeftImageMessage.visibility = View.VISIBLE
+                        .into(it)
+                } // donde la vamos a colocar
+                holder.ivLeftImageMessage?.visibility = View.VISIBLE
             }
         }
 
@@ -95,33 +106,33 @@ class ChatMessagesAdapter(val chatMessagesListener: ChatMessagesListener, val pr
         if (position == listOfMessages.size-1){
 
             if (message.isSeen == true) {
-                holder.tvLeftIsTextSeen?.let {
-                    holder.tvLeftIsTextSeen.text = "Leído"
+                holder.tvLeftIsTextSeen.let {
+                    holder.tvLeftIsTextSeen?.text = context?.getString(R.string.message_read)
                     if (imageChatSent)
-                        holder.tvLeftIsTextSeen.layoutParams = changeLayoutParams(holder.tvLeftIsTextSeen.layoutParams as RelativeLayout.LayoutParams?)
+                        holder.tvLeftIsTextSeen?.layoutParams = changeLayoutParams(holder.tvLeftIsTextSeen?.layoutParams as RelativeLayout.LayoutParams?)
                 }
-                holder.tvRightIsTextSeen?.let {
-                    holder.tvRightIsTextSeen.text = "Leído"
+                holder.tvRightIsTextSeen.let {
+                    holder.tvRightIsTextSeen?.text = context?.getString(R.string.message_read)
                     if (imageChatSent)
-                        holder.tvRightIsTextSeen.layoutParams = changeLayoutParams(holder.tvRightIsTextSeen.layoutParams as RelativeLayout.LayoutParams?)
+                        holder.tvRightIsTextSeen?.layoutParams = changeLayoutParams(holder.tvRightIsTextSeen?.layoutParams as RelativeLayout.LayoutParams?)
                 }
 
             } else {
 
-                holder.tvLeftIsTextSeen?.let {
-                    holder.tvLeftIsTextSeen.text = "Enviado"
+                holder.tvLeftIsTextSeen.let {
+                    holder.tvLeftIsTextSeen?.text = context?.getString(R.string.message_sent)
                     if (imageChatSent)
-                        holder.tvLeftIsTextSeen.layoutParams = changeLayoutParams(holder.tvLeftIsTextSeen.layoutParams as RelativeLayout.LayoutParams?)
+                        holder.tvLeftIsTextSeen?.layoutParams = changeLayoutParams(holder.tvLeftIsTextSeen?.layoutParams as RelativeLayout.LayoutParams?)
                 }
-                holder.tvRightIsTextSeen?.let {
-                    holder.tvRightIsTextSeen.text = "Enviado"
+                holder.tvRightIsTextSeen.let {
+                    holder.tvRightIsTextSeen?.text = context?.getString(R.string.message_sent)
                     if (imageChatSent)
-                        holder.tvRightIsTextSeen.layoutParams = changeLayoutParams(holder.tvRightIsTextSeen.layoutParams as RelativeLayout.LayoutParams?)
+                        holder.tvRightIsTextSeen?.layoutParams = changeLayoutParams(holder.tvRightIsTextSeen?.layoutParams as RelativeLayout.LayoutParams?)
                 }
             }
         } else {
-            holder.tvLeftIsTextSeen?.let { holder.tvLeftIsTextSeen.visibility = View.GONE }
-            holder.tvRightIsTextSeen?.let { holder.tvRightIsTextSeen.visibility = View.GONE }
+            holder.tvLeftIsTextSeen.let { holder.tvLeftIsTextSeen?.visibility = View.GONE }
+            holder.tvRightIsTextSeen.let { holder.tvRightIsTextSeen?.visibility = View.GONE }
         }
 
 
@@ -149,14 +160,14 @@ class ChatMessagesAdapter(val chatMessagesListener: ChatMessagesListener, val pr
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        val civLeftProfileImage = itemView.findViewById<CircleImageView>(R.id.civLeftProfileImage)
-        val tvLeftTextMessage = itemView.findViewById<TextView>(R.id.tvLeftTextMessage)
-        val ivLeftImageMessage = itemView.findViewById<ImageView>(R.id.ivLeftImageMessage)
-        val tvLeftIsTextSeen = itemView.findViewById<TextView>(R.id.tvLeftIsTextSeen)
+        val civLeftProfileImage: CircleImageView? = itemView.findViewById(R.id.civLeftProfileImage)
+        val tvLeftTextMessage: TextView? = itemView.findViewById(R.id.tvLeftTextMessage)
+        val ivLeftImageMessage: ImageView? = itemView.findViewById(R.id.ivLeftImageMessage)
+        val tvLeftIsTextSeen: TextView? = itemView.findViewById(R.id.tvLeftIsTextSeen)
 
-        val tvRightTextMessage = itemView.findViewById<TextView>(R.id.tvRightTextMessage)
-        val ivRightImageMessage = itemView.findViewById<ImageView>(R.id.ivRightImageMessage)
-        val tvRightIsTextSeen = itemView.findViewById<TextView>(R.id.tvRightIsTextSeen)
+        val tvRightTextMessage: TextView? = itemView.findViewById(R.id.tvRightTextMessage)
+        val ivRightImageMessage: ImageView? = itemView.findViewById(R.id.ivRightImageMessage)
+        val tvRightIsTextSeen: TextView? = itemView.findViewById(R.id.tvRightIsTextSeen)
 
     }
 

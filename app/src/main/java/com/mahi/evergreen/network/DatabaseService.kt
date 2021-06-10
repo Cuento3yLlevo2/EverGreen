@@ -28,6 +28,8 @@ const val UPCYCLING_CATEGORIES = "upcyclingCategories"
 const val POST_SERVICE_TYPE = 1
 const val POST_IDEA_TYPE = 2
 // const val POST_AD_TYPE = 3
+const val REMOVE_FAV_POST = 0
+const val ADD_FAV_POST = 1
 
 class DatabaseService {
     val database = Firebase.database("https://evergreen-app-bdbc2-default-rtdb.europe-west1.firebasedatabase.app")
@@ -155,6 +157,27 @@ class DatabaseService {
                     // Write failed
                     Log.w("FireBaseLogs", "Write failed")
                 }
+        }
+    }
+
+    fun changeFavPostStateInDatabase(currentUserID: String?, postId: String?, action: Int, callback: Callback<Boolean>) {
+        if(action == ADD_FAV_POST){
+            val childUpdates = hashMapOf<String, Any>(
+                "/posts/$postId/membersFollowingAsFavorite/$currentUserID" to true,
+                "/users/$currentUserID/favoritePosts/$postId" to true
+            )
+            database.reference.updateChildren(childUpdates)
+                .addOnSuccessListener { callback.onSuccess(true) }
+                .addOnFailureListener { callback.onSuccess(false) }
+        }
+        else if (action == REMOVE_FAV_POST){
+            val childUpdates = hashMapOf<String, Any?>(
+                "/posts/$postId/membersFollowingAsFavorite/$currentUserID" to null,
+                "/users/$currentUserID/favoritePosts/$postId" to null
+            )
+            database.reference.updateChildren(childUpdates)
+                .addOnSuccessListener { callback.onSuccess(true) }
+                .addOnFailureListener { callback.onSuccess(false) }
         }
     }
 
@@ -465,6 +488,29 @@ class DatabaseService {
                 })
     }
 
+    fun getPostsFromDatabaseByCategory(categoryID: String, callback: Callback<List<Post>>) {
+        database.getReference(POSTS)
+            .orderByChild("updatedAt")
+            .addValueEventListener(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val postList = ArrayList<Post>()
+                    for (child in snapshot.children) {
+                        val post = child.getValue(Post::class.java)
+                        if (post != null) {
+                            if (post.category.containsKey(categoryID)){
+                                postList.add(post)
+                            }
+                        }
+                    }
+                    callback.onSuccess(postList)
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    Log.w("Data reading failure", "Error getting documents.", error.toException())
+                }
+            })
+
+    }
+
     fun getProfilePostsFromDatabaseByType(type: Int, currentUserID: String, callback: Callback<List<Post>>) {
         database.getReference(USERS)
                 .child(currentUserID)
@@ -504,7 +550,6 @@ class DatabaseService {
                     }
                 })
     }
-
 
 
     private fun getPostFromDatabaseByType(type: Int, createdPost: String, callback: Callback<Post>) {
@@ -572,6 +617,8 @@ class DatabaseService {
         }
         return dialog
     }
+
+
 
 
 }

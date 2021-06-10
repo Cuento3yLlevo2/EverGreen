@@ -310,7 +310,7 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
                     viewModel.getChatIDAndRefreshChatMessages(currentUserID, userIDVisited, postID, postTitle, postImageURL, messageChatActivity)
 
 
-                    chatMessagesAdapter = ChatMessagesAdapter(this@MessageChatActivity, visitedUserData.profile?.profileImage!!)
+                    chatMessagesAdapter = ChatMessagesAdapter(this@MessageChatActivity, visitedUserData.profile?.profileImage!!, context)
 
                     binding.rvMessageChats.apply {
                         val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -364,7 +364,11 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
 
                                 viewModel.refreshChatMessages(chatIDFromChatList)
 
-                                chatMessagesAdapter = ChatMessagesAdapter(this@MessageChatActivity, visitedUserData.profile?.profileImage!!)
+                                chatMessagesAdapter = ChatMessagesAdapter(
+                                    this@MessageChatActivity,
+                                    visitedUserData.profile?.profileImage!!,
+                                    context
+                                )
 
                                 binding.rvMessageChats.apply {
                                     val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)

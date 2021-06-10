@@ -80,7 +80,6 @@ class UpcyclingCreationFragment : BaseDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         // prepare navigation toolbar
         binding.toolbarUpcyclingCreation.navigationIcon = ContextCompat.getDrawable(view.context, R.drawable.arrow_backwards)
         binding.toolbarUpcyclingCreation.setNavigationOnClickListener {
