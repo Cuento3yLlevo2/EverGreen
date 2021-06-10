@@ -59,7 +59,7 @@ class HomeFragment : Fragment(), PostListener {
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            findNavController().navigate(R.id.navHomeFragment)
+            requireActivity().finish()
         }
 
         observeViewModel()

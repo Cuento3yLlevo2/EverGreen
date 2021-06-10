@@ -40,18 +40,19 @@
         </provider>
         <activity android:name=".view.ui.activities.MessageChatActivity" />
         <activity android:name=".view.ui.activities.WelcomeActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".view.ui.activities.LoginActivity" />
         <activity android:name=".view.ui.activities.RegisterActivity" />
         <activity
             android:name=".view.ui.activities.MainActivity"
             android:theme="@style/Theme.EverGreen" />
-        <activity android:name=".view.ui.activities.SplashscreenActivity" />
+        <activity android:name=".view.ui.activities.SplashscreenActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
     </application>
 
