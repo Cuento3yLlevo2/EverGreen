@@ -38,6 +38,8 @@ class PostDetailDialogFragment : BaseDialogFragment(), DialogInterface.OnDismiss
     private lateinit var viewModel: PostViewModel
     private lateinit var categoryMap: Map<*, *>
     private var isCategoryFiltering: Boolean? = false
+    private var isSearchFiltering: Boolean? = false
+    private var keyword: String? = ""
     private var adapter: PostImagesViewPagerAdapter? = null
     var firebaseUser = Firebase.auth.currentUser
     private var databaseService = DatabaseService()
@@ -67,6 +69,12 @@ class PostDetailDialogFragment : BaseDialogFragment(), DialogInterface.OnDismiss
         binding.toolbarPostDetails.setNavigationOnClickListener {
             dismiss()
         }
+
+        isSearchFiltering = arguments?.getBoolean("isSearchFiltering", false)
+        if(isSearchFiltering == true) {
+            keyword = arguments?.getString("keyword")
+        }
+
         isCategoryFiltering = arguments?.getBoolean("isCategoryFiltering", false)
         if(isCategoryFiltering == true) {
             categoryMap = arguments?.getSerializable("upcyclingCategory") as Map<*, *>
@@ -109,6 +117,7 @@ class PostDetailDialogFragment : BaseDialogFragment(), DialogInterface.OnDismiss
 
         binding.indicator.updateIndicatorCounts(binding.viewpager.indicatorCount)
 
+        binding.tvPostDetailTitle.text = post.title
         binding.tvPostDetailDesc.text = post.description
 
         when(post.type){
@@ -176,18 +185,21 @@ class PostDetailDialogFragment : BaseDialogFragment(), DialogInterface.OnDismiss
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        if(isCategoryFiltering == true) {
-            val bundle = bundleOf("upcyclingCategory" to categoryMap)
-            findNavController().previousBackStackEntry?.destination?.id?.let {
-                findNavController().navigate(
-                    it, bundle
-                )
+        when {
+            isCategoryFiltering == true -> {
+                val bundle = bundleOf("upcyclingCategory" to categoryMap)
+                findNavController().navigate(R.id.categoriesPostFilteringFragment, bundle)
             }
-        } else {
-            findNavController().previousBackStackEntry?.destination?.id?.let {
-                findNavController().navigate(
-                    it
-                )
+            isSearchFiltering == true -> {
+                val bundle = bundleOf("keyword" to keyword)
+                findNavController().navigate(R.id.homePostSearchDetailDialogFragment, bundle)
+            }
+            else -> {
+                findNavController().previousBackStackEntry?.destination?.id?.let {
+                    findNavController().navigate(
+                        it
+                    )
+                }
             }
         }
     }

@@ -46,6 +46,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
+@Suppress("DEPRECATION")
 class UpcyclingCreationFragment : BaseDialogFragment() {
 
     override var bottomNavigationViewVisibility: Int = View.GONE

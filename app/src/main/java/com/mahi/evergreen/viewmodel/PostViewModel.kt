@@ -9,7 +9,6 @@ import com.google.firebase.ktx.Firebase
 import com.mahi.evergreen.model.Post
 import com.mahi.evergreen.network.Callback
 import com.mahi.evergreen.network.DatabaseService
-import java.lang.Exception
 
 class PostViewModel : ViewModel() {
 
@@ -22,6 +21,20 @@ class PostViewModel : ViewModel() {
 
     fun refreshPostList() {
         getPostsFromFirebase()
+    }
+
+    fun searchForPosts(keyword: String) {
+        firestoreService.getPostQuery(keyword, object: Callback<List<Post>> {
+            override fun onSuccess(result: List<Post>?) {
+                postList.postValue(result)
+                processFinished()
+            }
+
+            override fun onFailure(exception: Exception) {
+                processFinished()
+            }
+        })
+
     }
 
     fun refreshFavoritePostList() {

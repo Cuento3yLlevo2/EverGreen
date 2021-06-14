@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView android:layout_width="match_parent"
+    android:layout_height="300dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="@dimen/cardCornerRadius"
+    android:elevation="4dp"
+    android:layout_margin="5dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <com.mahi.evergreen.model.AdsTemplateView
+        android:id="@+id/admodTemplate"
+        app:gnt_template_type="@layout/item_native_admod"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</androidx.cardview.widget.CardView>

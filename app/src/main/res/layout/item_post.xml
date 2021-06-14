@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView android:layout_width="match_parent"
-    android:layout_height="260dp"
+    android:layout_height="300dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     app:cardCornerRadius="@dimen/cardCornerRadius"
@@ -15,65 +15,6 @@
         android:orientation="vertical"
         android:background="@drawable/shape_parrafo"
         >
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/clPostSponsoredTop"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            >
-
-            <ImageView
-                android:id="@+id/ivPostSponsoredImage"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                app:layout_constraintEnd_toStartOf="@id/tvPostSponsoredTitle"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:src="@mipmap/ic_launcher"
-                android:layout_marginStart="18dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="24dp"
-                android:contentDescription="@string/cd_sponsored_image" />
-
-            <TextView
-                android:id="@+id/tvPostSponsoredTitle"
-                android:layout_width="180dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                tools:text="Motor 100% eléctrico"
-                android:textSize="@dimen/textSizeTitle"
-                android:textColor="@color/primary_text"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                />
-
-            <TextView
-                android:id="@+id/tvPostSponsoredTag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:text="@string/item_post_sponsored_tag"
-                android:textSize="@dimen/textSizeSubtitle"
-                android:textColor="@color/secondary_text"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <View
-            android:id="@+id/vPostSponsoredTop"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/primary_dark"
-            android:visibility="gone"
-            />
 
         <ImageView
             android:id="@+id/ivPostCoverImage"
@@ -102,54 +43,47 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
                 tools:text="desde 35€"
                 android:textStyle="bold"
                 android:textSize="@dimen/textSizeTitle"
                 android:textColor="@color/primary_text"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:drawablePadding="6dp"
+                android:layout_marginTop="6dp"
+                android:drawablePadding="4dp"
                 app:drawableStartCompat="@drawable/upcycling_service_small" />
 
             <ImageView
                 android:id="@+id/ivPostUpcyclingIdea"
                 android:layout_width="wrap_content"
-                android:layout_height="22dp"
+                android:layout_height="18dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
                 android:src="@drawable/upcycling_idea_24dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:visibility="gone"
                 android:contentDescription="@string/cd_upcycing_ideas_icon" />
 
             <ImageView
                 android:id="@+id/ivPostFavCheck"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="28dp"
+                android:layout_height="27dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
                 android:src="@drawable/ic_favorite"
                 android:layout_marginEnd="8dp"
-                android:layout_marginTop="8dp"
                 android:visibility="gone"
                 android:contentDescription="@string/cd_favorite_check" />
 
             <ImageView
                 android:id="@+id/ivPostFavUncheck"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:src="@drawable/ic_favorite_border"
+                android:layout_width="28dp"
+                android:layout_height="27dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginTop="8dp"
                 android:contentDescription="@string/cd_favorites_uncheck"
-                />
+                android:src="@drawable/ic_favorite_border"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/ivPostEdit"
@@ -171,27 +105,14 @@
             android:id="@+id/tvPostDesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text= "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-            android:textSize="@dimen/textSizeTitle"
+            tools:text= "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+            android:textSize="16sp"
             android:textColor="@color/primary_text"
-            android:padding="8dp"
             android:ellipsize="end"
-            android:lines="2"
-            />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/bPostSponsoredLink"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:text="Descúbrelo"
-            android:textAllCaps="false"
-            android:textStyle="bold"
-            app:strokeWidth="0.5dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="12dp"
-            android:backgroundTint="@color/teal_200"
-            app:cornerRadius="16dp"
-            android:visibility="gone"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            android:paddingBottom="6dp"
+            android:lines="3"
             />
     </LinearLayout>
 

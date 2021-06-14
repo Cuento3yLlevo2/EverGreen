@@ -69,10 +69,16 @@
     <string name="services_list_empty">Aún no tienes servicios de upcycling creados</string>
     <string name="ideas_list_empty">Aún no tienes ideas de upcycling creadas</string>
     <string name="category_post_filtering_empty">Aún no hay publicaciones en esta categoría</string>
+    <string name="post_search_empty">No hay publicaciones que coincidan</string>
     <string name="hint_search_upcycling">Busca una idea de Upcycling</string>
     <string name="categories_toolbar_text">Categorías</string>
     <string name="chat_list_empty_text">Aún no tienes conversaciones iniciadas</string>
     <string name="upcycling_creation_categories_toolbar_text">Selecciona una categoría</string>
     <string name="upcycling_service_creation_toolbar_text">Crea tu servicio de Upcycling</string>
     <string name="upcycling_idea_creation_toolbar_text">Crea tu idea de Upcycling</string>
+    <string name="continue_google_btn">Continuar con Google</string>
+
+    <string name="facebook_app_id">1034616273942547</string>
+    <string name="fb_login_protocol_scheme">fb1034616273942547</string>
+
 </resources>

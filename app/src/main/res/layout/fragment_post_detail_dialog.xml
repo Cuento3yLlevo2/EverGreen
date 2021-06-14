@@ -177,6 +177,17 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <TextView
+                        android:id="@+id/tvPostDetailTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:text= "Lorem ipsum dolor sit amet.."
+                        android:textSize="@dimen/textSizeTitle"
+                        android:textStyle="bold"
+                        android:textColor="@color/primary_text"
+                        android:padding="16dp"
+                        />
+
+                    <TextView
                         android:id="@+id/tvPostDetailDesc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

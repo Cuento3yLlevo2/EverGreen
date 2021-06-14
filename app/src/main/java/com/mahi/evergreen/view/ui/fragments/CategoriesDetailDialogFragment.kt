@@ -24,7 +24,7 @@ class CategoriesDetailDialogFragment : BaseDialogFragment(), UpcyclingCategories
     private lateinit var viewModel: UpcyclingCategoriesViewModel
     private var isUpcyclingCreationAction: Boolean? = false
     private var upcyclingType: Int? = 0
-    private var upcyclingCategorycliked = false
+    private var upcyclingCategoryClicked = false
 
     private var _binding: FragmentCategoriesDetailDialogBinding? = null
     // This property is only valid between onCreateView and
@@ -57,11 +57,10 @@ class CategoriesDetailDialogFragment : BaseDialogFragment(), UpcyclingCategories
         }
 
         binding.toolbarCategories.setNavigationOnClickListener {
-            // findNavController().popBackStack()
-            if(isUpcyclingCreationAction == false){
-                findNavController().navigate(R.id.navHomeFragment)
-            } else if (isUpcyclingCreationAction == true) {
+            if(isUpcyclingCreationAction == true){
                 dismiss()
+            } else {
+                findNavController().navigate(R.id.navHomeFragment)
             }
         }
 
@@ -85,7 +84,9 @@ class CategoriesDetailDialogFragment : BaseDialogFragment(), UpcyclingCategories
 
     override fun onDetach() {
         super.onDetach()
-        if(!upcyclingCategorycliked && isUpcyclingCreationAction == false){
+        if(!upcyclingCategoryClicked && isUpcyclingCreationAction == null){
+            findNavController().navigate(R.id.navHomeFragment)
+        } else if (!upcyclingCategoryClicked && isUpcyclingCreationAction == false) {
             findNavController().navigate(R.id.navHomeFragment)
         }
     }
@@ -95,11 +96,11 @@ class CategoriesDetailDialogFragment : BaseDialogFragment(), UpcyclingCategories
         position: Int
     ) {
         if (isUpcyclingCreationAction == true){
-            upcyclingCategorycliked = true
+            upcyclingCategoryClicked = true
             val bundle = bundleOf("upcyclingType" to upcyclingType, "categoryID" to upcyclingCategoryItem.id.toString())
             findNavController().navigate(R.id.action_categoriesDetailDialogFragment_to_upcyclingCreationFragment, bundle)
         } else {
-            upcyclingCategorycliked = true
+            upcyclingCategoryClicked = true
             val upcyclingCategoryValues = upcyclingCategoryItem.toMap()
             val bundle = bundleOf("upcyclingCategory" to upcyclingCategoryValues)
             findNavController().navigate(R.id.action_categoriesDetailDialogFragment_to_categoriesPostFilteringFragment, bundle)
@@ -119,7 +120,7 @@ class CategoriesDetailDialogFragment : BaseDialogFragment(), UpcyclingCategories
     }
 
     override fun onDestroyView() {
-        bottomNavigationViewVisibility = if(upcyclingCategorycliked){
+        bottomNavigationViewVisibility = if(upcyclingCategoryClicked){
             View.GONE
         } else {
             View.VISIBLE

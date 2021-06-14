@@ -36,16 +36,16 @@ class DatabaseService {
 
     // Write to Realtime Database
 
-    fun writeNewUser(userId: String, username: String, email: String, callback: Callback<Boolean>) {
+    fun writeNewUser(userId: String, usernameInput: String?, email: String?, profileImageInput: String?, callback: Callback<Boolean>) {
         val defaultProfileImage = "https://firebasestorage.googleapis.com/v0/b/evergreen-app-bdbc2.appspot.com/o/user_default.png?alt=media&token=53382a72-8fc1-4a11-b63f-0cb342bb02c6"
-        val defaultCoverImage = "https://firebasestorage.googleapis.com/v0/b/evergreen-app-bdbc2.appspot.com/o/profile_cover_default.jpg?alt=media&token=07a0cfd5-a6df-4877-8ea6-8e0ecc2d98fb"
+        val profileImage = profileImageInput ?: defaultProfileImage
+        val username = usernameInput ?: "Introduce un nombre de usuario"
         val createdAt = System.currentTimeMillis()
         val userProfile = UserProfile(
                 username,
                 email,
-                defaultProfileImage,
-                defaultCoverImage,
-            0
+                profileImage,
+            3
         )
 
         val user = User(
@@ -150,6 +150,7 @@ class DatabaseService {
                     Log.w("FireBaseLogs", "Write was successful")
 
                     database.reference.child(USERS).child(publisherID).child("createdPosts").updateChildren(hashMapOf<String, Any>(postKey to true))
+                    addSeedsPointsToUser(publisherID, 3)
 
                     callback.onSuccess(true)
                 }
@@ -158,6 +159,34 @@ class DatabaseService {
                     Log.w("FireBaseLogs", "Write failed")
                 }
         }
+    }
+
+    private fun addSeedsPointsToUser(userID: String, newPoints: Int) {
+        database.reference.child(USERS)
+            .child(userID)
+            .child("profile")
+            .child("seedsPoints")
+            .get()
+            .addOnSuccessListener { result ->
+                Log.d("Data reading success", "${result.key} => ${result.value}")
+                val currentPoints : Long = result.value as Long
+                val finalPoints = currentPoints.plus(newPoints)
+                database.reference.child(USERS)
+                    .child(userID)
+                    .child("profile")
+                    .child("seedsPoints").setValue(finalPoints)
+                    .addOnSuccessListener {
+                    // Write was successful!
+                    Log.w("FireBaseLogs", "Write was successful")
+                    }
+                    .addOnFailureListener {
+                        // Write failed
+                        Log.w("FireBaseLogs", "Write failed")
+                    }
+            }
+            .addOnFailureListener { exception ->
+                Log.w("Data reading failure", "Error getting documents.", exception)
+            }
     }
 
     fun changeFavPostStateInDatabase(currentUserID: String?, postId: String?, action: Int, callback: Callback<Boolean>) {
@@ -208,6 +237,23 @@ class DatabaseService {
                     Log.w("Data reading failure", "Error getting documents.", exception)
                 }
     }
+
+    fun userAlreadyExists(uid: String, callback: Callback<Boolean>) {
+        database.getReference(USERS)
+            .child(uid)
+            .get()
+            .addOnSuccessListener { result ->
+                var exists = false
+                if(result.exists()){
+                    exists = true
+                }
+                callback.onSuccess(exists)
+            }
+            .addOnFailureListener { exception ->
+                Log.w("Data reading failure", "Error getting documents.", exception)
+            }
+    }
+
 
     fun getDatabaseUsersReference(): DatabaseReference {
         database.getReference(USERS)
@@ -434,6 +480,7 @@ class DatabaseService {
                 .addValueEventListener(object : ValueEventListener{
                     override fun onDataChange(snapshot: DataSnapshot) {
                         val postList = ArrayList<Post>()
+
                         for (child in snapshot.children) {
                             val post = child.getValue(Post::class.java)
                             if (post != null) {
@@ -571,6 +618,25 @@ class DatabaseService {
             })
     }
 
+    fun getPostQuery(keyword: String, callback: Callback<List<Post>>) {
+        database.getReference(POSTS)
+            .orderByChild("description")
+            .startAt(keyword)
+            .endAt(keyword + "\uf8ff")
+            .addValueEventListener(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val postList = ArrayList<Post>()
+                    for (child in snapshot.children) {
+                        child.getValue(Post::class.java)?.let { postList.add(it) }
+                    }
+                    callback.onSuccess(postList)
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    Log.w("Data reading failure", "Error getting documents.", error.toException())
+                }
+            })
+    }
+
     // Extra Tools
 
     fun setProgressDialogWhenDataLoading(context: Context, message:String): AlertDialog {
@@ -617,7 +683,6 @@ class DatabaseService {
         }
         return dialog
     }
-
 
 
 

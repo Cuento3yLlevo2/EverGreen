@@ -39,15 +39,26 @@
                     android:paddingEnd="12dp"
                     android:inputType="text"
                     android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
                     android:importantForAutofill="no"
                     android:textSize="@dimen/textSizeTitle"
                     android:hint="@string/hint_search_upcycling"
-                    app:layout_constraintEnd_toStartOf="@id/ivHomeToCategories"
+                    app:layout_constraintEnd_toStartOf="@id/ivSearchPostBtn"
                     app:layout_constraintStart_toEndOf="@+id/toolbarLogo"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:background="@drawable/custom_edit_text_rounded"
+                    />
+
+                <ImageView
+                    android:id="@+id/ivSearchPostBtn"
+                    android:layout_width="@dimen/toolbar_logo_dimen"
+                    android:layout_height="@dimen/toolbar_logo_dimen"
+                    android:src="@drawable/ic_search"
+                    android:layout_marginEnd="8dp"
+                    android:padding="4dp"
+                    app:layout_constraintEnd_toStartOf="@id/ivHomeToCategories"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     />
 
                 <ImageView
@@ -77,7 +88,8 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/appbarHome">
+        android:layout_below="@id/appbarHome"
+        >
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvHomePosts"
@@ -102,5 +114,7 @@
         </RelativeLayout>
 
     </FrameLayout>
+
+
 
 </RelativeLayout>

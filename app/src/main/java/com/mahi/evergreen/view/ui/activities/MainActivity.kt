@@ -4,6 +4,12 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.nativead.NativeAd
+import com.google.android.gms.ads.nativead.NativeAdOptions
 import com.mahi.evergreen.R
 import com.mahi.evergreen.databinding.ActivityMainBinding
 
@@ -18,6 +24,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
         setActionBar(findViewById(R.id.toolbarHome))
         title = ""
+
 
         // Set Navigation Config for app flow
         configNav()

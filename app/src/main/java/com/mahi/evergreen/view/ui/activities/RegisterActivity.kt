@@ -8,10 +8,19 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.facebook.AccessToken
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 import com.mahi.evergreen.R
 import com.mahi.evergreen.network.Callback
@@ -21,27 +30,33 @@ import java.util.*
 /***
  * UI interface that helps with user account creation
  */
+@Suppress("DEPRECATION")
 class RegisterActivity : AppCompatActivity() {
+
+    private val GOOGLE_REGISTER = 988
+    private lateinit var googleClient: GoogleSignInClient
+    // Initialize Facebook Login button
+    private val callbackManager = CallbackManager.Factory.create()
 
     private lateinit var auth: FirebaseAuth
     private lateinit var etRegisterUsername: EditText
     private lateinit var etRegisterEmail: EditText
     private lateinit var etRegisterPassword: EditText
     private val databaseService: DatabaseService = DatabaseService()
-    private lateinit var database: FirebaseDatabase
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        database = databaseService.database
 
         etRegisterUsername = findViewById(R.id.etRegisterUsername)
         etRegisterEmail = findViewById(R.id.etRegisterEmail)
         etRegisterPassword = findViewById(R.id.etRegisterPassword)
-
+        val buttonActivityRegister : Button = findViewById(R.id.buttonActivityRegister)
         val tvLinkFromRegisterToLogin : TextView = findViewById(R.id.tvLinkFromRegisterToLogin)
+        val buttonActivityRegisterGoogle : Button = findViewById(R.id.buttonActivityRegisterGoogle)
+        val buttonActivityRegisterFacebook : Button = findViewById(R.id.buttonActivityRegisterFacebook)
 
         tvLinkFromRegisterToLogin.setOnClickListener {
             val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
@@ -52,13 +67,148 @@ class RegisterActivity : AppCompatActivity() {
         // Initialize Firebase Auth
         auth = Firebase.auth
 
-        val buttonActivityRegister : Button = findViewById(R.id.buttonActivityRegister)
+        // btn to start register process with Email and Password credentials
         buttonActivityRegister.setOnClickListener {
-            registerUser()
+            registerUserWithEmail()
+        }
+
+        // btn to start login process with Google Singin
+        buttonActivityRegisterGoogle.setOnClickListener {
+            // Configure Google Sign In
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build()
+
+            googleClient = GoogleSignIn.getClient(this, gso)
+
+            val signInIntent = googleClient.signInIntent
+            startActivityForResult(signInIntent, GOOGLE_REGISTER)
+        }
+
+        // btn to start login process with Facebook Singin
+        buttonActivityRegisterFacebook.setOnClickListener {
+
+            LoginManager.getInstance().logInWithReadPermissions(this, listOf("email", "public_profile"))
+
+            LoginManager.getInstance().registerCallback(callbackManager,
+                object : FacebookCallback<LoginResult> {
+                    override fun onSuccess(loginResult: LoginResult?) {
+                        Log.d("firebaseAuth", "facebook:onSuccess:$loginResult")
+                        if (loginResult != null) {
+                            handleFacebookAccessToken(loginResult.accessToken)
+                        }
+                    }
+
+                    override fun onCancel() {
+                        Log.d("firebaseAuth", "facebook:onCancel")
+                    }
+
+                    override fun onError(error: FacebookException?) {
+                        Log.d("firebaseAuth", "facebook:onError", error)
+                    }
+
+                }
+            )
+
         }
     }
 
-    private fun registerUser() {
+    private fun handleFacebookAccessToken(token: AccessToken) {
+        Log.d("firebaseAuth", "handleFacebookAccessToken:$token")
+
+        val credential = FacebookAuthProvider.getCredential(token.token)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d("firebaseAuth", "signInWithCredential:success")
+                    val user = auth.currentUser
+                    updateUI(user)
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w("firebaseAuth", "signInWithCredential:failure", task.exception)
+                    Toast.makeText(baseContext, "Authentication failed.",
+                        Toast.LENGTH_SHORT).show()
+                    updateUI(null)
+                }
+            }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+        // Pass the activity result back to the Facebook SDK
+        callbackManager.onActivityResult(requestCode, resultCode, data)
+
+        super.onActivityResult(requestCode, resultCode, data)
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == GOOGLE_REGISTER) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                // Google Sign In was successful, authenticate with Firebase
+                val account = task.getResult(ApiException::class.java)!!
+                Log.d("firebaseAuth", "firebaseAuthWithGoogle:" + account.id)
+                firebaseAuthWithGoogle(account.idToken!!)
+            } catch (e: ApiException) {
+                // Google Sign In failed, update UI appropriately
+                Log.w("firebaseAuth", "Google sign in failed", e)
+            }
+        }
+    }
+
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d("firebaseAuth", "signInWithCredential:success")
+                    val user = auth.currentUser
+                    updateUI(user)
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w("firebaseAuth", "signInWithCredential:failure", task.exception)
+                    updateUI(null)
+                }
+            }
+    }
+
+    private fun updateUI(user: FirebaseUser?) {
+        if (user != null){
+            val uid = user.uid
+            databaseService.userAlreadyExists(uid, object: Callback<Boolean> {
+                override fun onSuccess(result: Boolean?) {
+                    if (result == true) {
+                        val intent = Intent(this@RegisterActivity, MainActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        databaseService.writeNewUser(user.uid, user.displayName, user.email, user.photoUrl.toString(), object: Callback<Boolean> {
+                            override fun onSuccess(result: Boolean?) {
+                                val intent = Intent(this@RegisterActivity, MainActivity::class.java)
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                                startActivity(intent)
+                                finish()
+                            }
+
+                            override fun onFailure(exception: Exception) {
+                                Log.w("FireBaseLogs", "Write failed")
+                            }
+                        })
+                    }
+                }
+                override fun onFailure(exception: Exception) {
+                    Log.w("FireBaseLogs", "userAlreadyExists:onFailure", exception)
+                }
+            })
+
+
+        }
+    }
+
+    private fun registerUserWithEmail() {
         val username: String = etRegisterUsername.text.toString()
         val userEmail: String = etRegisterEmail.text.toString()
         val userPassword: String = etRegisterPassword.text.toString()
@@ -124,7 +274,7 @@ class RegisterActivity : AppCompatActivity() {
                                             Log.d("FireBaseLogs", "createUserWithEmail:success")
                                             val user = auth.currentUser
                                             if (user != null) {
-                                                databaseService.writeNewUser(user.uid, username, userEmail, object: Callback<Boolean> {
+                                                databaseService.writeNewUser(user.uid, username, userEmail, null, object: Callback<Boolean> {
                                                     override fun onSuccess(result: Boolean?) {
                                                         val intent = Intent(this@RegisterActivity, MainActivity::class.java)
                                                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)

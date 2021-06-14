@@ -4,11 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.ads.MobileAds
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import com.mahi.evergreen.R
+
 
 class WelcomeActivity : AppCompatActivity() {
 
@@ -20,6 +22,7 @@ class WelcomeActivity : AppCompatActivity() {
 
         val buttonWelcomeRegister: Button = findViewById(R.id.buttonWelcomeRegister)
         val buttonWelcomeLogin: Button = findViewById(R.id.buttonWelcomeLogin)
+
 
         // When the user press the register button it starts the Loginactivity
         buttonWelcomeRegister.setOnClickListener {
@@ -38,7 +41,14 @@ class WelcomeActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
+        // User's consent status successfully updated.
+        // This call initializes the SDK and calls back a completion listener
+        // once initialization is complete (or after a 30-second timeout).
+        // This method should be Called only once and as early as possible, ideally at app launch.
+        MobileAds.initialize(applicationContext)
+
         // setPersistenceEnabled to true at the beginning of the application
+        // This method should be Called only once, ideally at app launch.
         FirebaseDatabase.getInstance().setPersistenceEnabled(true)
 
         // When the Activity starts we need to know whether the user has already login or not.

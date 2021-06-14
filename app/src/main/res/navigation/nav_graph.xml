@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_navHomeFragment_to_postDetailDialogFragment"
             app:destination="@id/postDetailDialogFragment" />
+        <action
+            android:id="@+id/action_navHomeFragment_to_homePostSearchDetailDialogFragment"
+            app:destination="@id/homePostSearchDetailDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/navFavoritesFragment"
@@ -145,6 +148,15 @@
         <action
             android:id="@+id/action_categoriesPostFilteringFragment_to_categoriesDetailDialogFragment"
             app:destination="@id/categoriesDetailDialogFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homePostSearchDetailDialogFragment"
+        android:name="com.mahi.evergreen.view.ui.fragments.HomePostSearchDetailDialogFragment"
+        android:label="fragment_home_post_search_detail_dialog"
+        tools:layout="@layout/fragment_home_post_search_detail_dialog" >
+        <action
+            android:id="@+id/action_homePostSearchDetailDialogFragment_to_postDetailDialogFragment"
+            app:destination="@id/postDetailDialogFragment" />
     </fragment>
 
 </navigation>
