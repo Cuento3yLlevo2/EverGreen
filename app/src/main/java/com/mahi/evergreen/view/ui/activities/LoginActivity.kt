@@ -31,6 +31,7 @@ import com.mahi.evergreen.network.DatabaseService
 @Suppress("DEPRECATION")
 class LoginActivity : AppCompatActivity() {
 
+    @Suppress("PrivatePropertyName")
     private val GOOGLE_SIGN_IN = 999
     // Initialize Facebook Login button
     private val callbackManager = CallbackManager.Factory.create()

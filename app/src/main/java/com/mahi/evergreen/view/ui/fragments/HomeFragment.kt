@@ -30,6 +30,7 @@ class HomeFragment : Fragment(), PostListener {
     private lateinit var admodItemList: ArrayList<NativeAd>
     private lateinit var recyclerViewList: ArrayList<Any>
     private lateinit var adLoader: AdLoader
+    private var addsAlreadyLoad = false
 
 
     private var _binding: FragmentHomeBinding? = null
@@ -97,7 +98,7 @@ class HomeFragment : Fragment(), PostListener {
 
         if (context != null){
 
-            adLoader = AdLoader.Builder(context, "ca-app-pub-3940256099942544/2247696110")
+            adLoader = AdLoader.Builder(context ?: requireContext(), "ca-app-pub-3940256099942544/2247696110")
                 .forNativeAd { NativeAd ->
 
                     if (activity?.isDestroyed == true) {
@@ -105,19 +106,12 @@ class HomeFragment : Fragment(), PostListener {
                         return@forNativeAd
                     }
 
-
                     admodItemList.add(NativeAd)
-
-
-
 
                     if (admodItem.adLoader?.isLoading == false){
                         postAdapter.updateAds(admodItemList)
-
+                        binding.rlBaseHomePost.visibility = View.INVISIBLE
                     }
-
-
-
 
                 }.withAdListener(object : AdListener() {
                     override fun onAdFailedToLoad(loadAdError: LoadAdError) {
@@ -154,21 +148,28 @@ class HomeFragment : Fragment(), PostListener {
 
     override fun onPostFavCheckClicked(postItem: Post, position: Int) {
         viewModel.changeFavPostState(postItem.postId, REMOVE_FAV_POST)
+        findNavController().navigate(com.mahi.evergreen.R.id.navHomeFragment)
     }
 
     override fun onPostFavUncheckClicked(postItem: Post, position: Int) {
         viewModel.changeFavPostState(postItem.postId, ADD_FAV_POST)
+        findNavController().navigate(com.mahi.evergreen.R.id.navHomeFragment)
     }
 
     override fun observeViewModel() {
         viewModel.postList.observe(viewLifecycleOwner, { postList ->
-            postAdapter.updateData(postList)
-        })
+            postAdapter.updateDataOnlyHomeFragment(postList)
 
-        viewModel.isLoading.observe(viewLifecycleOwner, {
-            if(it != null)
-                binding.rlBaseHomePost.visibility = View.INVISIBLE
-                createNativeAd()
+            viewModel.isLoading.observe(viewLifecycleOwner, {
+                if(it != null && _binding != null){
+                    if(!addsAlreadyLoad && postList.size >= 6){
+                        createNativeAd()
+                        addsAlreadyLoad = true
+                    } else {
+                        binding.rlBaseHomePost.visibility = View.INVISIBLE
+                    }
+                }
+            })
         })
     }
 

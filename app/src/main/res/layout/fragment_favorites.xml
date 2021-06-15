@@ -83,7 +83,7 @@
                 android:layout_centerHorizontal="true"
                 android:src="@drawable/post_default_image"
                 android:layout_above="@id/tvFavoritesListEmptyText"
-                />
+                android:contentDescription="@string/cd_favorites_list_empty_image" />
             <TextView
                 android:id="@+id/tvFavoritesListEmptyText"
                 android:layout_width="wrap_content"

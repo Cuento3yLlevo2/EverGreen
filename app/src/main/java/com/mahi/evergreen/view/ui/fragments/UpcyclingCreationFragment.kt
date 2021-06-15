@@ -138,8 +138,14 @@ class UpcyclingCreationFragment : BaseDialogFragment() {
                 title == "" -> {
                     Toast.makeText(context, "introduce un título", Toast.LENGTH_LONG).show()
                 }
+                title.length > 30 -> {
+                    Toast.makeText(context, "El título debe tener maximo 30 caracteres", Toast.LENGTH_LONG).show()
+                }
                 description == "" -> {
                     Toast.makeText(context, "introduce una descripción", Toast.LENGTH_LONG).show()
+                }
+                description.length > 30 -> {
+                    Toast.makeText(context, "La descripción debe tener maximo 240 caracteres", Toast.LENGTH_LONG).show()
                 }
                 type == POST_SERVICE_TYPE && minPrice.isEmpty() -> {
                     Toast.makeText(context, "introduce un precio base", Toast.LENGTH_LONG).show()

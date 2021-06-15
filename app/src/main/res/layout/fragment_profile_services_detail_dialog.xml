@@ -71,7 +71,7 @@
                 android:layout_centerHorizontal="true"
                 android:src="@drawable/post_default_image"
                 android:layout_above="@id/tvServicesListEmptyText"
-                />
+                android:contentDescription="@string/cd_services_list_empty_image" />
             <TextView
                 android:id="@+id/tvServicesListEmptyText"
                 android:layout_width="wrap_content"

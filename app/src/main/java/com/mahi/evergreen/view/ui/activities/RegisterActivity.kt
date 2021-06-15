@@ -33,6 +33,7 @@ import java.util.*
 @Suppress("DEPRECATION")
 class RegisterActivity : AppCompatActivity() {
 
+    @Suppress("PrivatePropertyName")
     private val GOOGLE_REGISTER = 988
     private lateinit var googleClient: GoogleSignInClient
     // Initialize Facebook Login button
@@ -218,15 +219,15 @@ class RegisterActivity : AppCompatActivity() {
                (_(?!([._])) a _ not followed by a . OR
                \.(?!([_.])) a . not followed by a _ OR
                [a-zA-Z0-9] an alphanumeric ) FOR
-               {2,8} minimum 2 to maximum 8 times THEN
+               {2,18} minimum 2 to maximum 18 times THEN
                [a-zA-Z0-9] an alphanumeric
 
                result:
 
-               First character is alphanum, then 2 to 8 characters, last character is alphanum,
-               minimum characters in total 4, maximum characters in total 10
+               First character is alphanum, then 2 to 18 characters, last character is alphanum,
+               minimum characters in total 4, maximum characters in total 20
        */
-        val usernameRegExpression = Regex("^[a-zA-Z0-9](_(?!([._]))|\\.(?!([_.]))|[a-zA-Z0-9]){2,8}[a-zA-Z0-9]\$", setOf(RegexOption.IGNORE_CASE))
+        val usernameRegExpression = Regex("^[a-zA-Z0-9](_(?!([._]))|\\.(?!([_.]))|[a-zA-Z0-9]){2,18}[a-zA-Z0-9]\$", setOf(RegexOption.IGNORE_CASE))
 
         when {
             username == "" -> {
@@ -243,8 +244,8 @@ class RegisterActivity : AppCompatActivity() {
                     username.length < 4 -> {
                         Toast.makeText(this@RegisterActivity, "El nombre de usuario debe tener mínimo 4 caracteres", Toast.LENGTH_LONG).show()
                     }
-                    username.length > 10 -> {
-                        Toast.makeText(this@RegisterActivity, "El nombre de usuario debe tener maximo 10 caracteres", Toast.LENGTH_LONG).show()
+                    username.length > 20 -> {
+                        Toast.makeText(this@RegisterActivity, "El nombre de usuario debe tener maximo 20 caracteres", Toast.LENGTH_LONG).show()
                     }
                     username.startsWith("_") or username.startsWith(".") -> {
                         Toast.makeText(this@RegisterActivity, "El nombre de usuario no debe comenzar por '_' o '.'", Toast.LENGTH_LONG).show()

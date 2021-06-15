@@ -30,6 +30,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.EverGreen">
+        <!-- FileProvider needed to save high quality images  -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.mahi.evergreen.fileprovider"
@@ -61,7 +62,9 @@
             </intent-filter>
         </activity>
 
-
+        <!--
+             Metadata needed for Facebook Login
+        -->
         <meta-data android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
 
@@ -80,11 +83,12 @@
             </intent-filter>
         </activity>
 
+        <!--
+             Metadata needed for Google Login
+        -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-5396592645563998~7507401185"/>
-
-
     </application>
 
 </manifest>

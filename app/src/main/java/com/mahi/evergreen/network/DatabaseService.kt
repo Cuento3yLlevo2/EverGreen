@@ -10,7 +10,6 @@ import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -18,6 +17,8 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.mahi.evergreen.model.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 const val USERS = "users"
 const val CHATS = "chats"
@@ -210,6 +211,32 @@ class DatabaseService {
         }
     }
 
+    fun updateUsername(userID: String, newUsername: String, callback: Callback<Boolean>) {
+        database.reference.child(USERS)
+            .child(userID)
+            .child("profile")
+            .child("username").setValue(newUsername)
+            .addOnSuccessListener {
+                // Write was successful!
+                database.reference.child(USERS)
+                    .child(userID)
+                    .child("search").setValue(newUsername.lowercase(Locale.getDefault()))
+                    .addOnSuccessListener {
+                        // Write was successful!
+                        Log.w("FireBaseLogs", "Write was successful")
+                        callback.onSuccess(true)
+                    }
+                    .addOnFailureListener {
+                        // Write failed
+                        Log.w("FireBaseLogs", "Write failed")
+                    }
+            }
+            .addOnFailureListener {
+                // Write failed
+                Log.w("FireBaseLogs", "Write failed")
+            }
+    }
+
 
 
     // Read From Realtime Database
@@ -258,49 +285,6 @@ class DatabaseService {
     fun getDatabaseUsersReference(): DatabaseReference {
         database.getReference(USERS)
         return database.getReference(USERS)
-    }
-
-    fun getUsersExcludingCurrent(firebaseUser: FirebaseUser?, callback: Callback<List<User>>){
-        database.getReference(USERS)
-                .get()
-                .addOnSuccessListener { result ->
-                    val userList = ArrayList<User>()
-                    for (child in result.children) {
-                        Log.d("Data reading success", "${child.key} => ${child.value}")
-                        if (firebaseUser != null) {
-                            if (child.key?.equals(firebaseUser.uid) == false) {
-                                child.getValue(User::class.java)?.let { userList.add(it) }
-                            }
-                        }
-                    }
-                    callback.onSuccess(userList)
-                }
-                .addOnFailureListener { exception ->
-                    Log.w("Data reading failure", "Error getting documents.", exception)
-                }
-    }
-
-    fun getUsersQuery(keyword: String, firebaseUser: FirebaseUser?, callback: Callback<List<User>>) {
-        database.getReference(USERS)
-                .orderByChild("search")
-                .startAt(keyword)
-                .endAt(keyword + "\uf8ff")
-                .get()
-                .addOnSuccessListener { result ->
-                    val userList = ArrayList<User>()
-                    for (child in result.children) {
-                        Log.d("Data reading success", "${child.key} => ${child.value}")
-                        if (firebaseUser != null) {
-                            if (child.key?.equals(firebaseUser.uid) == false) {
-                                child.getValue(User::class.java)?.let { userList.add(it) }
-                            }
-                        }
-                    }
-                    callback.onSuccess(userList)
-                }
-                .addOnFailureListener { exception ->
-                    Log.w("Data reading failure", "Error getting documents.", exception)
-                }
     }
 
     fun getChatMessageItemsFromDatabase(chatID: String, callback: Callback<List<ChatMessage>>) {
@@ -683,6 +667,7 @@ class DatabaseService {
         }
         return dialog
     }
+
 
 
 

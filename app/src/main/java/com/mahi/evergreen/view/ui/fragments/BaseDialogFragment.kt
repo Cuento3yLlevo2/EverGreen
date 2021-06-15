@@ -9,6 +9,7 @@ abstract class BaseDialogFragment: DialogFragment() {
 
     protected open var bottomNavigationViewVisibility = View.VISIBLE
 
+    @Suppress("DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         // get the reference of the parent activity and call the setBottomNavigationVisibility method.

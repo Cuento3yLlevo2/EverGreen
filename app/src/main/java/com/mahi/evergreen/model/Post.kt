@@ -16,8 +16,7 @@ class Post (val coverImage: String? = "",
             val updatedAt: Long? = null,
             val description: String? = "",
             val images: MutableMap<String, String> = HashMap(),
-            val membersFollowingAsFavorite: MutableMap<String, Boolean> = HashMap(),
-            var sponsorPofile: SponsorProfile? = SponsorProfile()
+            val membersFollowingAsFavorite: MutableMap<String, Boolean> = HashMap()
 ) {
     // Null default values create a no-argument default constructor, which is needed
     // for deserialization from a DataSnapshot.
@@ -36,7 +35,6 @@ class Post (val coverImage: String? = "",
             "description" to description,
             "images" to images,
             "membersFollowingAsFavorite" to membersFollowingAsFavorite,
-            // "sponsorPofile" to sponsorPofile
         )
     }
 
@@ -56,7 +54,6 @@ class Post (val coverImage: String? = "",
             map["description"] as String,
             map["images"] as MutableMap<String, String>,
             map["membersFollowingAsFavorite"] as MutableMap<String, Boolean>,
-            // map["sponsorPofile"] as SponsorProfile?
         )
     }
 

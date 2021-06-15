@@ -85,7 +85,7 @@
                 android:layout_centerHorizontal="true"
                 android:src="@drawable/ic_baseline_comment_24"
                 android:layout_above="@id/tvChatListEmptyText"
-                />
+                android:contentDescription="@string/cd_chat_list_empty_image" />
             <TextView
                 android:id="@+id/tvChatListEmptyText"
                 android:layout_width="wrap_content"

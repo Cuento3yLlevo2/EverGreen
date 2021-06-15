@@ -15,7 +15,7 @@
     <color name="divider">#ff62ad</color>
     <color name="chat_background_light_green">#CEDCCE</color>
     <color name="background_light_green">#8AF1F1F1</color>
-
+    <!-- Colors used for ads -->
     <color name="gnt_test_background_color">#00F4F4F4</color>
     <color name="gnt_test_background_color_2">#00A3A3A3</color>
     <color name="gnt_black">#000000</color>

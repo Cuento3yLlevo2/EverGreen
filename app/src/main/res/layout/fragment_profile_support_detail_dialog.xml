@@ -49,7 +49,7 @@
                     android:paddingEnd="24dp"
                     android:textColor="@color/primary_text"
                     android:textSize="@dimen/textSizeTitle"
-                    android:text="Preguntas Frecuentes"
+                    android:text="@string/support_faqs"
                     android:background="@drawable/ripple"
                     android:clickable="true"
                     android:focusable="true"/>
@@ -69,7 +69,7 @@
                     android:paddingEnd="24dp"
                     android:textColor="@color/primary_text"
                     android:textSize="@dimen/textSizeTitle"
-                    android:text="Contacta con nosotros"
+                    android:text="@string/support_contact"
                     android:background="@drawable/ripple"
                     android:clickable="true"
                     android:focusable="true"/>
@@ -89,7 +89,7 @@
                     android:paddingEnd="24dp"
                     android:textColor="@color/primary_text"
                     android:textSize="@dimen/textSizeTitle"
-                    android:text="Condiciones Legales"
+                    android:text="@string/support_legal"
                     android:background="@drawable/ripple"
                     android:clickable="true"
                     android:focusable="true"/>
@@ -97,6 +97,20 @@
             </LinearLayout>
 
         </ScrollView>
+
+        <RelativeLayout
+            android:id="@+id/rlWebviewSupport"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <WebView
+                android:id="@+id/webviewSupport"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:animateLayoutChanges="true"/>
+
+        </RelativeLayout>
 
     </FrameLayout>
 

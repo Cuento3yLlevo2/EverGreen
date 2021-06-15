@@ -118,29 +118,33 @@ class PostAdapter(private val postListener: PostListener) : RecyclerView.Adapter
     fun updateData(data: List<Any>) {
         listOfPostsAndAdmodItems.clear()
         listOfPostsAndAdmodItems.addAll(data)
-        // listOfPostsAndAdmodItemsReversed = listOfPostsAndAdmodItems.reversed() as ArrayList<Any?>
         notifyDataSetChanged()
+    }
+
+    fun updateDataOnlyHomeFragment(data: List<Any>) {
+        listOfPostsAndAdmodItems.clear()
+        listOfPostsAndAdmodItems.addAll(data)
     }
 
     fun updateAds(admodItemList: ArrayList<NativeAd>) {
         val finalList = ArrayList<Any?>()
         var addsInserted = 0
-        val listofLists = listOfPostsAndAdmodItems.chunked(listOfPostsAndAdmodItems.size.div(3))
+        val listofLists = listOfPostsAndAdmodItems.chunked(3)
         for (list in listofLists){
             finalList.addAll(list)
-            if (addsInserted < admodItemList.size - 1){
+            if (addsInserted < admodItemList.size){
                 finalList.add(admodItemList[addsInserted])
                 addsInserted ++
             }
         }
-        finalList.add(admodItemList[admodItemList.size - 1])
         updateList(finalList)
     }
 
-    fun updateList(finalList: ArrayList<Any?>){
+    private fun updateList(finalList: ArrayList<Any?>){
         listOfPostsAndAdmodItems.clear()
         listOfPostsAndAdmodItems.addAll(finalList)
         notifyDataSetChanged()
+        notifyItemRangeChanged(0, listOfPostsAndAdmodItems.size)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -161,11 +165,7 @@ class PostAdapter(private val postListener: PostListener) : RecyclerView.Adapter
         val ivPostFavUncheck : ImageView? = itemView.findViewById(R.id.ivPostFavUncheck)
         // val ivPostEdit : ImageView? = itemView.findViewById(R.id.ivPostEdit)
         val tvPostDesc : TextView? = itemView.findViewById(R.id.tvPostDesc)
-
         val clPostTitle : ConstraintLayout? = itemView.findViewById(R.id.clPostTitle)
-        val vPostTitle : View? = itemView.findViewById(R.id.vPostTitle)
-
-
     }
 
     class AdmodViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

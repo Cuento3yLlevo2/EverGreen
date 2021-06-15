@@ -12,10 +12,10 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -32,10 +32,10 @@ import com.mahi.evergreen.model.UserProfile
 import com.mahi.evergreen.network.DatabaseService
 import com.mahi.evergreen.network.POST_IDEA_TYPE
 import com.mahi.evergreen.network.POST_SERVICE_TYPE
-import com.mahi.evergreen.viewmodel.UsersViewModel
 import com.squareup.picasso.Picasso
 
 
+@Suppress("DEPRECATION")
 class ProfileFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
@@ -43,10 +43,10 @@ class ProfileFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    private lateinit var viewModel: UsersViewModel
     private var databaseService = DatabaseService()
     private lateinit var dataBaseUsersReference: DatabaseReference
-    private lateinit var userUid: String
+    private var userUid: String? = null
+    private var auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     private val pickImageRequestCode = 438
     private var imageUri: Uri? = null
@@ -64,29 +64,31 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(this).get(UsersViewModel::class.java)
-
         dataBaseUsersReference = databaseService.getDatabaseUsersReference()
-        userUid = viewModel.getCurrentUserUID().toString()
+
+        userUid = auth.currentUser?.uid
         storageRef = Firebase.storage.reference.child("Users Images")
 
-        dataBaseUsersReference.child(userUid).addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val user: User? = snapshot.getValue(User::class.java)
-                if (context!=null && user != null && _binding != null){
-                    currentUserData = user
-                    val userProfile: UserProfile? = user.profile
-                    if (userProfile!=null){
-                        binding.tvProfileUsername.text = userProfile.username
-                        Picasso.get().load(userProfile.profileImage).placeholder(R.drawable.user_default).into(binding.ivProfileImage)
-                        binding.tvProfileSeedsPoints.text = userProfile.seedsPoints.toString()
+        userUid?.let {
+            dataBaseUsersReference.child(it).addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val user: User? = snapshot.getValue(User::class.java)
+                    if (context!=null && user != null && _binding != null){
+                        currentUserData = user
+                        val userProfile: UserProfile? = user.profile
+                        if (userProfile!=null){
+                            binding.tvProfileUsername.text = userProfile.username
+                            Picasso.get().load(userProfile.profileImage).placeholder(R.drawable.user_default).into(binding.ivProfileImage)
+                            binding.tvProfileSeedsPoints.text = userProfile.seedsPoints.toString()
+                        }
                     }
                 }
-            }
-            override fun onCancelled(error: DatabaseError) {
-                Log.w("Data reading failure", "Error getting documents.", error.toException())
-            }
-        })
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.w("Data reading failure", "Error getting documents.", error.toException())
+                }
+            })
+        }
 
         binding.ivProfileImage.setOnClickListener {
             pickImage()
@@ -170,7 +172,7 @@ class ProfileFragment : Fragment() {
                     if (task.isSuccessful) {
                         val downloadUri = task.result
                         val url = downloadUri.toString()
-                        dataBaseUsersReference.child(userUid).child("profile").updateChildren(hashMapOf<String, Any>("profileImage" to url))
+                        userUid?.let { dataBaseUsersReference.child(it).child("profile").updateChildren(hashMapOf<String, Any>("profileImage" to url)) }
                         progressBar.dismiss()
                     }
 

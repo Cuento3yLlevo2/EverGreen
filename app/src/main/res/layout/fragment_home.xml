@@ -59,7 +59,7 @@
                     app:layout_constraintEnd_toStartOf="@id/ivHomeToCategories"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    />
+                    android:contentDescription="@string/cd_search_post_btn" />
 
                 <ImageView
                     android:id="@+id/ivHomeToCategories"
@@ -71,7 +71,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:padding="4dp"
-                    />
+                    android:contentDescription="@string/home_to_categories" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

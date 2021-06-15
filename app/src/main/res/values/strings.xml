@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">EverGreen</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_main2">MainActivity</string>
     <!-- Strings used for fragments for navigation -->
@@ -8,9 +7,10 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Si</string>
     <string name="previous">Previous</string>
-
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+    <!-- Strings used for Sign in and Log in  -->
     <string name="welcome_app_title">Te damos la bienvenida a EverGreen</string>
     <string name="welcome_app_subtitle">Descubre tu próxima Idea de reciclaje</string>
     <string name="register_btn">Regístrate</string>
@@ -25,9 +25,11 @@
     <string name="not_yet_register_link">¿Aún no estás en EverGreen? Regístrate</string>
     <string name="content_description_evergreen_logo">Evergreen Logo</string>
     <string name="evergreen_welcome_image">variedad de materiales reciclables sujetos por manos</string>
+    <string name="continue_google_btn">Continuar con Google</string>
+
+    <!-- Strings used for main activity  -->
     <string name="buttonSignOut">Cerrar sesión</string>
     <string name="cd_profile_cover_image">profile cover image</string>
-    <string name="item_post_sponsored_tag">Ad</string>
     <string name="profile_seeds_text">Seeds</string>
     <string name="profile_upcycling_idea_text">Mis ideas de upcycling</string>
     <string name="profile_upcycling_services_text">Mis servicios de upcycling</string>
@@ -76,9 +78,50 @@
     <string name="upcycling_creation_categories_toolbar_text">Selecciona una categoría</string>
     <string name="upcycling_service_creation_toolbar_text">Crea tu servicio de Upcycling</string>
     <string name="upcycling_idea_creation_toolbar_text">Crea tu idea de Upcycling</string>
-    <string name="continue_google_btn">Continuar con Google</string>
+    <string name="support_faqs">Preguntas Frecuentes</string>
+    <string name="support_contact">Contacta con nosotros</string>
+    <string name="support_legal">Condiciones Legales</string>
+    <string name="profile_edit_text">Editar perfil</string>
+    <string name="profile_edit_username">Nombre de Usuario</string>
+    <string name="profile_edit_imageinfo">Para editar la imagen de tu perfil solo debes presionar en ella en la sección principal del perfil.</string>
+    <string name="profile_edit_btn_text">Guardar</string>
+    <string name="profile_edit_notifications">Notificaciones</string>
+    <string name="cd_services_list_empty_image">Services List Empty Image</string>
+    <string name="cd_ideas_list_empty_image">Ideas List Empty Image</string>
+    <string name="cd_home_posts_search_empty_image">Home Posts Search Empty Image</string>
+    <string name="cd_search_post_btn">Search Post Btn</string>
+    <string name="home_to_categories">Home To Categories</string>
+    <string name="cd_favorites_list_empty_image">Favorites List Empty Image</string>
+    <string name="cd_chat_list_empty_image">Chat List Empty Image</string>
+    <string name="cd_categories_posts_filtering_empty_image">Categories Posts Filtering Empty Image</string>
+    <!-- Strings used for fragments for fragment_upcycling_creation -->
+    <string name="image_full_size">image full size</string>
+    <string name="close_image_full_size">close image full size</string>
+    <string name="upcycling_creation_image">imagen a publicar</string>
+    <string name="upcycling_creation_image_toolbar_icon">icono del toolbar de imagen a publicar</string>
+    <string name="upcycling_creation_title">Ponle un título</string>
+    <string name="upcycling_creation_placeholder_image">Upcycling Creation Placeholder Image</string>
+    <string name="upcycling_creation_placeholder_text">¡Gracias por hacer del planeta un lugar mejor! Tu publicación se cargará en breve.</string>
+    <string name="upcycling_creation_description">Describe de que se trata</string>
+    <string name="upcycling_creation_close_text">¡Listo! Volver al inicio</string>
+    <string name="upcycling_creation_btn">Publicar</string>
+    <string name="upcycling_creation_minprice">Ponle un precio Base</string>
+    <string name="post_image_from_gallery">Post Image from gallery</string>
 
+    <!-- Strings used for fragments for facebook Login -->
     <string name="facebook_app_id">1034616273942547</string>
     <string name="fb_login_protocol_scheme">fb1034616273942547</string>
+
+    <!-- Strings used for ads -->
+    <string name="item_post_sponsored_tag">Ad</string>
+
+    <!-- Strings used for bnv_menu -->
+    <string name="nav_home_fragment_text">Inicio</string>
+    <string name="nav_favorites_fragment_text">Favoritos</string>
+    <string name="nav_chat_fragment_text">Buzón</string>
+    <string name="nav_profile_fragment_text">Perfil</string>
+
+
+
 
 </resources>

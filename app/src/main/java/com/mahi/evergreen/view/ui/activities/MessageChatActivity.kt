@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.mahi.evergreen.view.ui.activities
 
 import android.content.Context
@@ -237,8 +239,8 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
         startActivityForResult(intent, UpcyclingCreationFragment.REQUEST_GALLERY_ACCESS)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             UpcyclingCreationFragment.REQUEST_IMAGE_CAPTURE -> {
                 // If request is cancelled, the result arrays are empty.
