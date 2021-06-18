@@ -20,7 +20,12 @@ import com.mahi.evergreen.network.Callback
 import com.mahi.evergreen.network.DatabaseService
 import com.mahi.evergreen.view.ui.activities.WelcomeActivity
 
-
+/**
+ * Fragment class that Populates the view of the Settings options
+ * It lets the user edit username profile
+ * It lets the user manage notification settings (Not yet implemented)
+ * It lets the user Sign out from the application
+ */
 class ProfileSettingsDetailDialogFragment : BaseDialogFragment() {
 
     override var bottomNavigationViewVisibility: Int = View.GONE
@@ -84,6 +89,10 @@ class ProfileSettingsDetailDialogFragment : BaseDialogFragment() {
         }
     }
 
+    /**
+     * This method verifies that the new username provided is correct
+     * and if the username is not already taken
+     */
     private fun updateUserProfile() {
 
         val newUsername = binding.etEditProfileUsername.text.toString()

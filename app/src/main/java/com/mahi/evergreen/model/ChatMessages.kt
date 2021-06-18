@@ -2,8 +2,11 @@ package com.mahi.evergreen.model
 
 import com.google.firebase.database.IgnoreExtraProperties
 
+/**
+    This Object represents a list of ChatMessages when adding it to the Firebase database
+    storage all ChatMessages related with a chat
+ */
 @IgnoreExtraProperties
-// This Object represents ChatMessages when adding it to the database
 class ChatMessages(val chatID: String? = "",
                    val messages: MutableMap<String, ChatMessage> = HashMap()
 ) {

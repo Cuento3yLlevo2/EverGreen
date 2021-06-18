@@ -27,7 +27,9 @@ import com.mahi.evergreen.R
 import com.mahi.evergreen.network.Callback
 import com.mahi.evergreen.network.DatabaseService
 
-
+/**
+ * This Activity handles when the user is trying to login into the application
+ */
 @Suppress("DEPRECATION")
 class LoginActivity : AppCompatActivity() {
 
@@ -117,6 +119,53 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * This method handles when a user decides to login user Email and Password credentials
+     */
+    private fun loginUserWithEmail() {
+        val userEmail: String = etLoginEmail.text.toString()
+        val userPassword: String = etLoginPassword.text.toString()
+
+        when {
+            userEmail == "" -> {
+                Toast.makeText(this@LoginActivity, "introduce tu correo electrónico", Toast.LENGTH_LONG).show()
+            }
+            userPassword == "" -> {
+                Toast.makeText(this@LoginActivity, "introduce tu contraseña", Toast.LENGTH_LONG).show()
+            }
+            else -> {
+                auth.signInWithEmailAndPassword(userEmail, userPassword)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful){
+                            val user = auth.currentUser
+                            updateUI(user)
+                        } else {
+                            lateinit var errorCode: String
+                            when(task.exception as FirebaseException){
+                                is FirebaseAuthException -> {
+                                    errorCode = (task.exception as FirebaseAuthException).errorCode
+                                    // taking care of login errors depending of the error
+                                    when(errorCode){
+                                        "ERROR_WRONG_PASSWORD" -> Toast.makeText(this@LoginActivity, "La contraseña que ingresaste es incorrecta.", Toast.LENGTH_LONG).show()
+                                        "ERROR_USER_NOT_FOUND" -> Toast.makeText(this@LoginActivity, "El correo electrónico que ingresaste no pertenece a ninguna cuenta.", Toast.LENGTH_LONG).show()
+                                        "ERROR_USER_DISABLED" -> Toast.makeText(this@LoginActivity, "La cuenta de usuario ha sido deshabilitada", Toast.LENGTH_LONG).show()
+                                        "ERROR_USER_TOKEN_EXPIRED" -> Toast.makeText(this@LoginActivity, "El inicio de sesión ha caducado.", Toast.LENGTH_LONG).show()
+                                        "ERROR_INVALID_USER_TOKEN" -> Toast.makeText(this@LoginActivity, "Error desconocido, imposible iniciar sesión.", Toast.LENGTH_LONG).show()
+                                        else -> Toast.makeText(this@LoginActivity, "Error: $errorCode", Toast.LENGTH_LONG).show()
+                                    }
+                                }
+                                is FirebaseTooManyRequestsException -> Toast.makeText(this@LoginActivity, "Demasiados intentos consecutivos. Vuelve a intentarlo más tarde.", Toast.LENGTH_LONG).show()
+                                else -> Toast.makeText(this@LoginActivity, "Error: ${(task.exception as FirebaseException).message}", Toast.LENGTH_LONG).show()
+                            }
+                        }
+                    }
+            }
+        }
+    }
+
+    /**
+     * This method handles Facebook Access Token when the user tries to log in with Facebook Account
+     */
     private fun handleFacebookAccessToken(token: AccessToken) {
         Log.d("firebaseAuth", "handleFacebookAccessToken:$token")
 
@@ -133,6 +182,26 @@ class LoginActivity : AppCompatActivity() {
                     Log.w("firebaseAuth", "signInWithCredential:failure", task.exception)
                     Toast.makeText(baseContext, "Authentication failed.",
                         Toast.LENGTH_SHORT).show()
+                    updateUI(null)
+                }
+            }
+    }
+
+    /**
+     * This method handles Google Access Token when the user tries to log in with Google account
+     */
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d("firebaseAuth", "signInWithCredential:success")
+                    val user = auth.currentUser
+                    updateUI(user)
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w("firebaseAuth", "signInWithCredential:failure", task.exception)
                     updateUI(null)
                 }
             }
@@ -162,23 +231,9 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun firebaseAuthWithGoogle(idToken: String) {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-        auth.signInWithCredential(credential)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d("firebaseAuth", "signInWithCredential:success")
-                    val user = auth.currentUser
-                    updateUI(user)
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w("firebaseAuth", "signInWithCredential:failure", task.exception)
-                    updateUI(null)
-                }
-            }
-    }
-
+    /**
+     * This method lets the user continue into the application if the Login is successful
+     */
     private fun updateUI(user: FirebaseUser?) {
         if (user != null){
             val uid = user.uid
@@ -210,47 +265,6 @@ class LoginActivity : AppCompatActivity() {
             })
 
 
-        }
-    }
-
-
-    private fun loginUserWithEmail() {
-        val userEmail: String = etLoginEmail.text.toString()
-        val userPassword: String = etLoginPassword.text.toString()
-
-        when {
-            userEmail == "" -> {
-                Toast.makeText(this@LoginActivity, "introduce tu correo electrónico", Toast.LENGTH_LONG).show()
-            }
-            userPassword == "" -> {
-                Toast.makeText(this@LoginActivity, "introduce tu contraseña", Toast.LENGTH_LONG).show()
-            }
-            else -> {
-                auth.signInWithEmailAndPassword(userEmail, userPassword)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful){
-                            val user = auth.currentUser
-                            updateUI(user)
-                        } else {
-                            lateinit var errorCode: String
-                            when(task.exception as FirebaseException){
-                                is FirebaseAuthException -> {
-                                    errorCode = (task.exception as FirebaseAuthException).errorCode
-                                    when(errorCode){
-                                        "ERROR_WRONG_PASSWORD" -> Toast.makeText(this@LoginActivity, "La contraseña que ingresaste es incorrecta.", Toast.LENGTH_LONG).show()
-                                        "ERROR_USER_NOT_FOUND" -> Toast.makeText(this@LoginActivity, "El correo electrónico que ingresaste no pertenece a ninguna cuenta.", Toast.LENGTH_LONG).show()
-                                        "ERROR_USER_DISABLED" -> Toast.makeText(this@LoginActivity, "La cuenta de usuario ha sido deshabilitada", Toast.LENGTH_LONG).show()
-                                        "ERROR_USER_TOKEN_EXPIRED" -> Toast.makeText(this@LoginActivity, "El inicio de sesión ha caducado.", Toast.LENGTH_LONG).show()
-                                        "ERROR_INVALID_USER_TOKEN" -> Toast.makeText(this@LoginActivity, "Error desconocido, imposible iniciar sesión.", Toast.LENGTH_LONG).show()
-                                        else -> Toast.makeText(this@LoginActivity, "Error: $errorCode", Toast.LENGTH_LONG).show()
-                                    }
-                                }
-                                is FirebaseTooManyRequestsException -> Toast.makeText(this@LoginActivity, "Demasiados intentos consecutivos. Vuelve a intentarlo más tarde.", Toast.LENGTH_LONG).show()
-                                else -> Toast.makeText(this@LoginActivity, "Error: ${(task.exception as FirebaseException).message}", Toast.LENGTH_LONG).show()
-                            }
-                        }
-                    }
-            }
         }
     }
 

@@ -16,6 +16,10 @@ import com.mahi.evergreen.view.adapter.UpcyclingCategoriesAdapter
 import com.mahi.evergreen.view.adapter.UpcyclingCategoriesListener
 import com.mahi.evergreen.viewmodel.UpcyclingCategoriesViewModel
 
+/**
+ * Fragment class that Populates the view of the list of Upcycling Categories
+ * Using a recyclerview
+ */
 class CategoriesDetailDialogFragment : BaseDialogFragment(), UpcyclingCategoriesListener {
 
     override var bottomNavigationViewVisibility: Int = View.GONE

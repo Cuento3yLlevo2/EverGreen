@@ -19,7 +19,10 @@ import com.mahi.evergreen.view.adapter.PostAdapter
 import com.mahi.evergreen.view.adapter.PostListener
 import com.mahi.evergreen.viewmodel.PostViewModel
 
-
+/**
+ * Fragment class that Populates the view of the list of post matching a user search on HomeFragment
+ * Using a recyclerview
+ */
 class HomePostSearchDetailDialogFragment : BaseDialogFragment() , PostListener {
 
     override var bottomNavigationViewVisibility: Int = View.VISIBLE

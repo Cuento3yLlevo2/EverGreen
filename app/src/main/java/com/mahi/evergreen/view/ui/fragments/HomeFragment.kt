@@ -22,7 +22,11 @@ import com.mahi.evergreen.view.adapter.PostAdapter
 import com.mahi.evergreen.view.adapter.PostListener
 import com.mahi.evergreen.viewmodel.PostViewModel
 
-
+/**
+ * Fragment class that Populates the view of the list of all the post currently created
+ * Using a recyclerview
+ * This fragment also populates a list of AdMod Ads
+ */
 class HomeFragment : Fragment(), PostListener {
 
     private lateinit var postAdapter: PostAdapter
@@ -76,7 +80,6 @@ class HomeFragment : Fragment(), PostListener {
                 }
             }
 
-
             requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
                 requireActivity().finish()
             }
@@ -92,10 +95,11 @@ class HomeFragment : Fragment(), PostListener {
 
     }
 
+    /**
+     * This method loads AdMod Native ads following the documentation on https://developers.google.com/admob/android/native/start
+     */
     private fun createNativeAd() {
-
         val admodItem = AdmodItem()
-
         if (context != null){
 
             adLoader = AdLoader.Builder(context ?: requireContext(), "ca-app-pub-3940256099942544/2247696110")

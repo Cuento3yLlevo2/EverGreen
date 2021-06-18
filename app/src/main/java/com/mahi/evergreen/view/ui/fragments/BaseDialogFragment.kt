@@ -5,6 +5,10 @@ import android.view.View
 import androidx.fragment.app.DialogFragment
 import com.mahi.evergreen.view.ui.activities.MainActivity
 
+/**
+ * this abstract class gives control over the MainActivity
+ * BottomNavigationView visibility to its child fragments
+ */
 abstract class BaseDialogFragment: DialogFragment() {
 
     protected open var bottomNavigationViewVisibility = View.VISIBLE
@@ -18,7 +22,6 @@ abstract class BaseDialogFragment: DialogFragment() {
             mainActivity.setBottomNavigationVisibility(bottomNavigationViewVisibility)
         }
     }
-
 
     override fun onResume() {
         super.onResume()

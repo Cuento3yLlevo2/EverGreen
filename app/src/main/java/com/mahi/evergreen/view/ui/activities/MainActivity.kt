@@ -7,6 +7,10 @@ import androidx.navigation.ui.NavigationUI
 import com.mahi.evergreen.R
 import com.mahi.evergreen.databinding.ActivityMainBinding
 
+/**
+ * This activity takes care of the main flow of the application
+ * this activity sets a navigation controller and a customized toolbar
+ */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -16,6 +20,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+        // customized toolbar
         setActionBar(findViewById(R.id.toolbarHome))
         title = ""
 
@@ -25,10 +30,16 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * Sets up a BottomNavigationView for use with a NavController.
+     */
     private fun configNav() {
         NavigationUI.setupWithNavController(binding.bnvMenu, Navigation.findNavController(this, R.id.fragContent))
     }
 
+    /**
+     * Lets fragments take control of hidding or showing the BottomNavigationView when needed
+     */
     fun setBottomNavigationVisibility(visibility: Int) {
         // get the reference of the bottomNavigationView and set the visibility.
         binding.bnvMenu.visibility = visibility

@@ -6,6 +6,13 @@ import com.mahi.evergreen.model.UpcyclingCategory
 import com.mahi.evergreen.network.Callback
 import com.mahi.evergreen.network.DatabaseService
 
+/**
+ * This ViewModel class takes care of connecting the realtime database service with the
+ * Fragments populating Upcycling Categories data.
+ *
+ * When a given fragment/Activity needs to update, create or retrieve data form the database this class
+ * summit the request to the server
+ */
 class UpcyclingCategoriesViewModel : ViewModel() {
 
     private val firestoreService = DatabaseService()

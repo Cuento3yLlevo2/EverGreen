@@ -8,6 +8,10 @@ import com.asksira.loopingviewpager.LoopingPagerAdapter
 import com.bumptech.glide.Glide
 import com.mahi.evergreen.R
 
+/**
+ * A Pager Adapter that supports infinite loop.
+ * This Pager populates every image of a post inside the PostDetailDialogFragment.kt
+ */
 class PostImagesViewPagerAdapter(
     itemList: ArrayList<String>,
     isInfinite: Boolean

@@ -9,6 +9,13 @@ import com.mahi.evergreen.network.Callback
 import com.mahi.evergreen.network.DatabaseService
 import java.lang.Exception
 
+/**
+ * This ViewModel class takes care of connecting the realtime database service with the
+ * Fragments populating Chat list data.
+ *
+ * When a given fragment/Activity needs to update, create or retrieve data form the database this class
+ * summit the request to the server
+ */
 class ChatListViewModel : ViewModel() {
 
     private val firestoreService = DatabaseService()

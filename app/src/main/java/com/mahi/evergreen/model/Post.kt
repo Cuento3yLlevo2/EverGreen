@@ -3,8 +3,11 @@ package com.mahi.evergreen.model
 import com.google.firebase.database.Exclude
 import com.google.firebase.database.IgnoreExtraProperties
 
+/**
+    This Object represents a Post when adding it to the Firebase database
+    storage all data related with a post including Upcycling Ideas or Upcycling services
+ */
 @IgnoreExtraProperties
-// This Object represents a Post when adding it to the database
 class Post (val coverImage: String? = "",
             var type: Int? = 0,
             val minPrice: Double? = 0.toDouble(),

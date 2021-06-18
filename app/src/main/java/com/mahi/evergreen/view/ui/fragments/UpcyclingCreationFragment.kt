@@ -46,6 +46,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
+/**
+ * Handles the creation of new posts providing a form to fill the needed data
+ * and a images update tool to select the images that are going to be uploaded with the post
+ */
 @Suppress("DEPRECATION")
 class UpcyclingCreationFragment : BaseDialogFragment() {
 

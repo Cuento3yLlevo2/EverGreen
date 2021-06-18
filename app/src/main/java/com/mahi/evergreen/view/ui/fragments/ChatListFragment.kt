@@ -18,7 +18,10 @@ import com.mahi.evergreen.view.adapter.ChatListListener
 import com.mahi.evergreen.view.ui.activities.MessageChatActivity
 import com.mahi.evergreen.viewmodel.ChatListViewModel
 
-
+/**
+ * Fragment class that Populates the view of the list of Chats available for a user
+ * Using a recyclerview
+ */
 class ChatListFragment : Fragment(), ChatListListener {
 
     private lateinit var chatListAdapter: ChatListAdapter

@@ -3,6 +3,9 @@ package com.mahi.evergreen.model
 import com.google.firebase.database.Exclude
 import com.google.firebase.database.IgnoreExtraProperties
 
+/**
+    This Object represents a Upcycling Category when adding it to the Firebase database
+ */
 @IgnoreExtraProperties
 class UpcyclingCategory (val name: String? = "", val description: String? = "",
                          val image: String? = "", val creatorHelp: String? = "", var id: Int? = 0) {

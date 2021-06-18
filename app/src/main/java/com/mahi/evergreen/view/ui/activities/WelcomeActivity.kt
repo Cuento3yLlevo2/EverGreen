@@ -4,14 +4,17 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.ads.MobileAds
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import com.mahi.evergreen.R
 
-
+/**
+ * This activity appears when the the user has not yet log in or sing in into the app
+ * It welcomes the user and let him continue in the sign in or log in process
+ * If an user is already login this Activity will send the user directly into the mainActivity
+ */
 class WelcomeActivity : AppCompatActivity() {
 
     private var firebaseUser: FirebaseUser? = null
@@ -40,14 +43,7 @@ class WelcomeActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-
-        // User's consent status successfully updated.
-        // This call initializes the SDK and calls back a completion listener
-        // once initialization is complete (or after a 30-second timeout).
-        // This method should be Called only once and as early as possible, ideally at app launch.
-        MobileAds.initialize(applicationContext)
-
-        // setPersistenceEnabled to true at the beginning of the application
+        // setPersistenceEnabled to true at the beginning of the application for Firebase Service
         // This method should be Called only once, ideally at app launch.
         FirebaseDatabase.getInstance().setPersistenceEnabled(true)
 

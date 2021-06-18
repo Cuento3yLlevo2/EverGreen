@@ -3,8 +3,11 @@ package com.mahi.evergreen.model
 import com.google.firebase.database.Exclude
 import com.google.firebase.database.IgnoreExtraProperties
 
+/**
+    This Object represents a User Category when adding it to the Firebase database
+    Also storage a list of favorites post and a list of the post created by the user
+ */
 @IgnoreExtraProperties
-// This Object represents a User when adding it to the database
 data class User(
         var uid: String? = "",
         var profile: UserProfile? = UserProfile(),

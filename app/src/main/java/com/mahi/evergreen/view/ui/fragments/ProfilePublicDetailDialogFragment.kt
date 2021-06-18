@@ -11,6 +11,11 @@ import com.mahi.evergreen.databinding.FragmentProfilePublicDetailDialogBinding
 import com.mahi.evergreen.model.User
 import com.squareup.picasso.Picasso
 
+/**
+ * Fragment class that Populates the view of the public profile user data
+ * It shows all relevant data of the user including profile image and username
+ * It continues to the Upcycling service/idea created list if the user decides to do so (not yet implemented)
+ */
 class ProfilePublicDetailDialogFragment : BaseDialogFragment() {
 
     override var bottomNavigationViewVisibility: Int = View.GONE

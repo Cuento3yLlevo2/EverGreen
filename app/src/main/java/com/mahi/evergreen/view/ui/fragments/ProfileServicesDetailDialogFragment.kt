@@ -19,6 +19,11 @@ import com.mahi.evergreen.view.adapter.PostAdapter
 import com.mahi.evergreen.view.adapter.PostListener
 import com.mahi.evergreen.viewmodel.PostViewModel
 
+/**
+ * Fragment class that Populates the view of the list of post of type Upcycling Services
+ * Created by the current user
+ * Using a recyclerview
+ */
 class ProfileServicesDetailDialogFragment : BaseDialogFragment() , PostListener {
 
     override var bottomNavigationViewVisibility: Int = View.GONE

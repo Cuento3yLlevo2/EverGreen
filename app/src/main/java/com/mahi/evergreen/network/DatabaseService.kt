@@ -32,11 +32,23 @@ const val POST_IDEA_TYPE = 2
 const val REMOVE_FAV_POST = 0
 const val ADD_FAV_POST = 1
 
+/**
+ * Manages main interactions with Firebase Realtime Database.
+ * Takes care of Database updates, inserts, deletes
+ * Firebase Realtime Database is a non-relational database base in JSON
+ * for more info go to https://firebase.google.com/docs/database/android/read-and-write
+ */
 class DatabaseService {
+
+    // project's server database reference host by firebase services (for more info go to https://firebase.google.com/)
     val database = Firebase.database("https://evergreen-app-bdbc2-default-rtdb.europe-west1.firebasedatabase.app")
 
     // Write to Realtime Database
 
+    /**
+     * Writes a new user to database using User.kt and UserProfile.kt Models
+     * handles registrations with Email, Google Token and Facebook Token
+     */
     fun writeNewUser(userId: String, usernameInput: String?, email: String?, profileImageInput: String?, callback: Callback<Boolean>) {
         val defaultProfileImage = "https://firebasestorage.googleapis.com/v0/b/evergreen-app-bdbc2.appspot.com/o/user_default.png?alt=media&token=53382a72-8fc1-4a11-b63f-0cb342bb02c6"
         val profileImage = profileImageInput ?: defaultProfileImage
@@ -60,7 +72,7 @@ class DatabaseService {
         database.reference.child(USERS).child(userId).setValue(user)
                 .addOnSuccessListener {
                     // Write was successful!
-                        Log.w("FireBaseLogs", "Write was successful")
+                        Log.i("FireBaseLogs", "Write was successful")
                     callback.onSuccess(true)
                 }
                 .addOnFailureListener {
@@ -69,6 +81,11 @@ class DatabaseService {
                 }
     }
 
+    /**
+     * Writes a new chat to database using Chat.kt and ChatMembers.kt
+     * this new chat will start without ChatMessages and these will be created
+     * by the user later
+     */
     fun writeNewChat(
         postImageURL: String,
         postTitle: String,
@@ -98,6 +115,10 @@ class DatabaseService {
         }
     }
 
+    /**
+     * Writes a new single messages to the database using ChatMessage.kt and also ads the message
+     * to the ChatMessages list
+     */
     fun writeNewMessage(senderID: String?, chatKey: String, message: String, url: String) {
         val currentTime = System.currentTimeMillis()
         val messageKey = database.reference.child(CHAT_MESSAGES).child(chatKey).push().key
@@ -118,6 +139,10 @@ class DatabaseService {
         }
     }
 
+    /**
+     * Writes new post to the database using Post.kt
+     * Also updates the user created post list
+     */
     fun writeNewPost(coverImage: String,
                      type: Int,
                      minPrice: Double?,
@@ -162,6 +187,9 @@ class DatabaseService {
         }
     }
 
+    /**
+     * Given a number of points this class add the new Seeds points to the current user points
+     */
     private fun addSeedsPointsToUser(userID: String, newPoints: Int) {
         database.reference.child(USERS)
             .child(userID)
@@ -190,6 +218,10 @@ class DatabaseService {
             }
     }
 
+    /**
+     * Removes or Adds a given post from the user's favorites list depending on the input
+     * on the action param
+     */
     fun changeFavPostStateInDatabase(currentUserID: String?, postId: String?, action: Int, callback: Callback<Boolean>) {
         if(action == ADD_FAV_POST){
             val childUpdates = hashMapOf<String, Any>(
@@ -211,6 +243,9 @@ class DatabaseService {
         }
     }
 
+    /**
+     * Updates the user's username given the username string as input
+     */
     fun updateUsername(userID: String, newUsername: String, callback: Callback<Boolean>) {
         database.reference.child(USERS)
             .child(userID)
@@ -223,7 +258,7 @@ class DatabaseService {
                     .child("search").setValue(newUsername.lowercase(Locale.getDefault()))
                     .addOnSuccessListener {
                         // Write was successful!
-                        Log.w("FireBaseLogs", "Write was successful")
+                        Log.i("FireBaseLogs", "Write was successful")
                         callback.onSuccess(true)
                     }
                     .addOnFailureListener {
@@ -241,23 +276,23 @@ class DatabaseService {
 
     // Read From Realtime Database
 
-
+    /**
+     * Determines whether a username already exists on the database and returns
+     * True on the callback if it does
+     */
     fun usernameAlreadyExists(newUsername: String, callback: Callback<Boolean>) {
         database.getReference(USERS)
                 .get()
                 .addOnSuccessListener { result ->
                     var exists = false
                     for (child in result.children) {
-                        Log.d("Data reading success", "${child.key} => ${child.value}")
                         val user = child.getValue(User::class.java)
                         if (user != null) {
-                            Log.d("Data reading success 2", "$newUsername => ${user.search}")
                             if (user.search.equals(newUsername, true)) {
                                 exists = true
                             }
                         }
                     }
-                    Log.d("Data reading success 3", "$exists")
                     callback.onSuccess(exists)
                 }
                 .addOnFailureListener { exception ->
@@ -265,6 +300,12 @@ class DatabaseService {
                 }
     }
 
+    /**
+     * Mainly use for Google and Facebook token singIn.
+     * Since these singIns does not control whether in the database already exists a user
+     * related to the token, this method takes care of that returning True in the Callback is the
+     * user already exists
+     */
     fun userAlreadyExists(uid: String, callback: Callback<Boolean>) {
         database.getReference(USERS)
             .child(uid)
@@ -281,14 +322,18 @@ class DatabaseService {
             }
     }
 
-
+    /**
+     * Provides users reference data from Database
+     */
     fun getDatabaseUsersReference(): DatabaseReference {
         database.getReference(USERS)
         return database.getReference(USERS)
     }
 
+    /**
+     * Populates the list of previous chat messages when a user starts a chat activity
+     */
     fun getChatMessageItemsFromDatabase(chatID: String, callback: Callback<List<ChatMessage>>) {
-        Log.d("ccccData", "El Chat ID es ->>>>>>>>>>>> $chatID")
         database.getReference(CHAT_MESSAGES)
                 .child(chatID)
                 .orderByChild("timestamp")
@@ -309,6 +354,9 @@ class DatabaseService {
                 })
     }
 
+    /**
+     * Retrieves the chatID for a given postID and chat members
+     */
     fun getChatIDFromDatabase(
         postID: String,
         currentUserID: String,
@@ -338,6 +386,9 @@ class DatabaseService {
                 }
     }
 
+    /**
+     * Retrieves chat user name to display on a chat activity given a chatID and current user ID
+     */
     fun getChatUsername(chatID: String, currentUserID: String, callback: Callback<String>) {
         var chatUsernameID: String
         var chatUsername: String
@@ -371,6 +422,10 @@ class DatabaseService {
                 }
     }
 
+    /**
+     * Retrieves the UserID for the visited user id on a chat activity given the currentUserID to
+     * know which one is the current user and which one is the visited
+     */
     fun getUserIDVisited(chatIDFromChatList: String, currentUserID: String, callback: Callback<String>) {
         var chatUsernameID: String
         database.getReference(CHAT_MEMBERS).child(chatIDFromChatList)
@@ -391,6 +446,9 @@ class DatabaseService {
             }
     }
 
+    /**
+     * Populates the main ChatListFragment and show all active chats for the current user
+     */
     fun getChatListFromDatabase(currentUserID: String, callback: Callback<List<Chat>>){
         val chatRefList = ArrayList<String>()
         database.getReference(CHAT_MEMBERS)
@@ -437,6 +495,9 @@ class DatabaseService {
                 })
     }
 
+    /**
+     * Retrieves all the data for the upcycling categories from the database to populate the upcycling categories list
+     */
     fun getUpcyclingCategoriesFromDatabase(callback: Callback<List<UpcyclingCategory>>) {
         database.getReference(UPCYCLING_CATEGORIES)
             .orderByChild("name")
@@ -458,6 +519,10 @@ class DatabaseService {
 
     }
 
+    /**
+     * This method retrieves all the posts crated on the database
+     * in order of updated post first. It populates the HomeFragment
+     */
     fun getPostsFromDatabase(callback: Callback<List<Post>>) {
         database.getReference(POSTS)
                 .orderByChild("updatedAt")
@@ -479,6 +544,10 @@ class DatabaseService {
                 })
     }
 
+    /**
+     * This method retrieves all the posts that the given user has set as favorites
+     * from the database. It populates the FavoritesFragment
+     */
     fun getFavoritePostsFromDatabase(currentUserID: String, callback: Callback<List<Post>>) {
         database.getReference(USERS)
                 .child(currentUserID)
@@ -519,6 +588,9 @@ class DatabaseService {
                 })
     }
 
+    /**
+     * Retrieves all post matching the category id given
+     */
     fun getPostsFromDatabaseByCategory(categoryID: String, callback: Callback<List<Post>>) {
         database.getReference(POSTS)
             .orderByChild("updatedAt")
@@ -542,6 +614,9 @@ class DatabaseService {
 
     }
 
+    /**
+     * Retrieves user's created Upcycling Services or Ideas given the user id
+     */
     fun getProfilePostsFromDatabaseByType(type: Int, currentUserID: String, callback: Callback<List<Post>>) {
         database.getReference(USERS)
                 .child(currentUserID)
@@ -582,7 +657,9 @@ class DatabaseService {
                 })
     }
 
-
+    /**
+     * Given a list of post ids this method will return only the post that match with the given post type
+     */
     private fun getPostFromDatabaseByType(type: Int, createdPost: String, callback: Callback<Post>) {
         database.getReference(POSTS).child(createdPost)
             .addValueEventListener(object : ValueEventListener{
@@ -602,6 +679,9 @@ class DatabaseService {
             })
     }
 
+    /**
+     * Search for posts matching the post description string provided as param
+     */
     fun getPostQuery(keyword: String, callback: Callback<List<Post>>) {
         database.getReference(POSTS)
             .orderByChild("description")
@@ -622,7 +702,10 @@ class DatabaseService {
     }
 
     // Extra Tools
-
+    /**
+     * This tool shows a charging dialog window to the user until data is successfully wrote on the database
+     * It is only use when loading heavy images to de Firebase Storage service
+     */
     fun setProgressDialogWhenDataLoading(context: Context, message:String): AlertDialog {
         val llPadding = 30
         val ll = LinearLayout(context)

@@ -3,7 +3,9 @@ package com.mahi.evergreen.model
 import com.google.firebase.database.Exclude
 import com.google.firebase.database.IgnoreExtraProperties
 
-// This Object represents a Chat when adding it to the database
+/**
+    This Object represents a Chat when adding it to the Firebase database
+ */
 @IgnoreExtraProperties
 class Chat(val postID: String? = "",
            val postTitle: String? = "",

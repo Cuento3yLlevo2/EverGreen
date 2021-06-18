@@ -6,12 +6,24 @@ import android.os.Bundle
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
+import com.google.android.gms.ads.MobileAds
 import com.mahi.evergreen.R
 
+/**
+ * This is the LAUNCHER activity of the application
+ * It shows the Official application logo with an animation while
+ * charging the Google MobileAds and other app process
+ */
 class SplashscreenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splashscreen)
+
+        // User's consent status successfully updated.
+        // This call initializes the SDK and calls back a completion listener
+        // once initialization is complete (or after a 30-second timeout).
+        // This method should be Called only once and as early as possible, ideally at app launch.
+        MobileAds.initialize(applicationContext)
 
         val ivLogoEverGreen = findViewById<ImageView>(R.id.ivLogoEverGreen)
 

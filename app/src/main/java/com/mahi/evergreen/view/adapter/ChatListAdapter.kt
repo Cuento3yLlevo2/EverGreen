@@ -16,6 +16,11 @@ import com.mahi.evergreen.network.Callback
 import com.mahi.evergreen.network.DatabaseService
 import java.lang.Exception
 
+/**
+ * A subclass of RecyclerView.Adapter responsible for providing views
+ * that represent every Chat List in a data set.
+ * This class provides views for the ChatListFragment.kt
+ */
 class ChatListAdapter(private val chatListListener: ChatListListener, val context: Context?) : RecyclerView.Adapter<ChatListAdapter.ViewHolder>() {
 
     private var listOfChats = ArrayList<Chat>()

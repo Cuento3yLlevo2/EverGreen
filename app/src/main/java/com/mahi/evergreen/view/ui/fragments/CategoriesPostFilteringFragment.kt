@@ -20,6 +20,10 @@ import com.mahi.evergreen.view.adapter.PostAdapter
 import com.mahi.evergreen.view.adapter.PostListener
 import com.mahi.evergreen.viewmodel.PostViewModel
 
+/**
+ * Fragment class that Populates the view of the list of Post filtered by a category
+ * Using a recyclerview
+ */
 class CategoriesPostFilteringFragment : BaseDialogFragment() , PostListener {
 
     override var bottomNavigationViewVisibility: Int = View.GONE

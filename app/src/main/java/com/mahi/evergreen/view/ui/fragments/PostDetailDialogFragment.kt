@@ -31,7 +31,11 @@ import com.mahi.evergreen.view.ui.activities.MessageChatActivity
 import com.mahi.evergreen.viewmodel.PostViewModel
 import com.squareup.picasso.Picasso
 
-
+/**
+ * Fragment class that Populates the view of the post details of a given post
+ * It shows all relevant data of the post including images
+ * It starts a chat message activity if the user decides to do so
+ */
 class PostDetailDialogFragment : BaseDialogFragment(), DialogInterface.OnDismissListener {
 
     override var bottomNavigationViewVisibility: Int = View.GONE
@@ -83,6 +87,8 @@ class PostDetailDialogFragment : BaseDialogFragment(), DialogInterface.OnDismiss
         val postMap = arguments?.getSerializable("post") as Map<*, *>
         val post: Post = Post().getPostFromMap(postMap)
         binding.toolbarPostDetails.title = post.description
+
+
 
         viewModel = ViewModelProvider(this).get(PostViewModel::class.java)
 
@@ -148,6 +154,9 @@ class PostDetailDialogFragment : BaseDialogFragment(), DialogInterface.OnDismiss
             binding.ivPostDetailFavCheck.visibility = View.VISIBLE
         }
 
+        if (post.publisher == firebaseUser?.uid) {
+            binding.bPostDetailChatBtn.visibility = View.GONE
+        }
         binding.bPostDetailChatBtn.setOnClickListener {
             val intent = Intent(context, MessageChatActivity::class.java)
             intent.putExtra("visit_user_id", post.publisher)

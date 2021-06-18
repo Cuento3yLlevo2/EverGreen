@@ -34,7 +34,13 @@ import com.mahi.evergreen.network.POST_IDEA_TYPE
 import com.mahi.evergreen.network.POST_SERVICE_TYPE
 import com.squareup.picasso.Picasso
 
-
+/**
+ * Fragment class that Populates the view of the profile user data
+ * It shows all relevant data of the user including profile image and username
+ * It starts a Upcycling service/idea creation if the user decides to do so
+ * It continues to the Upcycling service/idea created list if the user decides to do so
+ * it shows settigns and support options
+ */
 @Suppress("DEPRECATION")
 class ProfileFragment : Fragment() {
 

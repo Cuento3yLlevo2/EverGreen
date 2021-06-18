@@ -10,6 +10,11 @@ import com.bumptech.glide.Glide
 import com.mahi.evergreen.R
 import com.mahi.evergreen.model.UpcyclingCategory
 
+/**
+ * A subclass of RecyclerView.Adapter responsible for providing views
+ * that represent every Upcycling Category in a data set.
+ * This class provides views for the CategoriesDetailDialogFragment.kt
+ */
 class UpcyclingCategoriesAdapter(
     private val isUpcyclingCreationAction: Boolean?,
     private val upcyclingCategListener: UpcyclingCategoriesListener

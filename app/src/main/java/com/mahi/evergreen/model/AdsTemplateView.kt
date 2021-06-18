@@ -16,7 +16,7 @@ import com.mahi.evergreen.R
 
 
 /**
- * Base class for a template view. *
+ * Base class for a template view that inflates item_native_admod.xml that shows Admod ads.
  */
 class AdsTemplateView : FrameLayout {
     private var templateType = 0

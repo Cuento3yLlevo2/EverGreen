@@ -15,6 +15,11 @@ import com.mahi.evergreen.R
 import com.mahi.evergreen.model.AdsTemplateView
 import com.mahi.evergreen.model.Post
 
+/**
+ * A subclass of RecyclerView.Adapter responsible for providing views
+ * that represent every Post in a data set.
+ * This class provides views for several fragments on MainActivity.kt.
+ */
 class PostAdapter(private val postListener: PostListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var listOfPostsAndAdmodItems = ArrayList<Any?>()

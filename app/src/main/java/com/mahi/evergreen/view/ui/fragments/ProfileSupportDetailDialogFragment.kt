@@ -11,6 +11,16 @@ import androidx.navigation.fragment.findNavController
 import com.mahi.evergreen.R
 import com.mahi.evergreen.databinding.FragmentProfileSupportDetailDialogBinding
 
+/**
+ * Fragment class that Populates the view of the Support options
+ * It lets the user navigate to the EverGreen Support Website
+ * This website is hosted by wordpress and provides information
+ * about FAQs and contact details.
+ *
+ * This class uses a WebView element to integrate the Website into de App layout
+ *
+ * if you want to see the website here is the url: https://appsupportevergreen.wordpress.com/
+ */
 class ProfileSupportDetailDialogFragment : BaseDialogFragment() {
 
     override var bottomNavigationViewVisibility: Int = View.GONE

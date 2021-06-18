@@ -10,6 +10,13 @@ import com.mahi.evergreen.model.Post
 import com.mahi.evergreen.network.Callback
 import com.mahi.evergreen.network.DatabaseService
 
+/**
+ * This ViewModel class takes care of connecting the realtime database service with the
+ * Fragments populating Post data.
+ *
+ * When a given fragment/Activity needs to update, create or retrieve data form the database this class
+ * summit the request to the server
+ */
 class PostViewModel : ViewModel() {
 
     private val firestoreService = DatabaseService()

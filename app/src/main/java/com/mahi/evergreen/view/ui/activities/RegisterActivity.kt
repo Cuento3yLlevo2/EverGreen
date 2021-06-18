@@ -115,6 +115,9 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * This method handles Facebook Access Token when the user tries to log in with Facebook Account
+     */
     private fun handleFacebookAccessToken(token: AccessToken) {
         Log.d("firebaseAuth", "handleFacebookAccessToken:$token")
 
@@ -158,6 +161,9 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * This method handles Google Access Token when the user tries to log in with Google Account
+     */
     private fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         auth.signInWithCredential(credential)
@@ -175,6 +181,9 @@ class RegisterActivity : AppCompatActivity() {
             }
     }
 
+    /**
+     * Lets the user continue into the application if the Sing in is successful
+     */
     private fun updateUI(user: FirebaseUser?) {
         if (user != null){
             val uid = user.uid
@@ -209,10 +218,16 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * This method handles when the user tries to create an account with username, email and password
+     * Email and Password validity are handled by Google Firebase
+     * Username should be unique and this validation is check here
+     */
     private fun registerUserWithEmail() {
         val username: String = etRegisterUsername.text.toString()
         val userEmail: String = etRegisterEmail.text.toString()
         val userPassword: String = etRegisterPassword.text.toString()
+
         /*
            Overview: // Username Should Only contains alphanumeric characters, underscore and dot.
                [a-zA-Z0-9] an alphanumeric THEN (
@@ -229,6 +244,7 @@ class RegisterActivity : AppCompatActivity() {
        */
         val usernameRegExpression = Regex("^[a-zA-Z0-9](_(?!([._]))|\\.(?!([_.]))|[a-zA-Z0-9]){2,18}[a-zA-Z0-9]\$", setOf(RegexOption.IGNORE_CASE))
 
+        // make sure that all camps are valid and username is eligible
         when {
             username == "" -> {
                 Toast.makeText(this@RegisterActivity, "introduce un nombre de usuario", Toast.LENGTH_LONG).show()
@@ -262,12 +278,13 @@ class RegisterActivity : AppCompatActivity() {
                 }
             }
             else -> {
-
+                // make sure that username is unique
                 databaseService.usernameAlreadyExists(username, object: Callback<Boolean> {
                     override fun onSuccess(result: Boolean?) {
                         if (result == true) {
                             Toast.makeText(this@RegisterActivity, "Este nombre de usuario ya está en uso!", Toast.LENGTH_LONG).show()
                         } else {
+                            // ask firebase authentication service to register user with email and password
                             auth.createUserWithEmailAndPassword(userEmail, userPassword)
                                     .addOnCompleteListener { task ->
                                         if (task.isSuccessful){
@@ -275,8 +292,13 @@ class RegisterActivity : AppCompatActivity() {
                                             Log.d("FireBaseLogs", "createUserWithEmail:success")
                                             val user = auth.currentUser
                                             if (user != null) {
+                                                /*
+                                                * if firebase authentication service registers the user successfully
+                                                * write new user data on the Firebase realtime database with all needed files
+                                                * */
                                                 databaseService.writeNewUser(user.uid, username, userEmail, null, object: Callback<Boolean> {
                                                     override fun onSuccess(result: Boolean?) {
+                                                        // If writing the new user in the database was successful continue to main activity
                                                         val intent = Intent(this@RegisterActivity, MainActivity::class.java)
                                                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                                                         startActivity(intent)

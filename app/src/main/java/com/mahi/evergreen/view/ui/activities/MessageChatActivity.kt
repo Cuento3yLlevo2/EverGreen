@@ -47,7 +47,11 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
-
+/**
+ * This Activity handles when users open a post and decide to start a chat.
+ * populates chat messages, images and text and let the user summit new text messages or images
+ * into the chat conversation
+ */
 class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
 
     private lateinit var binding: ActivityMessageChatBinding
@@ -136,6 +140,9 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
 
     }
 
+    /**
+     * Asks the user if prefers to upload a image from the gallery or take a picture
+     */
     private fun loadImageWithCameraOrGallery() {
         val options = arrayOf<CharSequence>("Tomar una foto", "Seleccionar de galería")
         val builder : android.app.AlertDialog.Builder = android.app.AlertDialog.Builder(this)
@@ -159,11 +166,14 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
         builder.show()
     }
 
+    /**
+     * Shows dialog to explain to user why a given permission access is required for the app to work
+     */
     private fun showDialog(permission: String, name: String, requestCode: Int){
         val builder = AlertDialog.Builder(this)
         builder.apply {
-            setMessage("Permission to access your $name is required to use this app")
-            setTitle("Permission required")
+            setMessage("Se requiere permiso para acceder a la $name para usar esta aplicación")
+            setTitle("Permiso requerido")
             setPositiveButton("OK") { _, _ ->
                 ActivityCompat.requestPermissions(this@MessageChatActivity, arrayOf(permission), requestCode)
             }
@@ -172,6 +182,9 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
         dialog.show()
     }
 
+    /**
+     * Handles the needed permissions for the camera or gallery and then calls intent for given activity
+     */
     private fun checkForPermissions(permission: String, name: String, requestCode: Int){
         when {
             ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED -> {
@@ -190,6 +203,9 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
         }
     }
 
+    /**
+     * Starts the process to load a image from the gallery or camera depending on the customer's selection
+     */
     private fun dispatchTakePictureIntent() {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
             // Ensure that there's a camera activity to handle the intent
@@ -218,6 +234,9 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
         }
     }
 
+    /**
+     * Creates a temporal file from the image took from camera
+     */
     @Throws(IOException::class)
     private fun createImageFile(): File {
         // Create an image file name
@@ -233,6 +252,9 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
         }
     }
 
+    /**
+     * Takes care of the gallery intent to let the user pick a picture from the device internal storage
+     */
     private fun dispatchGalleryPictureIntent() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
@@ -284,6 +306,9 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
         }
     }
 
+    /**
+     * Verifies if the given device has camera available
+     */
     private fun hasCameraSupport(): Boolean {
         var hasSupport = false
         if(this.packageManager?.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY) == true){
@@ -292,6 +317,10 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
         return hasSupport
     }
 
+    /**
+     * When user start Chat activity directly from a Post,
+     * this method Populates the data from the database given the userVisited id and other data
+     */
     private fun displayMessagesWithVisitedUserID(
         userIDVisited: String,
         context: Context,
@@ -329,6 +358,9 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
         })
     }
 
+    /**
+     * given a ChatID retrieve chat data from the database to populate the view
+     */
     fun displayChatData(chatID: String) {
         val chatRef = reference.child("chats").child(chatID)
         chatRef.addValueEventListener(object : ValueEventListener{
@@ -351,6 +383,9 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
         })
     }
 
+    /**
+     * Using ChatID as input search for list of messages previously made
+     */
     private fun displayMessagesWithChatID(chatIDFromChatList: String, context: Context, currentUserID: String) {
         databaseService.getUserIDVisited(chatIDFromChatList, currentUserID, object: Callback<String> {
             override fun onSuccess(result: String?) {

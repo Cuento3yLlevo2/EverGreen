@@ -19,6 +19,10 @@ import com.mahi.evergreen.view.adapter.PostAdapter
 import com.mahi.evergreen.view.adapter.PostListener
 import com.mahi.evergreen.viewmodel.PostViewModel
 
+/**
+ * Fragment class that Populates the view of the list of favorite post for a user
+ * Using a recyclerview
+ */
 class FavoritesFragment : Fragment() , PostListener {
 
     private lateinit var postAdapter: PostAdapter
