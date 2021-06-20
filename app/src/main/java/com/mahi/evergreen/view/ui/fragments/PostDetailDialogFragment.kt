@@ -43,12 +43,12 @@ class PostDetailDialogFragment : BaseDialogFragment(), DialogInterface.OnDismiss
     private lateinit var categoryMap: Map<*, *>
     private var isCategoryFiltering: Boolean? = false
     private var isSearchFiltering: Boolean? = false
+    private var isPostEditionClicked: Boolean? = false
     private var keyword: String? = ""
     private var adapter: PostImagesViewPagerAdapter? = null
     var firebaseUser = Firebase.auth.currentUser
     private var databaseService = DatabaseService()
     private val reference = databaseService.database.reference
-
     private var _binding: FragmentPostDetailDialogBinding? = null
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -87,8 +87,6 @@ class PostDetailDialogFragment : BaseDialogFragment(), DialogInterface.OnDismiss
         val postMap = arguments?.getSerializable("post") as Map<*, *>
         val post: Post = Post().getPostFromMap(postMap)
         binding.toolbarPostDetails.title = post.description
-
-
 
         viewModel = ViewModelProvider(this).get(PostViewModel::class.java)
 
@@ -156,7 +154,15 @@ class PostDetailDialogFragment : BaseDialogFragment(), DialogInterface.OnDismiss
 
         if (post.publisher == firebaseUser?.uid) {
             binding.bPostDetailChatBtn.visibility = View.GONE
+            binding.ivPostDetailEdit.visibility = View.VISIBLE
         }
+
+        binding.ivPostDetailEdit.setOnClickListener {
+            isPostEditionClicked = true
+            val bundle = bundleOf("post" to postMap, "isPostEdition" to true)
+            findNavController().navigate(R.id.action_postDetailDialogFragment_to_upcyclingCreationFragment, bundle)
+        }
+
         binding.bPostDetailChatBtn.setOnClickListener {
             val intent = Intent(context, MessageChatActivity::class.java)
             intent.putExtra("visit_user_id", post.publisher)
@@ -167,9 +173,6 @@ class PostDetailDialogFragment : BaseDialogFragment(), DialogInterface.OnDismiss
             startActivity(intent)
         }
     }
-
-
-
 
     private fun displayPostPublisherData(postPublisherID: String) {
         val postPublisherData = reference.child("users").child(postPublisherID)
@@ -203,6 +206,9 @@ class PostDetailDialogFragment : BaseDialogFragment(), DialogInterface.OnDismiss
                 val bundle = bundleOf("keyword" to keyword)
                 findNavController().navigate(R.id.homePostSearchDetailDialogFragment, bundle)
             }
+            isPostEditionClicked == true -> {
+                // do nothing
+            }
             else -> {
                 findNavController().previousBackStackEntry?.destination?.id?.let {
                     findNavController().navigate(
@@ -227,11 +233,13 @@ class PostDetailDialogFragment : BaseDialogFragment(), DialogInterface.OnDismiss
     }
 
     override fun onDestroyView() {
-        bottomNavigationViewVisibility = View.VISIBLE
+        if(isPostEditionClicked == true) {
+            bottomNavigationViewVisibility = View.GONE
+        } else {
+            bottomNavigationViewVisibility = View.VISIBLE
+        }
+
         _binding = null
         super.onDestroyView()
     }
-
-
-
 }

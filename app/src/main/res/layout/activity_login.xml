@@ -7,6 +7,7 @@
     tools:context=".view.ui.activities.LoginActivity">
 
     <LinearLayout
+        android:id="@+id/llLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -39,7 +40,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_weight="0.3"
+            android:layout_weight="0.25"
             android:textSize="20sp"
             android:textStyle="bold"
             android:text="@string/welcome_app_subtitle"
@@ -84,13 +85,46 @@
             android:textAllCaps="false"
             />
 
+        <TextView
+            android:id="@+id/tvLinktoSendPasswordResetEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.1"
+            android:textSize="@dimen/textSizeSubtitle"
+            android:textStyle="bold"
+            android:text="@string/PasswordResetHint"
+            android:textAlignment="center"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="16dp"
+            android:linksClickable="true"
+            android:textColor="@color/primary_dark"
+            android:textColorLink="@color/green"/>
+
+        <TextView
+            android:id="@+id/tvLinkFromLoginToRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.1"
+            android:textSize="@dimen/textSizeSubtitle"
+            android:textStyle="bold"
+            android:text="@string/not_yet_register_link"
+            android:textAlignment="center"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:linksClickable="true"
+            android:textColor="@color/primary_dark"
+            android:textColorLink="@color/green"/>
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buttonActivityLoginGoogle"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.2"
-            android:layout_marginTop="25dp"
-            android:backgroundTint="@color/white"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="@color/whiteGrey"
             android:drawableStart="@drawable/google_icon"
             android:paddingStart="25dp"
             android:paddingEnd="25dp"
@@ -105,7 +139,7 @@
             android:layout_height="0dp"
             android:layout_weight="0.2"
             android:layout_marginTop="4dp"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@color/whiteGrey"
             android:drawableStart="@drawable/facebook"
             android:paddingStart="25dp"
             android:paddingEnd="25dp"
@@ -115,18 +149,75 @@
             android:layout_marginBottom="8dp"
             android:textSize="@dimen/textSizeTitle" />
 
-        <TextView
-            android:id="@+id/tvLinkFromLoginToRegister"
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llResetPwd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="25dp"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        tools:ignore="UselessParent"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_marginTop="25dp"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="0.1"
+            android:layout_height="80dp"
+            android:src="@drawable/evergreen_logo"
+            android:contentDescription="@string/content_description_evergreen_logo"
+            android:layout_marginBottom="8dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="@string/ResetPwdEmailDesc"
+            android:textColor="@color/primary_text"
+            android:textAlignment="center"
+            android:padding="8dp"/>
+
+        <EditText
+            android:id="@+id/etResetPwdEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:hint="@string/ResetPwdEmailHint"
+            android:textColor="@color/primary_text"
+            android:textColorHint="@color/secondary_text"
+            android:autofillHints="@string/login_hint_email"
+            android:textSize="@dimen/textSizeTitle"
+            android:layout_margin="10dp"/>
+
+
+        <Button
+            android:id="@+id/buttonResetPwd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/buttonResetPwd"
+            android:textSize="@dimen/textSizeTitle"
+            android:textAllCaps="false"
+            android:layout_margin="8dp"
+            />
+
+        <TextView
+            android:id="@+id/tvLinkBackFromSendPasswordResetEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:textSize="@dimen/textSizeSubtitle"
             android:textStyle="bold"
-            android:text="@string/not_yet_register_link"
+            android:text="@string/LinkBackFromSendPasswordResetEmail"
             android:textAlignment="center"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
+            android:layout_marginTop="16dp"
             android:linksClickable="true"
             android:textColor="@color/primary_dark"
             android:textColorLink="@color/green"/>

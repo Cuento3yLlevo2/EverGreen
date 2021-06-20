@@ -14,6 +14,8 @@ import com.google.firebase.ktx.Firebase
 import com.mahi.evergreen.R
 import com.mahi.evergreen.model.AdsTemplateView
 import com.mahi.evergreen.model.Post
+import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * A subclass of RecyclerView.Adapter responsible for providing views
@@ -129,6 +131,10 @@ class PostAdapter(private val postListener: PostListener) : RecyclerView.Adapter
     fun updateDataOnlyHomeFragment(data: List<Any>) {
         listOfPostsAndAdmodItems.clear()
         listOfPostsAndAdmodItems.addAll(data)
+        if(listOfPostsAndAdmodItems.size < 6){
+            listOfPostsAndAdmodItems.reverse()
+            notifyDataSetChanged()
+        }
     }
 
     fun updateAds(admodItemList: ArrayList<NativeAd>) {
@@ -148,6 +154,7 @@ class PostAdapter(private val postListener: PostListener) : RecyclerView.Adapter
     private fun updateList(finalList: ArrayList<Any?>){
         listOfPostsAndAdmodItems.clear()
         listOfPostsAndAdmodItems.addAll(finalList)
+        listOfPostsAndAdmodItems.reverse()
         notifyDataSetChanged()
         notifyItemRangeChanged(0, listOfPostsAndAdmodItems.size)
     }

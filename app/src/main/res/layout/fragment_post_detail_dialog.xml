@@ -165,14 +165,14 @@
                             android:id="@+id/ivPostDetailEdit"
                             android:layout_width="32dp"
                             android:layout_height="32dp"
-                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/ivPostDetailShare"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"
                             android:src="@drawable/ic_edit"
                             android:layout_marginEnd="8dp"
                             android:layout_marginTop="8dp"
-                            android:visibility="gone"
-                            android:contentDescription="@string/cd_edit_icon" />
+                            android:contentDescription="@string/cd_edit_icon"
+                            android:visibility="gone"/>
 
 
                     </androidx.constraintlayout.widget.ConstraintLayout>

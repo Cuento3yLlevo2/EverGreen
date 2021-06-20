@@ -12,6 +12,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +25,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.net.toUri
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseUser
@@ -35,6 +39,7 @@ import com.google.firebase.storage.UploadTask
 import com.google.firebase.storage.ktx.storage
 import com.mahi.evergreen.R
 import com.mahi.evergreen.databinding.FragmentUpcyclingCreationBinding
+import com.mahi.evergreen.model.Post
 import com.mahi.evergreen.network.Callback
 import com.mahi.evergreen.network.DatabaseService
 import com.mahi.evergreen.network.POST_IDEA_TYPE
@@ -66,6 +71,8 @@ class UpcyclingCreationFragment : BaseDialogFragment() {
     private var firebaseUser: FirebaseUser? = null
     private var storageRef: StorageReference? = null
     private var _binding: FragmentUpcyclingCreationBinding? = null
+    private var isPostEdition: Boolean? = false
+    private var postEditing: Post? = null
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -97,15 +104,22 @@ class UpcyclingCreationFragment : BaseDialogFragment() {
         }
 
         // retrieve extra arguments from intent
-        upcyclingType = arguments?.getInt("upcyclingType")
-        categoryID = arguments?.getString("categoryID")
-
-        // depending on type of post, set navigation toolbar title
-        if (upcyclingType == POST_SERVICE_TYPE){
-            binding.toolbarUpcyclingCreation.title = resources.getString(R.string.upcycling_service_creation_toolbar_text)
-        } else if(upcyclingType == POST_IDEA_TYPE) {
-            binding.toolbarUpcyclingCreation.title = resources.getString(R.string.upcycling_idea_creation_toolbar_text)
-            binding.etUpcyclingMinPrice.visibility = View.GONE
+        isPostEdition = arguments?.getBoolean("isPostEdition", false)
+        if(isPostEdition == true) {
+            val postMap = arguments?.getSerializable("post") as Map<*, *>
+            postEditing = Post().getPostFromMap(postMap)
+            updateLayoutText()
+            updateImageToolbar()
+        } else {
+            upcyclingType = arguments?.getInt("upcyclingType")
+            categoryID = arguments?.getString("categoryID")
+            // depending on type of post, set navigation toolbar title
+            if (upcyclingType == POST_SERVICE_TYPE){
+                binding.tvToolbarTitle.text = resources.getString(R.string.upcycling_service_creation_toolbar_text)
+            } else if(upcyclingType == POST_IDEA_TYPE) {
+                binding.tvToolbarTitle.text = resources.getString(R.string.upcycling_idea_creation_toolbar_text)
+                binding.etUpcyclingMinPrice.visibility = View.GONE
+            }
         }
 
         // establish Firebase Storage reference for future use
@@ -130,6 +144,10 @@ class UpcyclingCreationFragment : BaseDialogFragment() {
         val category: MutableMap<String, Boolean> = HashMap()
         category["\"$categoryID\""] = true
 
+        binding.ivErasePost.setOnClickListener {
+            erasePost()
+        }
+
         // Button for Post creation that start verification and loading process
         binding.bUpcyclingCreationBtn.setOnClickListener {
             // prepare some needed values to create a post
@@ -148,7 +166,7 @@ class UpcyclingCreationFragment : BaseDialogFragment() {
                 description == "" -> {
                     Toast.makeText(context, "introduce una descripción", Toast.LENGTH_LONG).show()
                 }
-                description.length > 30 -> {
+                description.length > 240 -> {
                     Toast.makeText(context, "La descripción debe tener maximo 240 caracteres", Toast.LENGTH_LONG).show()
                 }
                 type == POST_SERVICE_TYPE && minPrice.isEmpty() -> {
@@ -181,6 +199,99 @@ class UpcyclingCreationFragment : BaseDialogFragment() {
                     }
                 }
             }
+        }
+    }
+
+    private fun erasePost() {
+        val options = arrayOf<CharSequence>("Eliminar", "Cancelar")
+        val builder : android.app.AlertDialog.Builder = android.app.AlertDialog.Builder(context)
+        builder.setTitle("¿Seguro que quieres eliminar la publicación?")
+        builder.setItems(options) { _, which ->
+            when (which) {
+                0 -> {
+                    // show loading placeholder layout to user while charging
+                    binding.tvUpcyclingCreationPlaceholderText.text = resources.getString(R.string.upcycling_edition_deleting_text)
+                    binding.svUpcyclingCreation.visibility = View.GONE
+                    binding.clUpcyclingCreationPlaceholder.visibility = View.VISIBLE
+
+                    databaseService.erasePost(postEditing?.publisher, postEditing?.postId, object: Callback<Boolean> {
+                        override fun onSuccess(result: Boolean?) {
+                            Log.i("FireBaseLogs", "erase post success")
+                            for(url in postEditing?.images?.entries!!){
+                                Firebase.storage.getReferenceFromUrl(url.value).delete()
+                            }
+                            binding.UpcyclingCreationProgressBar.visibility = View.GONE
+                            binding.bUpcyclingCreationClose.visibility = View.VISIBLE
+                        }
+
+                        override fun onFailure(exception: Exception) {
+                            Log.w("FireBaseLogs", "Write failed")
+                        }
+                    })
+                }
+                1 -> {
+                    // do nothing
+                }
+            }
+        }
+        builder.show()
+    }
+
+    private fun updateImageToolbar() {
+        for((counter, url) in postEditing?.images?.entries!!.withIndex()){
+            Glide.with(requireContext()) // contexto
+                .asBitmap()
+                .load(url.value) // donde esta la url de la imagen
+                .into(object : CustomTarget<Bitmap>(){
+                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                        when(counter){
+                            0 -> {
+                                imageList?.set(counter, resource)
+                                binding.image0.setImageBitmap(resource)
+                            }
+                            1 -> {
+                                imageList?.set(counter, resource)
+                                binding.image1.setImageBitmap(resource)
+                            }
+                            2 -> {
+                                imageList?.set(counter, resource)
+                                binding.image2.setImageBitmap(resource)
+                            }
+                            3 -> {
+                                imageList?.set(counter, resource)
+                                binding.image3.setImageBitmap(resource)
+                            }
+                            4 -> {
+                                imageList?.set(counter, resource)
+                                binding.image4.setImageBitmap(resource)
+                             }
+                            5 -> {
+                                imageList?.set(counter, resource)
+                                binding.image5.setImageBitmap(resource)
+                            }
+                        }
+                    }
+                    override fun onLoadCleared(placeholder: Drawable?) {
+                        // this is called when imageView is cleared on lifecycle call or for
+                        // some other reason.
+                        // if you are referencing the bitmap somewhere else too other than this imageView
+                        // clear it here as you can no longer have the bitmap
+                    }
+                })
+        }
+    }
+
+    private fun updateLayoutText() {
+        upcyclingType = postEditing!!.type
+        categoryID = postEditing!!.category.toString()
+        binding.tvToolbarTitle.text = resources.getString(R.string.upcycling_edition_toolbar_text)
+        binding.bUpcyclingCreationBtn.text = resources.getString(R.string.upcycling_edition_btn_text)
+        binding.etUpcyclingTitle.text =  Editable.Factory().newEditable(postEditing!!.title)
+        binding.etUpcyclingDescription.text = Editable.Factory().newEditable(postEditing!!.description)
+        binding.etUpcyclingMinPrice.text = Editable.Factory().newEditable(postEditing!!.minPrice.toString())
+        binding.ivErasePost.visibility = View.VISIBLE
+        if(upcyclingType == POST_IDEA_TYPE) {
+            binding.etUpcyclingMinPrice.visibility = View.GONE
         }
     }
 
@@ -645,18 +756,40 @@ class UpcyclingCreationFragment : BaseDialogFragment() {
                         // when all images all finally uploaded create Post on Firebase Database with all data needed
                         if (counter == imageUriList.size){
                             val coverURL: String = images["\"1\""].toString()
-                            databaseService.writeNewPost(coverURL, type, minPrice, title, publisherID, category, description, images, object: Callback<Boolean> {
-                                override fun onSuccess(result: Boolean?) {
-                                    Log.i("FireBaseLogs", "Write post success")
 
-                                    binding.UpcyclingCreationProgressBar.visibility = View.GONE
-                                    binding.bUpcyclingCreationClose.visibility = View.VISIBLE
+                            if (isPostEdition == true){
+                                postEditing?.let {
+                                    databaseService.updatePost(postEditing!!.createdAt, postEditing?.postId, coverURL, type, minPrice, title, publisherID, category, description, images, object: Callback<Boolean> {
+                                        override fun onSuccess(result: Boolean?) {
+                                            Log.i("FireBaseLogs", "update post success")
+                                            for(url in postEditing?.images?.entries!!){
+                                                Firebase.storage.getReferenceFromUrl(url.value).delete()
+                                            }
+                                            binding.UpcyclingCreationProgressBar.visibility = View.GONE
+                                            binding.bUpcyclingCreationClose.visibility = View.VISIBLE
+                                        }
+
+                                        override fun onFailure(exception: Exception) {
+                                            Log.w("FireBaseLogs", "Write failed")
+                                        }
+                                    })
                                 }
 
-                                override fun onFailure(exception: Exception) {
-                                    Log.w("FireBaseLogs", "Write failed")
-                                }
-                            })
+                            } else {
+                                databaseService.writeNewPost(coverURL, type, minPrice, title, publisherID, category, description, images, object: Callback<Boolean> {
+                                    override fun onSuccess(result: Boolean?) {
+                                        Log.i("FireBaseLogs", "Write post success")
+
+                                        binding.UpcyclingCreationProgressBar.visibility = View.GONE
+                                        binding.bUpcyclingCreationClose.visibility = View.VISIBLE
+                                    }
+
+                                    override fun onFailure(exception: Exception) {
+                                        Log.w("FireBaseLogs", "Write failed")
+                                    }
+                                })
+                            }
+
                         }
                         counter++
 

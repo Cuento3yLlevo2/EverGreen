@@ -3,10 +3,8 @@ package com.mahi.evergreen.view.ui.activities
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.view.View
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.facebook.AccessToken
 import com.facebook.CallbackManager
@@ -37,15 +35,11 @@ class LoginActivity : AppCompatActivity() {
     private val GOOGLE_SIGN_IN = 999
     // Initialize Facebook Login button
     private val callbackManager = CallbackManager.Factory.create()
-
     private lateinit var auth: FirebaseAuth
     private lateinit var googleClient: GoogleSignInClient
-
     private lateinit var etLoginEmail: EditText
     private lateinit var etLoginPassword: EditText
-
     private val databaseService: DatabaseService = DatabaseService()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +50,13 @@ class LoginActivity : AppCompatActivity() {
         // get elements from layout
         etLoginEmail = findViewById(R.id.etLoginEmail)
         etLoginPassword = findViewById(R.id.etLoginPassword)
+        val llLogin : LinearLayout = findViewById(R.id.llLogin)
+        val llResetPwd : LinearLayout = findViewById(R.id.llResetPwd)
+        val etResetPwdEmail : EditText = findViewById(R.id.etResetPwdEmail)
+        val buttonResetPwd : Button = findViewById(R.id.buttonResetPwd)
+        val tvLinkBackFromSendPasswordResetEmail : TextView = findViewById(R.id.tvLinkBackFromSendPasswordResetEmail)
         val tvLinkFromLoginToRegister : TextView = findViewById(R.id.tvLinkFromLoginToRegister)
+        val tvLinktoSendPasswordResetEmail : TextView = findViewById(R.id.tvLinktoSendPasswordResetEmail)
         val buttonActivityLoginGoogle : Button = findViewById(R.id.buttonActivityLoginGoogle)
         val buttonActivityLoginFacebook : Button = findViewById(R.id.buttonActivityLoginFacebook)
         val buttonActivityLogin : Button = findViewById(R.id.buttonActivityLogin)
@@ -66,8 +66,6 @@ class LoginActivity : AppCompatActivity() {
         buttonActivityLogin.setOnClickListener {
             loginUserWithEmail()
         }
-
-
 
         // btn to start login process with Google Singin
         buttonActivityLoginGoogle.setOnClickListener {
@@ -116,6 +114,26 @@ class LoginActivity : AppCompatActivity() {
             val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
             startActivity(intent)
             finish()
+        }
+
+        tvLinktoSendPasswordResetEmail.setOnClickListener {
+            llLogin.visibility = View.GONE
+            llResetPwd.visibility = View.VISIBLE
+        }
+
+        tvLinkBackFromSendPasswordResetEmail.setOnClickListener {
+            llResetPwd.visibility = View.GONE
+            llLogin.visibility = View.VISIBLE
+        }
+
+        buttonResetPwd.setOnClickListener {
+            Firebase.auth.sendPasswordResetEmail(etResetPwdEmail.text.toString())
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.d("ResetUserPwd", "Email sent.")
+                        Toast.makeText(this, "Correo electrónico de restablecimiento de contraseña enviado", Toast.LENGTH_SHORT).show()
+                    }
+                }
         }
     }
 
@@ -208,13 +226,10 @@ class LoginActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-
         // Pass the activity result back to the Facebook SDK
         callbackManager.onActivityResult(requestCode, resultCode, data)
 
         super.onActivityResult(requestCode, resultCode, data)
-
-
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == GOOGLE_SIGN_IN) {
@@ -263,9 +278,6 @@ class LoginActivity : AppCompatActivity() {
                     Log.w("FireBaseLogs", "userAlreadyExists:onFailure", exception)
                 }
             })
-
-
         }
     }
-
 }

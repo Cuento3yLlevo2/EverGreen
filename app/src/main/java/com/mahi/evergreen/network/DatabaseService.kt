@@ -187,6 +187,63 @@ class DatabaseService {
         }
     }
 
+    fun updatePost(
+        createdAt: Long?,
+        postId: String?,
+        coverURL: String,
+        type: Int,
+        minPrice: Double?,
+        title: String,
+        publisherID: String,
+        category: MutableMap<String, Boolean>,
+        description: String,
+        images: MutableMap<String, String>,
+        callback: Callback<Boolean>
+    ) {
+        val updatedAt = System.currentTimeMillis()
+        val post = Post(
+            coverURL,
+            type,
+            minPrice,
+            title,
+            postId,
+            publisherID,
+            category,
+            createdAt,
+            updatedAt,
+            description,
+            images
+        )
+        post.postId?.let {
+            database.reference.child(POSTS).child(it).setValue(post)
+                .addOnSuccessListener {
+                    // Write was successful!
+                    Log.w("FireBaseLogs", "Write was successful")
+                    callback.onSuccess(true)
+                }
+                .addOnFailureListener {
+                    // Write failed
+                    Log.w("FireBaseLogs", "Write failed")
+                }
+        }
+    }
+
+    fun erasePost(publisherID: String?, postId: String?, callback: Callback<Boolean>) {
+        if (postId != null && publisherID != null) {
+            database.reference.child(POSTS).child(postId).setValue(null)
+                .addOnSuccessListener {
+                    // Write was successful!
+                    Log.w("FireBaseLogs", "Erase was successful")
+                    database.reference.child(USERS).child(publisherID).child("createdPosts").updateChildren(hashMapOf<String, Any?>(postId to null))
+                    callback.onSuccess(true)
+                }
+                .addOnFailureListener {
+                    // Write failed
+                    Log.w("FireBaseLogs", "Write failed")
+                }
+        }
+    }
+
     /**
      * Given a number of points this class add the new Seeds points to the current user points
      */
@@ -750,7 +807,6 @@ class DatabaseService {
         }
         return dialog
     }
-
 
 
 

@@ -81,7 +81,7 @@ dependencies {
 
     // Google Sign-In
     implementation 'com.google.android.gms:play-services-auth:19.0.0'
-    // Facebook Sing-In
+    // Facebook Sign-In
     implementation 'com.facebook.android:facebook-android-sdk:5.15.3'
     // AdMod the dependency for the Google Mobile Ads SDK
     implementation 'com.google.android.gms:play-services-ads:20.2.0'

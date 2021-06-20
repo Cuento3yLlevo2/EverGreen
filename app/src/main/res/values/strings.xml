@@ -77,6 +77,9 @@
     <string name="chat_list_empty_text">Aún no tienes conversaciones iniciadas</string>
     <string name="upcycling_creation_categories_toolbar_text">Selecciona una categoría</string>
     <string name="upcycling_service_creation_toolbar_text">Crea tu servicio de Upcycling</string>
+    <string name="upcycling_edition_toolbar_text">Edita tu publicación</string>
+    <string name="upcycling_edition_deleting_text">Estamos eliminando tu publicación</string>
+    <string name="upcycling_edition_btn_text">Guardar cambios</string>
     <string name="upcycling_idea_creation_toolbar_text">Crea tu idea de Upcycling</string>
     <string name="support_faqs">Preguntas Frecuentes</string>
     <string name="support_contact">Contacta con nosotros</string>
@@ -120,8 +123,11 @@
     <string name="nav_favorites_fragment_text">Favoritos</string>
     <string name="nav_chat_fragment_text">Buzón</string>
     <string name="nav_profile_fragment_text">Perfil</string>
-
-
+    <string name="LinkBackFromSendPasswordResetEmail">Volver al inicio de sesión</string>
+    <string name="buttonResetPwd">Enviar</string>
+    <string name="ResetPwdEmailHint">introduce el correo electrónico</string>
+    <string name="ResetPwdEmailDesc">Enviar correo electrónico de restablecimiento de contraseña</string>
+    <string name="PasswordResetHint">¿Olvidaste tu contraseña?</string>
 
 
 </resources>

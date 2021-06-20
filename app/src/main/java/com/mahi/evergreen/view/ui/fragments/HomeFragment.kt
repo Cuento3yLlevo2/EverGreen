@@ -35,8 +35,6 @@ class HomeFragment : Fragment(), PostListener {
     private lateinit var recyclerViewList: ArrayList<Any>
     private lateinit var adLoader: AdLoader
     private var addsAlreadyLoad = false
-
-
     private var _binding: FragmentHomeBinding? = null
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -56,13 +54,11 @@ class HomeFragment : Fragment(), PostListener {
         if (_binding != null){
             viewModel = ViewModelProvider(this).get(PostViewModel::class.java)
 
-
             viewModel.refreshPostList()
 
             postAdapter = PostAdapter(this)
             binding.rvHomePosts.apply {
                 val gridLayoutManager = GridLayoutManager(context, 2)
-                gridLayoutManager.reverseLayout = true
                 layoutManager = gridLayoutManager
                 adapter = postAdapter
             }
@@ -88,7 +84,6 @@ class HomeFragment : Fragment(), PostListener {
             admodItemList = ArrayList()
 
             observeViewModel()
-
         }
 
 
@@ -125,11 +120,9 @@ class HomeFragment : Fragment(), PostListener {
                         object: CountDownTimer(10000, 1000) {
                             override fun onTick(millisUntilFinished: Long) {
                                 Log.d("onAdFailedToLoad:Timer", "${millisUntilFinished/1000}")
-
                             }
                             override fun onFinish() {
                                 Log.d("onAdFailedToLoad:Timer", "Reloading NativeAd")
-
                                 createNativeAd()
                             }
                         }.start()
@@ -138,9 +131,7 @@ class HomeFragment : Fragment(), PostListener {
                 .build()
 
             adLoader.loadAds(AdRequest.Builder().build(), 2)
-
             admodItem.adLoader = adLoader
-
         }
     }
 
@@ -181,5 +172,4 @@ class HomeFragment : Fragment(), PostListener {
         super.onDestroyView()
         _binding = null
     }
-
 }

@@ -99,6 +99,9 @@
         <action
             android:id="@+id/action_postDetailDialogFragment_to_navHomeFragment"
             app:destination="@id/navHomeFragment" />
+        <action
+            android:id="@+id/action_postDetailDialogFragment_to_upcyclingCreationFragment"
+            app:destination="@id/upcyclingCreationFragment" />
     </dialog>
     <fragment
         android:id="@+id/profilePublicDetailDialogFragment"
