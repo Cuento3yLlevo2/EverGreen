@@ -741,14 +741,16 @@ class DatabaseService {
      */
     fun getPostQuery(keyword: String, callback: Callback<List<Post>>) {
         database.getReference(POSTS)
-            .orderByChild("description")
-            .startAt(keyword)
-            .endAt(keyword + "\uf8ff")
             .addValueEventListener(object : ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val postList = ArrayList<Post>()
                     for (child in snapshot.children) {
-                        child.getValue(Post::class.java)?.let { postList.add(it) }
+                        child.getValue(Post::class.java)?.let {
+                            if(it.description?.contains(keyword, true) == true && it.title?.contains(keyword, true) == true){
+                                postList.add(it)
+                            }
+
+                        }
                     }
                     callback.onSuccess(postList)
                 }
