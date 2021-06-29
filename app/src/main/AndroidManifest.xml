@@ -40,8 +40,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-        <activity android:name=".view.ui.activities.MessageChatActivity"
-            android:hardwareAccelerated="false"/>
         <activity android:name=".view.ui.activities.WelcomeActivity"
             android:hardwareAccelerated="false">
         </activity>

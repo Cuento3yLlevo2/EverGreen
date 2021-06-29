@@ -1,6 +1,4 @@
-@file:Suppress("DEPRECATION")
-
-package com.mahi.evergreen.view.ui.activities
+package com.mahi.evergreen.view.ui.fragments
 
 import android.content.Context
 import android.content.Intent
@@ -10,7 +8,9 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +18,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.gms.tasks.Continuation
@@ -33,13 +34,14 @@ import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
 import com.google.firebase.storage.ktx.storage
 import com.mahi.evergreen.R
-import com.mahi.evergreen.databinding.ActivityMessageChatBinding
-import com.mahi.evergreen.model.*
+import com.mahi.evergreen.databinding.FragmentMessageChatBinding
+import com.mahi.evergreen.model.Chat
+import com.mahi.evergreen.model.ChatMessage
+import com.mahi.evergreen.model.User
 import com.mahi.evergreen.network.Callback
 import com.mahi.evergreen.network.DatabaseService
 import com.mahi.evergreen.view.adapter.ChatMessagesAdapter
 import com.mahi.evergreen.view.adapter.ChatMessagesListener
-import com.mahi.evergreen.view.ui.fragments.UpcyclingCreationFragment
 import com.mahi.evergreen.viewmodel.ChatMessagesViewModel
 import com.squareup.picasso.Picasso
 import java.io.File
@@ -47,14 +49,7 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * This Activity handles when users open a post and decide to start a chat.
- * populates chat messages, images and text and let the user summit new text messages or images
- * into the chat conversation
- */
-class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
-
-    private lateinit var binding: ActivityMessageChatBinding
+class MessageChatFragment : BaseDialogFragment(), ChatMessagesListener {
 
     private lateinit var chatMessagesAdapter: ChatMessagesAdapter
     private lateinit var viewModel: ChatMessagesViewModel
@@ -67,15 +62,34 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
     private var imageUri: Uri? = null
     private var storageRef: StorageReference? = null
     private lateinit var currentPhotoPath: String
+    override var bottomNavigationViewVisibility: Int = View.GONE
+
+    private var _binding: FragmentMessageChatBinding? = null
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMessageChatBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+        setStyle(STYLE_NORMAL, R.style.FullScreenDialogStyle)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentMessageChatBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+
         binding.toolbarMessageChat.navigationIcon = ContextCompat.getDrawable(view.context, R.drawable.arrow_backwards)
         binding.toolbarMessageChat.setNavigationOnClickListener {
-            finish()
+            findNavController().popBackStack()
+            dismiss()
         }
 
         // retrieve from Firebase.auth the current user UID
@@ -86,11 +100,11 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
         // type 1 = chatActivity started from chatList,
         // type 2 = chatActivity started from userList,
         // type 3 = chatActivity started from Post
-        type = intent.getIntExtra("type", 0)
+        type = arguments?.getInt("type", 0)!!
         when (type) {
             1 -> {
                 // retrieve from previous activity the chatID
-                chatIDFromChatList = intent.getStringExtra("clicked_chat_id").toString()
+                chatIDFromChatList = arguments?.getString("clicked_chat_id").toString()
                 // update directly viewModel ChatID
                 viewModel.chatID = chatIDFromChatList
                 firebaseUser?.let { displayMessagesWithChatID(chatIDFromChatList, view.context, it.uid) }
@@ -103,21 +117,21 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
                 firebaseUser?.let { displayMessagesWithVisitedUserID(userIDVisited, view.context, it.uid) }
                 */
                 Log.w("Activity creation error", "Error: type of activity not currentlyused.")
-                finish()
+                dismiss()
             }
             3 -> {
                 // retrieve post data from previous activity
-                val postImageURL = intent.getStringExtra("postImageURL").toString()
-                val postTitle = intent.getStringExtra("postTitle").toString()
-                val postID = intent.getStringExtra("postID").toString()
+                val postImageURL = arguments?.getString("postImageURL").toString()
+                val postTitle = arguments?.getString("postTitle").toString()
+                val postID = arguments?.getString("postID").toString()
                 // retrieve from previous activity the Visited User UID
-                userIDVisited = intent.getStringExtra("visit_user_id").toString()
+                userIDVisited = arguments?.getString("visit_user_id").toString()
                 firebaseUser?.let { displayMessagesWithVisitedUserID(userIDVisited, view.context, it.uid, postID, postTitle, postImageURL, this) }
 
             }
             else -> {
                 Log.w("Activity creation error", "Error: type of activity not declare.")
-                finish()
+                dismiss()
             }
         }
 
@@ -137,7 +151,6 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
         }
 
         observeViewModel()
-
     }
 
     /**
@@ -145,7 +158,7 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
      */
     private fun loadImageWithCameraOrGallery() {
         val options = arrayOf<CharSequence>("Tomar una foto", "Seleccionar de galería")
-        val builder : android.app.AlertDialog.Builder = android.app.AlertDialog.Builder(this)
+        val builder : android.app.AlertDialog.Builder = android.app.AlertDialog.Builder(requireContext())
         builder.setTitle("¿Qué quieres hacer?")
         builder.setItems(options) { _, which ->
             when (which) {
@@ -170,16 +183,16 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
      * Shows dialog to explain to user why a given permission access is required for the app to work
      */
     private fun showDialog(permission: String, name: String, requestCode: Int){
-        val builder = AlertDialog.Builder(this)
-        builder.apply {
+        val builder = context?.let { AlertDialog.Builder(it) }
+        builder?.apply {
             setMessage("Se requiere permiso para acceder a la $name para usar esta aplicación")
             setTitle("Permiso requerido")
             setPositiveButton("OK") { _, _ ->
-                ActivityCompat.requestPermissions(this@MessageChatActivity, arrayOf(permission), requestCode)
+                activity?.let { ActivityCompat.requestPermissions(it, arrayOf(permission), requestCode) }
             }
         }
-        val dialog = builder.create()
-        dialog.show()
+        val dialog = builder?.create()
+        dialog?.show()
     }
 
     /**
@@ -187,7 +200,7 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
      */
     private fun checkForPermissions(permission: String, name: String, requestCode: Int){
         when {
-            ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED -> {
+            context?.let { ContextCompat.checkSelfPermission(it, permission) } == PackageManager.PERMISSION_GRANTED -> {
                 // If the Permissions have been granted continue
                 if (requestCode == UpcyclingCreationFragment.REQUEST_IMAGE_CAPTURE){
                     dispatchTakePictureIntent()
@@ -199,7 +212,7 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
             // If the Permissions are not granted Request Permission
             shouldShowRequestPermissionRationale(permission) -> showDialog(permission, name, requestCode)
 
-            else -> ActivityCompat.requestPermissions(this, arrayOf(permission), requestCode)
+            else -> activity?.let { ActivityCompat.requestPermissions(it, arrayOf(permission), requestCode) }
         }
     }
 
@@ -209,7 +222,8 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
     private fun dispatchTakePictureIntent() {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
             // Ensure that there's a camera activity to handle the intent
-            takePictureIntent.resolveActivity(this.packageManager)?.also {
+            context?.let { contextNotNull ->
+                takePictureIntent.resolveActivity(contextNotNull.packageManager)?.also {
                     // Create the File where the photo should go
                     val photoFile: File? = try {
                         createImageFile()
@@ -221,7 +235,7 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
                     // Continue only if the File was successfully created
                     photoFile?.also {
                         imageUri = FileProvider.getUriForFile(
-                            this,
+                            requireContext(),
                             "com.mahi.evergreen.fileprovider",
                             it
                         )
@@ -231,6 +245,7 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
                         )
                     }
                 }
+            }
         }
     }
 
@@ -241,7 +256,7 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
     private fun createImageFile(): File {
         // Create an image file name
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
-        val storageDir: File? = this.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val storageDir: File? = context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         return File.createTempFile(
             "JPEG_${timeStamp}_", /* prefix */
             ".jpg", /* suffix */
@@ -261,8 +276,8 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
         startActivityForResult(intent, UpcyclingCreationFragment.REQUEST_GALLERY_ACCESS)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             UpcyclingCreationFragment.REQUEST_IMAGE_CAPTURE -> {
                 // If request is cancelled, the result arrays are empty.
@@ -277,7 +292,7 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
                     // At the same time, respect the user's decision. Don't link to
                     // system settings in an effort to convince the user to change
                     // their decision.
-                    Toast.makeText(this, "Debes permitir el acceso a la cámara para tomar fotos", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Debes permitir el acceso a la cámara para tomar fotos", Toast.LENGTH_LONG).show()
                 }
                 return
             }
@@ -294,10 +309,11 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
                     // At the same time, respect the user's decision. Don't link to
                     // system settings in an effort to convince the user to change
                     // their decision.
-                    Toast.makeText(this, "Debes permitir el acceso los archivos para elegir una imagen", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Debes permitir el acceso los archivos para elegir una imagen", Toast.LENGTH_LONG).show()
                 }
                 return
             }
+
             // Add other 'when' lines to check for other
             // permissions this app might request.
             else -> {
@@ -309,9 +325,12 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
     /**
      * Verifies if the given device has camera available
      */
+    /**
+     * Verifies if the given device has camera available
+     */
     private fun hasCameraSupport(): Boolean {
         var hasSupport = false
-        if(this.packageManager?.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY) == true){
+        if(context?.packageManager?.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY) == true){
             hasSupport = true
         }
         return hasSupport
@@ -328,10 +347,10 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
         postID: String,
         postTitle: String,
         postImageURL: String,
-        messageChatActivity: MessageChatActivity
+        messageChatActivity: MessageChatFragment
     ) {
         val visitedUserDbRef = reference.child("users").child(userIDVisited)
-        visitedUserDbRef.addValueEventListener(object : ValueEventListener{
+        visitedUserDbRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
 
                 val visitedUserData: User? = snapshot.getValue(User::class.java)
@@ -341,7 +360,7 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
                     viewModel.getChatIDAndRefreshChatMessages(currentUserID, userIDVisited, postID, postTitle, postImageURL, messageChatActivity)
 
 
-                    chatMessagesAdapter = ChatMessagesAdapter(this@MessageChatActivity, visitedUserData.profile?.profileImage!!, context)
+                    chatMessagesAdapter = ChatMessagesAdapter(this@MessageChatFragment, visitedUserData.profile?.profileImage!!, context)
 
                     binding.rvMessageChats.apply {
                         val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -363,16 +382,18 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
      */
     fun displayChatData(chatID: String) {
         val chatRef = reference.child("chats").child(chatID)
-        chatRef.addValueEventListener(object : ValueEventListener{
+        chatRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
 
                 val chatData: Chat? = snapshot.getValue(Chat::class.java)
 
-                if (chatData != null) {
-                    Glide.with(this@MessageChatActivity) // contexto
+                if (chatData != null && _binding != null) {
+                    context?.let {
+                        Glide.with(it) // contexto
                             .load(chatData.postImageURL) // donde esta la url de la imagen
                             .placeholder(R.drawable.post_default_image) // placeholder
-                            .into(binding.ivVisitedPostImage) // donde la vamos a colocar
+                            .into(binding.ivVisitedPostImage)
+                    } // donde la vamos a colocar
 
                     chatData.postTitle?.let { binding.tvVisitedMessageTitle.text = it }
                 }
@@ -387,12 +408,13 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
      * Using ChatID as input search for list of messages previously made
      */
     private fun displayMessagesWithChatID(chatIDFromChatList: String, context: Context, currentUserID: String) {
-        databaseService.getUserIDVisited(chatIDFromChatList, currentUserID, object: Callback<String> {
+        databaseService.getUserIDVisited(chatIDFromChatList, currentUserID, object:
+            Callback<String> {
             override fun onSuccess(result: String?) {
                 if (result != null) {
                     userIDVisited = result
                     val visitedUserDbRef = reference.child("users").child(userIDVisited)
-                    visitedUserDbRef.addValueEventListener(object : ValueEventListener{
+                    visitedUserDbRef.addValueEventListener(object : ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
 
                             val visitedUserData: User? = snapshot.getValue(User::class.java)
@@ -402,7 +424,7 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
                                 viewModel.refreshChatMessages(chatIDFromChatList)
 
                                 chatMessagesAdapter = ChatMessagesAdapter(
-                                    this@MessageChatActivity,
+                                    this@MessageChatFragment,
                                     visitedUserData.profile?.profileImage!!,
                                     context
                                 )
@@ -434,7 +456,7 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
      */
     private fun sendMessageToUser(senderID: String?, message: String) {
         if (message.isBlank()){
-            Toast.makeText(this@MessageChatActivity, "El campo de texto esta vació!", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), "El campo de texto esta vació!", Toast.LENGTH_LONG).show()
         } else {
             viewModel.writeMessage(senderID, viewModel.chatID, message, "")
         }
@@ -443,11 +465,11 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == UpcyclingCreationFragment.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+        if (requestCode == UpcyclingCreationFragment.REQUEST_IMAGE_CAPTURE && resultCode == AppCompatActivity.RESULT_OK) {
 
             uploadImageToDatabase()
 
-        } else if (requestCode == UpcyclingCreationFragment.REQUEST_GALLERY_ACCESS && resultCode == RESULT_OK){
+        } else if (requestCode == UpcyclingCreationFragment.REQUEST_GALLERY_ACCESS && resultCode == AppCompatActivity.RESULT_OK){
             if (data != null) {
                 imageUri = data.data
                 uploadImageToDatabase()
@@ -461,7 +483,7 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
      * Retrieves the Attached image from Activity collecting the Image uri and saving URL on database
      */
     private fun uploadImageToDatabase() {
-        val progressBar = databaseService.setProgressDialogWhenDataLoading(this, "La imagen se está enviando...")
+        val progressBar = databaseService.setProgressDialogWhenDataLoading(requireContext(), "La imagen se está enviando...")
         progressBar.show()
 
         if (imageUri!=null){
@@ -506,7 +528,7 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
 
         // If chat.url is Not NullOrEmpty && chat.message.equals("sent you an image.") We know that massage clicked an Image
         if (!chatMessageItem.url.isNullOrEmpty() && chatMessageItem.message.equals("sent you an image.")){
-            Toast.makeText(this, "Próximamente", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Próximamente", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -522,5 +544,15 @@ class MessageChatActivity : AppCompatActivity(), ChatMessagesListener {
         })
     }
 
-}
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+    }
 
+    override fun onDestroyView() {
+        bottomNavigationViewVisibility = View.VISIBLE
+        _binding = null
+        super.onDestroyView()
+    }
+
+}

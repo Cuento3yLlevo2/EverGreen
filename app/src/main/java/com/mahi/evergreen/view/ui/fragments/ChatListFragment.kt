@@ -1,11 +1,11 @@
 package com.mahi.evergreen.view.ui.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -15,7 +15,6 @@ import com.mahi.evergreen.databinding.FragmentChatListBinding
 import com.mahi.evergreen.model.Chat
 import com.mahi.evergreen.view.adapter.ChatListAdapter
 import com.mahi.evergreen.view.adapter.ChatListListener
-import com.mahi.evergreen.view.ui.activities.MessageChatActivity
 import com.mahi.evergreen.viewmodel.ChatListViewModel
 
 /**
@@ -71,10 +70,21 @@ class ChatListFragment : Fragment(), ChatListListener {
         // type 1 = chatActivity started from chatList,
         // type 2 = chatActivity started from userList,
         // type 3 = chatActivity started from Post
+
+        /*
         val intent = Intent(context, MessageChatActivity::class.java)
         intent.putExtra("clicked_chat_id", chatListItem.chatID)
         intent.putExtra("type", 1)
         startActivity(intent)
+
+         */
+
+        val bundle = bundleOf(
+            "type" to 1,
+            "clicked_chat_id" to chatListItem.chatID
+        )
+        findNavController().navigate(R.id.action_navChatListFragment_to_messageChatFragment, bundle)
+
     }
 
     override fun observeViewModel() {

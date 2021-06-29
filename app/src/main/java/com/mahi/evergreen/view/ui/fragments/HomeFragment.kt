@@ -109,7 +109,9 @@ class HomeFragment : Fragment(), PostListener {
 
                     if (admodItem.adLoader?.isLoading == false){
                         postAdapter.updateAds(admodItemList)
-                        binding.rlBaseHomePost.visibility = View.INVISIBLE
+                        if (_binding != null){
+                            binding.rlBaseHomePost.visibility = View.INVISIBLE
+                        }
                     }
 
                 }.withAdListener(object : AdListener() {

@@ -44,8 +44,8 @@
             android:id="@+id/action_chatListFragment_to_profileFragment"
             app:destination="@id/navProfileFragment" />
         <action
-            android:id="@+id/action_navChatListFragment_to_messageChatActivity"
-            app:destination="@id/messageChatActivity" />
+            android:id="@+id/action_navChatListFragment_to_messageChatFragment"
+            app:destination="@id/messageChatFragment" />
     </fragment>
     <fragment
         android:id="@+id/navProfileFragment"
@@ -83,25 +83,19 @@
             android:id="@+id/action_categoriesDetailDialogFragment_to_categoriesPostFilteringFragment"
             app:destination="@id/categoriesPostFilteringFragment" />
     </dialog>
-    <activity
-        android:id="@+id/messageChatActivity"
-        android:name="com.mahi.evergreen.view.ui.activities.MessageChatActivity"
-        android:label="MessageChatActivity"
-        tools:layout="@layout/activity_message_chat"
-        />
     <dialog
         android:id="@+id/postDetailDialogFragment"
         android:name="com.mahi.evergreen.view.ui.fragments.PostDetailDialogFragment"
         android:label="PostDetailDialogFragment" >
-        <action
-            android:id="@+id/action_postDetailDialogFragment_to_messageChatActivity"
-            app:destination="@id/messageChatActivity" />
         <action
             android:id="@+id/action_postDetailDialogFragment_to_navHomeFragment"
             app:destination="@id/navHomeFragment" />
         <action
             android:id="@+id/action_postDetailDialogFragment_to_upcyclingCreationFragment"
             app:destination="@id/upcyclingCreationFragment" />
+        <action
+            android:id="@+id/action_postDetailDialogFragment_to_messageChatFragment"
+            app:destination="@id/messageChatFragment" />
     </dialog>
     <fragment
         android:id="@+id/profilePublicDetailDialogFragment"
@@ -160,6 +154,21 @@
         <action
             android:id="@+id/action_homePostSearchDetailDialogFragment_to_postDetailDialogFragment"
             app:destination="@id/postDetailDialogFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/messageChatFragment"
+        android:name="com.mahi.evergreen.view.ui.fragments.MessageChatFragment"
+        android:label="fragment_message_chat"
+        tools:layout="@layout/fragment_message_chat" >
+        <action
+            android:id="@+id/action_messageChatFragment_to_postDetailDialogFragment"
+            app:destination="@id/postDetailDialogFragment" />
+        <action
+            android:id="@+id/action_messageChatFragment_to_profilePublicDetailDialogFragment"
+            app:destination="@id/profilePublicDetailDialogFragment" />
+        <action
+            android:id="@+id/action_messageChatFragment_to_navChatListFragment"
+            app:destination="@id/navChatListFragment" />
     </fragment>
 
 </navigation>

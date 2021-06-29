@@ -1,7 +1,6 @@
 package com.mahi.evergreen.view.ui.fragments
 
 import android.content.DialogInterface
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -27,7 +26,6 @@ import com.mahi.evergreen.network.DatabaseService
 import com.mahi.evergreen.network.REMOVE_FAV_POST
 import com.mahi.evergreen.view.adapter.PostAdapter
 import com.mahi.evergreen.view.adapter.PostImagesViewPagerAdapter
-import com.mahi.evergreen.view.ui.activities.MessageChatActivity
 import com.mahi.evergreen.viewmodel.PostViewModel
 import com.squareup.picasso.Picasso
 
@@ -44,6 +42,7 @@ class PostDetailDialogFragment : BaseDialogFragment(), DialogInterface.OnDismiss
     private var isCategoryFiltering: Boolean? = false
     private var isSearchFiltering: Boolean? = false
     private var isPostEditionClicked: Boolean? = false
+    private var isChatCreated: Boolean? = false
     private var keyword: String? = ""
     private var adapter: PostImagesViewPagerAdapter? = null
     var firebaseUser = Firebase.auth.currentUser
@@ -164,6 +163,7 @@ class PostDetailDialogFragment : BaseDialogFragment(), DialogInterface.OnDismiss
         }
 
         binding.bPostDetailChatBtn.setOnClickListener {
+            /*
             val intent = Intent(context, MessageChatActivity::class.java)
             intent.putExtra("visit_user_id", post.publisher)
             intent.putExtra("postImageURL", post.coverImage)
@@ -171,6 +171,18 @@ class PostDetailDialogFragment : BaseDialogFragment(), DialogInterface.OnDismiss
             intent.putExtra("postID", post.postId)
             intent.putExtra("type", 3)
             startActivity(intent)
+
+             */
+            isChatCreated = true
+            val bundle = bundleOf(
+                "type" to 3,
+                "postID" to post.postId,
+                "postTitle" to post.description,
+                "postImageURL" to post.coverImage,
+                "visit_user_id" to post.publisher
+            )
+            findNavController().navigate(R.id.action_postDetailDialogFragment_to_messageChatFragment, bundle)
+
         }
     }
 
@@ -209,6 +221,9 @@ class PostDetailDialogFragment : BaseDialogFragment(), DialogInterface.OnDismiss
             isPostEditionClicked == true -> {
                 // do nothing
             }
+            isChatCreated == true -> {
+                // do nothing
+            }
             else -> {
                 findNavController().previousBackStackEntry?.destination?.id?.let {
                     findNavController().navigate(
@@ -233,10 +248,12 @@ class PostDetailDialogFragment : BaseDialogFragment(), DialogInterface.OnDismiss
     }
 
     override fun onDestroyView() {
-        if(isPostEditionClicked == true) {
-            bottomNavigationViewVisibility = View.GONE
+        bottomNavigationViewVisibility = if(isPostEditionClicked == true) {
+            View.GONE
+        } else if(isChatCreated == true){
+            View.GONE
         } else {
-            bottomNavigationViewVisibility = View.VISIBLE
+            View.VISIBLE
         }
 
         _binding = null

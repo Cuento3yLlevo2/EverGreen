@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.mahi.evergreen.model.ChatMessage
 import com.mahi.evergreen.network.Callback
 import com.mahi.evergreen.network.DatabaseService
-import com.mahi.evergreen.view.ui.activities.MessageChatActivity
+import com.mahi.evergreen.view.ui.fragments.MessageChatFragment
 
 /**
  * This ViewModel class takes care of connecting the realtime database service with the
@@ -34,7 +34,7 @@ class ChatMessagesViewModel: ViewModel() {
         postID: String,
         postTitle: String,
         postImageURL: String,
-        messageChatActivity: MessageChatActivity
+        messageChatFragment: MessageChatFragment
     ) {
         firestoreService.getChatIDFromDatabase(postID, currentUserID, visitedUserID, object: Callback<String>
         {
@@ -47,7 +47,7 @@ class ChatMessagesViewModel: ViewModel() {
                                 if (result != null) {
                                     chatID = result
                                     refreshChatMessages(chatID)
-                                    messageChatActivity.displayChatData(chatID)
+                                    messageChatFragment.displayChatData(chatID)
                                 }
                             }
 
@@ -58,7 +58,7 @@ class ChatMessagesViewModel: ViewModel() {
                     } else {
                         Log.d("cccc2", "El Chat ID es ->>>>>>>>>>>> $chatID")
                         refreshChatMessages(chatID)
-                        messageChatActivity.displayChatData(chatID)
+                        messageChatFragment.displayChatData(chatID)
                     }
                 }
             }
