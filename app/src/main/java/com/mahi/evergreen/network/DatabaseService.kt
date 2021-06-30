@@ -43,6 +43,36 @@ class DatabaseService {
     // project's server database reference host by firebase services (for more info go to https://firebase.google.com/)
     val database = Firebase.database("https://evergreen-app-bdbc2-default-rtdb.europe-west1.firebasedatabase.app")
 
+    /**
+     * Determine User status using Firebase Boolean Status to check according to https://firebase.google.com/docs/database/android/offline-capabilities#section-presence
+     * If setOnlineStatus is set to null the Firebase Boolean Status will be use to determine if user is online
+     * If setOnlineStatus is set to false the user status will be directly change to false.
+     */
+     fun isUserOnline(userId: String, setOnlineStatus: Boolean?){
+        if (setOnlineStatus == false){
+            database.reference.child(USERS).child(userId).child("online").setValue(false)
+        } else {
+            val connectedRef = database.getReference(".info/connected")
+            connectedRef.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val connected = snapshot.getValue(Boolean::class.java) ?: false
+                    if (connected) {
+                        Log.d("isUserOnline", "connected")
+                        database.reference.child(USERS).child(userId).child("online").setValue(true)
+                    } else {
+                        Log.d("isUserOnline", "not connected")
+                        database.reference.child(USERS).child(userId).child("online").setValue(false)
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.w("isUserOnline", "Listener was cancelled")
+                }
+            })
+        }
+     }
+
+
     // Write to Realtime Database
 
     /**
@@ -228,14 +258,33 @@ class DatabaseService {
         }
     }
 
+    /**
+     * Deletes a user's created post given a postID
+     * also:
+     * - Deletes the post reference from the user's created posts
+     * - Deletes the post reference from the favorites from all users realated
+     * - Deactivate the chats related with this post reference
+     */
     fun erasePost(publisherID: String?, postId: String?, callback: Callback<Boolean>) {
         if (postId != null && publisherID != null) {
             database.reference.child(POSTS).child(postId).setValue(null)
                 .addOnSuccessListener {
                     // Write was successful!
                     Log.w("FireBaseLogs", "Erase was successful")
-                    database.reference.child(USERS).child(publisherID).child("createdPosts").updateChildren(hashMapOf<String, Any?>(postId to null))
-                    callback.onSuccess(true)
+                    // - Deletes the post reference from the user's created posts
+                    database.reference.child(USERS).child(publisherID)
+                        .child("createdPosts")
+                        .updateChildren(hashMapOf<String, Any?>(postId to null))
+                        .addOnSuccessListener {
+                            //  - Deactivate the chats related with this post reference
+
+
+                            callback.onSuccess(true)
+
+                        }.addOnFailureListener {
+                            // Write failed
+                            Log.w("FireBaseLogs", "Write failed")
+                        }
                 }
                 .addOnFailureListener {
                     // Write failed
