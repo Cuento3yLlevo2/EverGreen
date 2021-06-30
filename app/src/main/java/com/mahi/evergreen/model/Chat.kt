@@ -11,7 +11,7 @@ class Chat(val postID: String? = "",
            val postTitle: String? = "",
            val postImageURL: String? = "",
            val lastMessage: String? = "",
-           val isSeen: Boolean? = false,
+           val seen: Boolean? = null,
            val timestamp: Long? = null,
            val chatID: String? = ""
 ) {
@@ -24,7 +24,7 @@ class Chat(val postID: String? = "",
                 "postTitle" to postTitle,
                 "postImageURL" to postImageURL,
                 "lastMessage" to lastMessage,
-                "isSeen" to isSeen,
+                "isSeen" to seen,
                 "timestamp" to timestamp,
                 "chatID" to chatID
         )

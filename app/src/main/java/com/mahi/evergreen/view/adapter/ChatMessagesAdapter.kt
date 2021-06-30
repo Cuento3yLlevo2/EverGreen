@@ -1,6 +1,7 @@
 package com.mahi.evergreen.view.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -109,8 +110,8 @@ class ChatMessagesAdapter(
 
         // sent and seen messages
         if (position == listOfMessages.size-1){
-
-            if (message.isSeen == true) {
+            Log.d("messagedebug", "messageAdapter -> ${message.message} seemAdapter  -> ${message.seen}")
+            if (message.seen == true) {
                 holder.tvLeftIsTextSeen.let {
                     holder.tvLeftIsTextSeen?.text = context?.getString(R.string.message_read)
                     if (imageChatSent)

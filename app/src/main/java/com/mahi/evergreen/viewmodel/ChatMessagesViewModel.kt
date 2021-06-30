@@ -1,6 +1,5 @@
 package com.mahi.evergreen.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mahi.evergreen.model.ChatMessage
@@ -46,7 +45,7 @@ class ChatMessagesViewModel: ViewModel() {
                             override fun onSuccess(result: String?) {
                                 if (result != null) {
                                     chatID = result
-                                    refreshChatMessages(chatID)
+                                    refreshChatMessages(chatID, currentUserID)
                                     messageChatFragment.displayChatData(chatID)
                                 }
                             }
@@ -56,8 +55,7 @@ class ChatMessagesViewModel: ViewModel() {
                             }
                         })
                     } else {
-                        Log.d("cccc2", "El Chat ID es ->>>>>>>>>>>> $chatID")
-                        refreshChatMessages(chatID)
+                        refreshChatMessages(chatID, currentUserID)
                         messageChatFragment.displayChatData(chatID)
                     }
                 }
@@ -69,7 +67,8 @@ class ChatMessagesViewModel: ViewModel() {
         })
     }
 
-    fun refreshChatMessages(chatID: String) {
+    fun refreshChatMessages(chatID: String, currentUserID: String?) {
+        firestoreService.messageIsSeenListener(currentUserID, chatID)
         getChatMessagesFromFirebase(chatID)
     }
 

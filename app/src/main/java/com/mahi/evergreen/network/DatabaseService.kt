@@ -162,6 +162,7 @@ class DatabaseService {
                         if (task.isSuccessful) {
                             Log.d("WriteData", "Message creation successful")
                             database.reference.child(CHATS).child(chatKey).updateChildren(hashMapOf<String, Any>(
+                                    "seen" to false,
                                     "timestamp" to currentTime,
                                     "lastMessage" to message))
                         }
@@ -376,6 +377,45 @@ class DatabaseService {
                 // Write failed
                 Log.w("FireBaseLogs", "Write failed")
             }
+    }
+
+
+    fun messageIsSeenListener(currentUserID: String?, chatID: String) {
+        database.getReference(CHAT_MESSAGES)
+            .child(chatID)
+            .orderByChild("timestamp")
+            .limitToLast(1)
+            .addValueEventListener(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (child in snapshot.children) {
+                        val chatMessage = child.getValue(ChatMessage::class.java)
+                        if (chatMessage != null) {
+                            Log.d("messagedebug", "message -> ${chatMessage.message} seem -> ${chatMessage.seen}")
+                            if (currentUserID != chatMessage.sender && chatMessage.seen == false){
+                                chatMessage.messageID?.let {
+                                    database
+                                        .getReference(CHAT_MESSAGES)
+                                        .child(chatID)
+                                        .child(it)
+                                        .child("seen")
+                                        .setValue(true)
+                                        .addOnCompleteListener { task ->
+                                            if (task.isSuccessful){
+                                                database.reference.child(CHATS).child(chatID).updateChildren(hashMapOf<String, Any>(
+                                                    "seen" to true))
+                                            }
+                                        }
+                                }
+
+                            }
+                        }
+                    }
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    Log.w("Data reading failure", "Error getting documents.", error.toException())
+                }
+            })
+
     }
 
 
@@ -858,6 +898,7 @@ class DatabaseService {
         }
         return dialog
     }
+
 
 
 

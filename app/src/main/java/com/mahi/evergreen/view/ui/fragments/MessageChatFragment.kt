@@ -421,7 +421,7 @@ class MessageChatFragment : BaseDialogFragment(), ChatMessagesListener {
                             if (visitedUserData?.profile?.profileImage != null) {
                                 Picasso.get().load(visitedUserData.profile?.profileImage).into(binding.ivVisitedProfileImage)
 
-                                viewModel.refreshChatMessages(chatIDFromChatList)
+                                viewModel.refreshChatMessages(chatIDFromChatList, firebaseUser?.uid)
 
                                 chatMessagesAdapter = ChatMessagesAdapter(
                                     this@MessageChatFragment,

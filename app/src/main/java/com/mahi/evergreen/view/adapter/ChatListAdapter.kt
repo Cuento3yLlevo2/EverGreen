@@ -77,7 +77,7 @@ class ChatListAdapter(private val chatListListener: ChatListListener, val contex
 
         }
 
-        if (chat.isSeen == true) {
+        if (chat.seen == true) {
             holder.tvChatLastMessage?.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.check_circle,0,0,0)
         } else {
             holder.tvChatLastMessage?.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.unchecked_circle,0,0,0)

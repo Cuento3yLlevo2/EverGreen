@@ -11,7 +11,7 @@ class ChatMessage(val messageID: String? = "",
                   val sender: String? = "",
                   val message: String? = "",
                   val url: String? = "",
-                  val isSeen: Boolean? = false,
+                  val seen: Boolean? = null,
                   val timestamp: Long? = 0
 ) {
     // Null default values create a no-argument default constructor, which is needed
